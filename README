@@ -1,0 +1,14 @@
+imvirt - I'm virtualized?
+-------------------------
+
+This script tries to detect if it is run under a (para)virtualization.
+This is done by looking for wellknown boot messages, device names,
+installed tools etc.
+
+Detected virtualizations:
+ - Virtual PC/Server
+ - VMware
+ - QEMU/KVM (experimental)
+ - Xen (para and non-para virtualized)
+
+ -- Thomas Liske <liske@ibh.de>  Mon, 17 Nov 2008 13:43:06 +0100
