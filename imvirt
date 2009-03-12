@@ -2,7 +2,7 @@
 
 # imvirt - I'm virtualized?
 #
-# $Id: imvirt 11 2008-11-25 12:13:13Z liske $
+# $Id$
 #
 # Authors:
 #   Thomas Liske <liske@ibh.de>
@@ -47,10 +47,18 @@ my $cmd = '$dmidecode -t system';
 
 my $dmesg = '/bin/dmesg | head -n 750';
 
-# paravirtualized Xen - very simple ;)
+# paravirtualized oldstyle Xen - very simple ;)
 if(-d '/proc/xen') {
     print "Xen\n";
     exit 0;
+}
+
+# newstyle Xen
+if(-r '/sys/devices/system/clocksource/clocksource0/available_clocksource') {
+    if(`cat /sys/devices/system/clocksource/clocksource0/available_clocksource` =~ /xen/) {
+	print "Xen\n";
+	exit 0;
+    }
 }
 
 # dmidecode needs root to work :(
@@ -79,6 +87,24 @@ if (-r '/dev/mem' && -x $dmidecode) {
     }
 }
 
+# Parse loaded modules
+my %modmap = (
+    '^vmxnet\s' => 'VMware',
+    '^xen_\w+front\s' => 'Xen',
+);
+
+if (open(HMODS, '/proc/modules')) {
+    while(<HMODS>) {
+	foreach my $str (keys %modmap) {
+	    if (/$str/) {
+		print "$modmap{$str}\n";
+		exit 0;
+	    }
+	}
+    }
+    close(HMODS);
+}
+
 # Let's parse some logs & /proc files for well known strings
 my %msgmap = (
     'VMware vmxnet virtual NIC driver' => 'VMware',
@@ -98,9 +124,10 @@ my %msgmap = (
     ': VBOX HARDDISK,' => 'VirtualBox',
     ': VBOX CD-ROM,' => 'VirtualBox',
 
+    'Hypervisor signature: xen' => 'Xen',
     'Xen virtual console successfully installed' => 'Xen',
     'Xen reported:' => 'Xen',
-    'Xen: 0000000000000000 - 0000000020000000' => 'Xen',
+    'Xen: \d+ - \d+' => 'Xen',
     'xen-vbd: registered block device' => 'Xen',
     'ACPI: RSDP \(v\d+\s+Xen ' => 'Xen',
     'ACPI: XSDT \(v\d+\s+Xen ' => 'Xen',
