@@ -1,3 +1,9 @@
+imvirt (0.2.1) unstable; urgency=low
+
+  * Fix Xen detection on new kernels (i.e. Debian Lenny).
+
+ -- Thomas Liske <liske@ibh.de>  Thu, 12 Mar 2009 10:19:00 +0100
+
 imvirt (0.2) unstable; urgency=low
 
   * Move to SF project apt-dater.
