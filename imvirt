@@ -125,6 +125,7 @@ my %msgmap = (
     ': VBOX CD-ROM,' => 'VirtualBox',
 
     'Hypervisor signature: xen' => 'Xen',
+    'Booting paravirtualized kernel on Xen' => 'Xen',
     'Xen virtual console successfully installed' => 'Xen',
     'Xen reported:' => 'Xen',
     'Xen: \d+ - \d+' => 'Xen',
