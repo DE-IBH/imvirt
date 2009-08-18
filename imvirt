@@ -8,7 +8,7 @@
 #   Thomas Liske <liske@ibh.de>
 #
 # Copyright Holder:
-#   2008 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#   2008-2009 (C) IBH IT-Service GmbH [http://www.ibh.de/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -34,6 +34,7 @@
 #   Virtual Machine
 #   VMware
 #   QEMU
+#   OpenVZ
 #
 # If no virtualization has been detected:
 #   Physical
@@ -46,6 +47,15 @@ my $dmidecode = '/usr/sbin/dmidecode';
 my $cmd = '$dmidecode -t system';
 
 my $dmesg = '/bin/dmesg | head -n 750';
+
+# OpenVZ/Virtuozzo
+# taken from virt-what (Evgeniy Sokolov)
+# /proc/vz - exists if OpenVZ kernel is running
+# /proc/bc - exists on nodes, but not inside containers
+if(-d '/proc/vz' && ! -d '/proc/bc') {
+    print "OpenVZ\n";
+    exit 0;
+}
 
 # paravirtualized oldstyle Xen - very simple ;)
 if(-d '/proc/xen') {

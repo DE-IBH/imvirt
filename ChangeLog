@@ -3,6 +3,9 @@ imvirt (0.x) unstable; urgency=low
   * Add manpage from Debian,
      thanks to Patrick Matthäi <patrick.matthaei@web.de>
 
+  * Add OpenVZ/Virtuozzo detection
+     taken from virt-what 1.1 (Evgeniy Sokolov)
+
  -- Thomas Liske <liske@ibh.de>  
 
 imvirt (0.2.1) unstable; urgency=low

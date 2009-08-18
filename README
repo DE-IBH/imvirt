@@ -10,5 +10,12 @@ Detected virtualizations:
  - VMware
  - QEMU/KVM (experimental)
  - Xen (para and non-para virtualized)
+ - OpenVZ/Virtuozzo
 
- -- Thomas Liske <liske@ibh.de>  Mon, 17 Nov 2008 13:43:06 +0100
+imvirt is comparable with virt-what [1]. imvirt was written to run as
+non-root - virt-what requires to be run as root but gives some more
+details on Xen (Dom0/DomU/HVM).
+
+[1] http://et.redhat.com/~rjones/virt-what/
+
+ -- Thomas Liske <liske@ibh.de>  Tue, 18 Aug 2009 13:36:27 +0200
