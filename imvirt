@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 # imvirt - I'm virtualized?
 #
@@ -42,6 +42,7 @@
 ##
 
 use strict;
+use warnings;
 
 my $dmidecode = '/usr/sbin/dmidecode';
 my $cmd = '$dmidecode -t system';
