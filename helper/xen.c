@@ -38,23 +38,20 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include "detect.h"
+#include "xen.h"
 
 static int pv_context;
 
-static void cpuid(uint32_t idx,
-                  uint32_t *eax,
-                  uint32_t *ebx,
-                  uint32_t *ecx,
-                  uint32_t *edx)
-{
+static void cpuid(uint32_t idx, uint32_t *eax, uint32_t *ebx, uint32_t *ecx, uint32_t *edx) {
     asm volatile (
         "test %1,%1 ; jz 1f ; ud2a ; .ascii \"xen\" ; 1: cpuid"
         : "=a" (*eax), "=b" (*ebx), "=c" (*ecx), "=d" (*edx)
-        : "0" (idx), "1" (pv_context) );
+        : "0" (idx), "1" (pv_context)
+    );
 }
 
-static int check_for_xen(void)
-{
+static int check_for_xen(void) {
     uint32_t eax, ebx, ecx, edx;
     char signature[13];
 
@@ -64,25 +61,24 @@ static int check_for_xen(void)
     *(uint32_t *)(signature + 8) = edx;
     signature[12] = '\0';
 
-    if ( strcmp("XenVMMXenVMM", signature) || (eax < 0x40000002) )
+    if (strcmp("XenVMMXenVMM", signature) || (eax < 0x40000002))
         return 0;
 
     cpuid(0x40000001, &eax, &ebx, &ecx, &edx);
-    printf("%d.%d %s\n",
+    printf("Xen %d.%d %s\n",
            (uint16_t)(eax >> 16), (uint16_t)eax,
            pv_context ? "PV" : "HVM");
 
     return 1;
 }
 
-int main(void)
-{
+int detect_xen(void) {
     pid_t pid;
     int status;
     uint32_t dummy;
 
     /* Check for execution in HVM context. */
-    if ( check_for_xen() )
+    if (check_for_xen())
         return 0;
 
     /* Now we check for execution in PV context. */

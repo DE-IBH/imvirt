@@ -33,6 +33,8 @@
 #include <string.h>
 #include <signal.h>
 #include <stdlib.h>
+#include "detect.h"
+#include "vmware.h"
 
 #define VMWARE_MAGIC 0x564d5868
 #define VMWARE_PORT 0x5658
@@ -46,11 +48,13 @@
     "2"(VMWARE_PORT), "3"(0) : \
     "memory");
 
-void sigh(int signum) {
-    exit(1);
+static int failed;
+
+static void sigh(int signum) {
+    failed = 1;
 }
 
-int main() {
+int detect_vmware() {
     uint32_t eax, ebx, ecx, edx;
     struct sigaction sa;
 
@@ -60,7 +64,12 @@ int main() {
     sa.sa_flags = 0;
     sigaction(SIGSEGV, &sa, NULL);
 
+    failed = 0;
+
     VMWARE_CMD(GETVERSION, eax, ebx, ecx, edx);
+
+    if(failed)
+	return 0;
 
     /* sanity check: maybe VMWARE_CMD did not SEGV if there was something
      * on the I/O port - test if EBX has been set to VMWARE_MAGIC */
@@ -85,8 +94,10 @@ int main() {
 		break;
 	}
 
-	printf("%s\n", product);
+	printf("VMware%s%s\n", (product[0] ? " " : ""), product);
+
+	return 1;
     }
 
-    return 1;
+    return 0;
 }
