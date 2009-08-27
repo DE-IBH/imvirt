@@ -28,6 +28,16 @@ AC_TYPE_UINT32_T
 AC_FUNC_FORK
 AC_TYPE_SIGNAL
 
+# Check architecture
+AC_MSG_CHECKING(x86 platform)
+case `uname -m` in
+    x86_64) x86arch=true ;;
+    i686) x86arch=true ;;
+    *) x86arch=false ;;
+esac
+AC_MSG_RESULT($x86arch)
+AM_CONDITIONAL([X86ARCH], [test x$x86arch = xtrue ])
+
 AC_CONFIG_FILES([
 Makefile
 helper/Makefile

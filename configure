@@ -694,6 +694,8 @@ am__fastdepCC_FALSE
 CPP
 GREP
 EGREP
+X86ARCH_TRUE
+X86ARCH_FALSE
 LIBOBJS
 LTLIBOBJS'
 ac_subst_files=''
@@ -4922,6 +4924,25 @@ _ACEOF
 
 
 
+# Check architecture
+{ echo "$as_me:$LINENO: checking x86 platform" >&5
+echo $ECHO_N "checking x86 platform... $ECHO_C" >&6; }
+case `uname -m` in
+    x86_64) x86arch=true ;;
+    i686) x86arch=true ;;
+    *) x86arch=false ;;
+esac
+{ echo "$as_me:$LINENO: result: $x86arch" >&5
+echo "${ECHO_T}$x86arch" >&6; }
+ if test x$x86arch = xtrue ; then
+  X86ARCH_TRUE=
+  X86ARCH_FALSE='#'
+else
+  X86ARCH_TRUE='#'
+  X86ARCH_FALSE=
+fi
+
+
 ac_config_files="$ac_config_files Makefile helper/Makefile"
 
 
@@ -5032,6 +5053,13 @@ if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"am__fastdepCC\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"am__fastdepCC\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${X86ARCH_TRUE}" && test -z "${X86ARCH_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"X86ARCH\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"X86ARCH\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -5646,11 +5674,13 @@ am__fastdepCC_FALSE!$am__fastdepCC_FALSE$ac_delim
 CPP!$CPP$ac_delim
 GREP!$GREP$ac_delim
 EGREP!$EGREP$ac_delim
+X86ARCH_TRUE!$X86ARCH_TRUE$ac_delim
+X86ARCH_FALSE!$X86ARCH_FALSE$ac_delim
 LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 80; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 82; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
