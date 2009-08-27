@@ -44,7 +44,8 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_detect_OBJECTS = detect.$(OBJEXT) vmware.$(OBJEXT) xen.$(OBJEXT)
+am_detect_OBJECTS = detect.$(OBJEXT) hyperv.$(OBJEXT) hvm.$(OBJEXT) \
+	vmware.$(OBJEXT) xen.$(OBJEXT)
 detect_OBJECTS = $(am_detect_OBJECTS)
 detect_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I.@am__isrc@
@@ -146,6 +147,10 @@ top_srcdir = @top_srcdir@
 detect_SOURCES = \
 	detect.c			\
 	detect.h			\
+	hyperv.c			\
+	hyperv.h			\
+	hvm.c				\
+	hvm.h				\
 	vmware.c			\
 	vmware.h			\
 	xen.c				\
@@ -238,6 +243,8 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/detect.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hvm.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hyperv.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vmware.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xen.Po@am__quote@
 

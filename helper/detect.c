@@ -35,15 +35,17 @@
 
 #include "detect.h"
 
+#include "hvm.h"
+#include "hyperv.h"
 #include "vmware.h"
 #include "xen.h"
 
 int main(void) {
-    if(detect_vmware())
-	return 1;
+    if(detect_hyperv()) return 1;
+    if(detect_vmware()) return 1;
+    if(detect_xen()) return 1;
 
-    if(detect_xen())
-	return 1;
+    if(detect_hvm()) return 1;
 
     return 0;
 }

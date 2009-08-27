@@ -1,4 +1,4 @@
-/* imvirt / VMware detection code
+/* imvirt / generic HyperVisor Manager detection code
  *
  * $Id$
  *
@@ -24,7 +24,31 @@
  *   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#include "config.h"
+/* This code tries to detect the VMware version using the VMware backdoor's
+ * GETVERSION command (http://chitchat.at.infoseek.co.jp/vmware/backdoor.html#cmd0ah).
+ */
 
-#define CPUID(idx,a,b,c,d)\
-  asm volatile("cpuid": "=a" (a), "=b" (b), "=c" (c), "=d" (d) : "0" (idx))
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include "detect.h"
+#include "hvm.h"
+
+int detect_hvm(void) {
+    uint32_t eax = 0, ebx = 0, ecx = 0, edx = 0;
+    char signature[13];
+
+    memset(signature, 0, sizeof(signature));
+
+    CPUID(0x40000000, eax, ebx, ecx, edx);
+    *(uint32_t *)(signature + 0) = ebx;
+    *(uint32_t *)(signature + 4) = ecx;
+    *(uint32_t *)(signature + 8) = edx;
+
+    if(strlen(signature)) {
+	printf("%s\n", signature);
+	return 1;
+    }
+
+    return 0;
+}

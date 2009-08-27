@@ -1,4 +1,4 @@
-/* imvirt / VMware detection code
+/* imvirt / HyperV detection code
  *
  * $Id$
  *
@@ -24,7 +24,18 @@
  *   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#include "config.h"
+/* This code tries to detect the VMware version using the VMware backdoor's
+ * GETVERSION command (http://chitchat.at.infoseek.co.jp/vmware/backdoor.html#cmd0ah).
+ */
 
-#define CPUID(idx,a,b,c,d)\
-  asm volatile("cpuid": "=a" (a), "=b" (b), "=c" (c), "=d" (d) : "0" (idx))
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include "detect.h"
+#include "hyperv.h"
+
+int detect_hyperv(void) {
+    return 0;
+}

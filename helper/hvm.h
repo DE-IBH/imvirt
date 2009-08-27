@@ -1,4 +1,4 @@
-/* imvirt / VMware detection code
+/* imvirt / Generic HyperVisor Manager detection code
  *
  * $Id$
  *
@@ -24,7 +24,4 @@
  *   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#include "config.h"
-
-#define CPUID(idx,a,b,c,d)\
-  asm volatile("cpuid": "=a" (a), "=b" (b), "=c" (c), "=d" (d) : "0" (idx))
+int detect_hvm();

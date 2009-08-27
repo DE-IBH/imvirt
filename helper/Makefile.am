@@ -3,6 +3,10 @@ bin_PROGRAMS = detect
 detect_SOURCES =			\
 	detect.c			\
 	detect.h			\
+	hyperv.c			\
+	hyperv.h			\
+	hvm.c				\
+	hvm.h				\
 	vmware.c			\
 	vmware.h			\
 	xen.c				\
