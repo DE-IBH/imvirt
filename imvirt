@@ -44,6 +44,13 @@
 use strict;
 use warnings;
 
+my $helper = '/usr/lib/imvirt/detect';
+
+if(-x $helper) {
+    my $ret = system($helper) >> 8;
+    exit(0) if($ret);
+}
+
 my $dmidecode = '/usr/sbin/dmidecode';
 my $cmd = '$dmidecode -t system';
 

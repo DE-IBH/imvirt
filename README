@@ -13,9 +13,19 @@ Detected virtualizations:
  - OpenVZ/Virtuozzo
 
 imvirt is comparable with virt-what [1]. imvirt was written to run as
-non-root - virt-what requires to be run as root but gives some more
+non-root - virt-what requires to be run as root but might give some more
 details on Xen (Dom0/DomU/HVM).
 
-[1] http://et.redhat.com/~rjones/virt-what/
+Some random links taken as suggestions:
 
- -- Thomas Liske <liske@ibh.de>  Tue, 18 Aug 2009 13:36:27 +0200
+[1] http://et.redhat.com/~rjones/virt-what/
+[2] http://www.dmo.ca/blog/detecting-virtualization-on-linux/
+[3] http://my.opera.com/jaelanicu/blog/2008/04/02/a-better-red-pill-scooby-for-vmware
+[4] http://my.opera.com/jaelanicu/blog/show.dml/4257341
+[5] http://www.codegurus.be/codegurus/Programming/virtualpc&vmware_en.htm
+[6] http://flierlu.blogspot.com/2008/04/virtualization-detection.html
+[7] http://www.microsoft.com/downloads/details.aspx?FamilyId=91E2E518-C62C-4FF2-8E50-3A37EA4100F5&displaylang=en
+[8] http://invisiblethings.org/papers/redpill.html
+[9] http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&cmd=displayKC&externalId=1009458
+
+ -- Thomas Liske <liske@ibh.de>  Thu, 27 Aug 2009 17:12:11 +0200

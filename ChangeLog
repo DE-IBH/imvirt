@@ -1,10 +1,16 @@
-imvirt (0.x) unstable; urgency=low
+imvirt (0.3) unstable; urgency=low
 
   * Add manpage from Debian,
      thanks to Patrick Matthäi <patrick.matthaei@web.de>
 
   * Add OpenVZ/Virtuozzo detection
      taken from virt-what 1.1 (Evgeniy Sokolov)
+
+  * Add binary helper to detect
+      - Virtual PC/Server
+      - VMware
+      - Xen
+     HVM using cpuid calls.
 
  -- Thomas Liske <liske@ibh.de>  
 
