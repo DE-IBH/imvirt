@@ -46,7 +46,7 @@ int detect_hvm(void) {
     *(uint32_t *)(signature + 8) = edx;
 
     if(strlen(signature)) {
-	printf("%s\n", signature);
+	printf("HVM: %s\n", signature);
 	return 1;
     }
 
