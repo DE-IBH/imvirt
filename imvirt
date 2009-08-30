@@ -135,8 +135,8 @@ my %msgmap = (
     ': QEMU HARDDISK,' => 'QEMU',
     ': QEMU CD-ROM,' => 'QEMU',
 
-    ': Virtual HD,' => 'Virtual Machine',
-    ': Virtual CD,' => 'Virtual Machine',
+    'Virtual HD' => 'Virtual Machine',
+    'Virtual CD' => 'Virtual Machine',
 
     ' VBOXBIOS ' => 'VirtualBox',
     ': VBOX HARDDISK,' => 'VirtualBox',
@@ -182,6 +182,7 @@ if (open(HDMSG, "$dmesg |")) {
     close(HDMSG);
 }
 
+# scan SCSI devices
 if (open(HSCSI, '/proc/scsi/scsi')) {
     while(<HSCSI>) {
 	foreach my $str (keys %msgmap) {
@@ -192,6 +193,21 @@ if (open(HSCSI, '/proc/scsi/scsi')) {
 	}
     }
     close(HSCSI);
+}
+
+# scan IDE devices
+foreach my $hd (</proc/ide/hd*/model>) {
+    if (open(HSCSI, $hd)) {
+	while(<HSCSI>) {
+	    foreach my $str (keys %msgmap) {
+		if (/$str/) {
+		    print "$msgmap{$str}\n";
+		    exit 0;
+	        }
+	    }
+	}
+        close(HSCSI);
+    }
 }
 
 print "Physical\n";

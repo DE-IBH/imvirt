@@ -12,6 +12,10 @@ imvirt (0.3) unstable; urgency=low
       - Xen
      HVM using cpuid calls.
 
+  * Improvements/fixes:
+    - fix dmesg call
+    - scan /proc/ide/hd*/model for well known signatures
+
  -- Thomas Liske <liske@ibh.de>  
 
 imvirt (0.2.1) unstable; urgency=low
