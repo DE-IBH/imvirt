@@ -170,7 +170,7 @@ if (open(HDMSG, '/var/log/dmesg')) {
 }
 
 # Read kernel ringbuffer directly
-if (open(HDMSG, '$dmesg |')) {
+if (open(HDMSG, "$dmesg |")) {
     while(<HDMSG>) {
 	foreach my $str (keys %msgmap) {
 	    if (/$str/) {
