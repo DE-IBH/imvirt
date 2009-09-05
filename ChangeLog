@@ -6,6 +6,8 @@ imvirt (0.3) unstable; urgency=low
   * Add OpenVZ/Virtuozzo detection
      taken from virt-what 1.1 (Evgeniy Sokolov)
 
+  * Add UML detection
+
   * Add binary helper to detect
       - Virtual PC/Server
       - VMware
@@ -16,7 +18,7 @@ imvirt (0.3) unstable; urgency=low
     - fix dmesg call
     - scan /proc/ide/hd*/model for well known signatures
 
- -- Thomas Liske <liske@ibh.de>  
+ -- Thomas Liske <liske@ibh.de>  Sat Sep  5 12:36:18 CEST 2009
 
 imvirt (0.2.1) unstable; urgency=low
 
