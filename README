@@ -11,6 +11,8 @@ Detected virtualizations:
  - QEMU/KVM (experimental)
  - Xen (para and non-para virtualized)
  - OpenVZ/Virtuozzo
+ - UML
+ - any HVM providing CPUID 0x40000000 detection
 
 imvirt is comparable with virt-what [1]. imvirt was written to run as
 non-root - virt-what requires to be run as root but might give some more
@@ -28,4 +30,4 @@ Some random links taken as suggestions:
 [8] http://invisiblethings.org/papers/redpill.html
 [9] http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&cmd=displayKC&externalId=1009458
 
- -- Thomas Liske <liske@ibh.de>  Thu, 27 Aug 2009 17:12:11 +0200
+ -- Thomas Liske <liske@ibh.de>  Sat, 05 Sep 2009 12:27:41 +0200

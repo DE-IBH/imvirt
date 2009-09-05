@@ -30,11 +30,15 @@
 #
 # Outputs:
 #   Xen
+#   Xen 3.x (PV|HVM)
 #   VirtualBox
 #   Virtual Machine
 #   VMware
+#   VMware (Express|ESX Server|GSX Server|Workstation)
 #   QEMU
 #   OpenVZ
+#   UML
+#   HVM: <signature>
 #
 # If no virtualization has been detected:
 #   Physical
@@ -43,6 +47,13 @@
 
 use strict;
 use warnings;
+
+# check for UML
+unless(system('grep -q "User Mode Linux" /proc/cpuinfo') >> 8) {
+    print "UML\n";
+    exit;
+}
+
 
 my $helper = '/usr/lib/imvirt/detect';
 
@@ -155,6 +166,8 @@ my %msgmap = (
     'ACPI: HPET \(v\d+\s+Xen ' => 'Xen',
     'ACPI: SSDT \(v\d+\s+Xen ' => 'Xen',
     'ACPI: DSDT \(v\d+\s+Xen ' => 'Xen',
+
+    'UML Watchdog Timer' => 'UML',
 );
 
 if (open(HDMSG, '/var/log/dmesg')) {
