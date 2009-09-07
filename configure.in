@@ -41,6 +41,7 @@ AM_CONDITIONAL([X86ARCH], [test x$x86arch = xtrue ])
 AC_CONFIG_FILES([
 Makefile
 helper/Makefile
+man/Makefile
 ])
 
 AC_OUTPUT

@@ -1,3 +1,11 @@
+imvirt (0.3.1) unstable; urgency=low
+
+  * Add missing manpage (svn was somewhat confused).
+
+  * Fix build system.
+
+ -- Thomas Liske <liske@ibh.de>  
+
 imvirt (0.3) unstable; urgency=low
 
   * Add manpage from Debian,
