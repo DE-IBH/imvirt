@@ -4,7 +4,7 @@ imvirt (0.3.1) unstable; urgency=low
 
   * Fix build system.
 
- -- Thomas Liske <liske@ibh.de>  
+ -- Thomas Liske <liske@ibh.de>  Sat, 12 Sep 2009 21:09:22 +0200
 
 imvirt (0.3) unstable; urgency=low
 
