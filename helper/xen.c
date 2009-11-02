@@ -34,6 +34,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -72,6 +73,10 @@ static int check_for_xen(void) {
     return 1;
 }
 
+static void sigh(int signum) {
+    exit(0);
+}
+
 int detect_xen(void) {
     pid_t pid;
     int status;
@@ -92,9 +97,19 @@ int detect_xen(void) {
     switch ( pid )
     {
     case 0:
+        /* ignore SIGILL on amd64 */
+        {
+            struct sigaction sa;
+
+            sa.sa_handler = sigh;
+            sigemptyset(&sa.sa_mask);
+            sa.sa_flags = 0;
+            sigaction(SIGILL, &sa, NULL);
+        }
+
         /* Child: test paravirtualised CPUID opcode and then exit cleanly. */
         cpuid(0x40000000, &dummy, &dummy, &dummy, &dummy);
-        exit(0);
+        exit(1);
     case -1:
 //        fprintf(stderr, "Fork failed.\n");
         return 0;
@@ -105,7 +120,7 @@ int detect_xen(void) {
      * Only if the exit is clean is it safe for us to try the extended CPUID.
      */
     waitpid(pid, &status, 0);
-    if ( WIFEXITED(status) && check_for_xen() )
+    if ( WIFEXITED(status) && WEXITSTATUS(status) && check_for_xen() )
         return 0;
 
 //    printf("Not running on Xen.\n");
