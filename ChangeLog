@@ -1,3 +1,10 @@
+imvirt (0.3.x) unstable; urgency=low
+
+  * Handle SIGILL on amd64 for Xen PV detection gracefully.
+     reported by Patrick Matthäi <patrick.matthaei@web.de>
+
+ -- Thomas Liske <liske@ibh.de>  
+
 imvirt (0.3.1) unstable; urgency=low
 
   * Add missing manpage (svn was somewhat confused).
