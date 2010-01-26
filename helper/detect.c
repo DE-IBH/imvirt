@@ -32,6 +32,7 @@
  */
 
 #include <stdio.h>
+#include <unistd.h>
 
 #include "detect.h"
 
@@ -40,7 +41,22 @@
 #include "vmware.h"
 #include "xen.h"
 
-int main(void) {
+int debug_cpuid = 0;
+
+int main(int argc, char **argv) {
+    int opts;
+
+    while ((opts = getopt(argc, argv, "c")) != EOF) {
+	switch(opts) {
+	    case 'c':
+		debug_cpuid = 1;
+		break;
+	    default:
+		fprintf(stderr, "Usage: detect [-c]\n\t-c\tdebug CPUID calls\n\n");
+		exit(1);
+	}
+    }
+
     if(detect_hyperv()) return 1;
     if(detect_vmware()) return 1;
     if(detect_xen()) return 1;

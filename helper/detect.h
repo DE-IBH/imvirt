@@ -26,5 +26,8 @@
 
 #include "config.h"
 
+extern int debug_cpuid;
+
 #define CPUID(idx,a,b,c,d)\
-  asm volatile("cpuid": "=a" (a), "=b" (b), "=c" (c), "=d" (d) : "0" (idx))
+  asm volatile("cpuid": "=a" (a), "=b" (b), "=c" (c), "=d" (d) : "0" (idx)); \
+  if(debug_cpuid) fprintf(stderr, "%s:%d\tCPUID[0x%x]: eax=%d ebx=%d ecx=%d edx=%d\n", __FILE__, __LINE__, idx, a, b, c,d)

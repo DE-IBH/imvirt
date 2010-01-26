@@ -45,6 +45,13 @@ int detect_hvm(void) {
     *(uint32_t *)(signature + 4) = ecx;
     *(uint32_t *)(signature + 8) = edx;
 
+    /* P4 reports '@' */
+    if((eax == 64) &&
+       (ebx == 64) &&
+       (ecx ==  0) &&
+       (edx == 0))
+	return 0;
+
     if(strlen(signature)) {
 	printf("HVM: %s\n", signature);
 	return 1;

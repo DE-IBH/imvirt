@@ -1,7 +1,11 @@
-imvirt (0.3.x) unstable; urgency=low
+imvirt (0.3.2) unstable; urgency=low
 
   * Handle SIGILL on amd64 for Xen PV detection gracefully.
      reported by Patrick Matthäi <patrick.matthaei@web.de>
+  * Fix false positive CPUID results interpreted as HVM
+    virtualization on P4.
+     (Closes Debian Bug#566656 by Stephan Sürken)
+  * Add CPUID debug code (-c).
 
  -- Thomas Liske <liske@ibh.de>  
 
