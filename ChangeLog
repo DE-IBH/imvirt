@@ -6,8 +6,9 @@ imvirt (0.3.2) unstable; urgency=low
     virtualization on P4.
      (Closes Debian Bug#566656 by Stephan Sürken)
   * Add CPUID debug code (-c).
+  * Add missing stdlib.h to detect.c (compile warning).
 
- -- Thomas Liske <liske@ibh.de>  
+ -- Thomas Liske <liske@ibh.de>  Mon, 01 Feb 2010 14:56:15 +0100
 
 imvirt (0.3.1) unstable; urgency=low
 
