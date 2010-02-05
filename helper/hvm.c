@@ -38,12 +38,11 @@ int detect_hvm(void) {
     uint32_t eax = 0, ebx = 0, ecx = 0, edx = 0;
     char signature[13];
 
-    memset(signature, 0, sizeof(signature));
-
     CPUID(0x40000000, eax, ebx, ecx, edx);
-    *(uint32_t *)(signature + 0) = ebx;
-    *(uint32_t *)(signature + 4) = ecx;
-    *(uint32_t *)(signature + 8) = edx;
+    memcpy(&signature[0], &ebx, 4);
+    memcpy(&signature[4], &ecx, 4);
+    memcpy(&signature[8], &edx, 4);
+    signature[12] = 0;
 
     /* P4 reports '@' */
     if((eax == 64) &&

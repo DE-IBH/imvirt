@@ -1,3 +1,10 @@
+imvirt (0.3.3) unstable; urgency=low
+
+  * Make modern GCC versions stop warning about breaking
+    strict-aliasing checking.
+
+ -- 
+
 imvirt (0.3.2) unstable; urgency=low
 
   * Handle SIGILL on amd64 for Xen PV detection gracefully.

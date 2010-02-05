@@ -57,9 +57,9 @@ static int check_for_xen(void) {
     char signature[13];
 
     cpuid(0x40000000, &eax, &ebx, &ecx, &edx);
-    *(uint32_t *)(signature + 0) = ebx;
-    *(uint32_t *)(signature + 4) = ecx;
-    *(uint32_t *)(signature + 8) = edx;
+    memcpy(&signature[0], &ebx, 4);
+    memcpy(&signature[4], &ecx, 4);
+    memcpy(&signature[8], &edx, 4);
     signature[12] = '\0';
 
     if (strcmp("XenVMMXenVMM", signature) || (eax < 0x40000002))
