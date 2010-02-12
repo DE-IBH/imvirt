@@ -1,0 +1,54 @@
+%define name @PACKAGE@
+%define version @PACKAGE_VERSION@
+%define release 1
+
+Name:		%{name}
+Summary:	Detects several virtualizations
+Version:	%{version}
+Release:	%{release}
+URL:		http://micky.ibh.net/~liske/imvirt.html
+Source:		%{name}-%{version}.tar.gz
+License:	GPL
+Group:		System/Management
+Requires:	perl
+Buildroot:	%{_tmppath}/%{name}-buildroot
+Vendor:		IBH IT-Service GmbH (http://www.ibh.de/)
+
+%description
+
+This little perl script tries to detect if it is called from within a virtualization container. This is detected by looking for wellknown boot messages, directories and reading DMI (Desktop Management Interface) data.
+
+The following containers are detected:
+
+    * Virtual PC/Virtual Server
+    * VirtualBox
+    * VMware
+    * QEMU/KVM (experimental)
+    * Xen (para and non-para virtualized)
+    * OpenVZ/Virtuozzo
+    * UML
+    * any HVM providing CPUID 0x40000000 detection
+
+%prep
+%setup
+
+%build
+
+%configure --prefix=%{_prefix} --libexec=%{_libexecdir}/imvirt
+
+make
+
+%install
+make install DESTDIR=$RPM_BUILD_ROOT
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+make clean
+
+%files
+%defattr(-,root,root)
+%{_bindir}/*
+%dir %{_libexecdir}/imvirt
+%{_libexecdir}/imvirt/*
+%doc AUTHORS COPYING ChangeLog README
+%{_mandir}/man1/*.1*

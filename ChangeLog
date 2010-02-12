@@ -2,8 +2,9 @@ imvirt (0.3.3) unstable; urgency=low
 
   * Make modern GCC versions stop warning about breaking
     strict-aliasing checking.
+  * Add imvirt.spec.in.
 
- -- 
+ -- Thomas Liske <liske@ibh.de>  Sat, 13 Feb 2010 00:26:54 +0100
 
 imvirt (0.3.2) unstable; urgency=low
 
