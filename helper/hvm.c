@@ -31,6 +31,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include "detect.h"
 #include "hvm.h"
 
@@ -51,7 +52,7 @@ int detect_hvm(void) {
        (edx == 0))
 	return 0;
 
-    if(strlen(signature)) {
+    if(strlen(signature) && isprint(signature[0])) {
 	printf("HVM: %s\n", signature);
 	return 1;
     }
