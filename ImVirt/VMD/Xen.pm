@@ -33,8 +33,6 @@ use constant PRODUCT => 'Xen';
 use ImVirt;
 use ImVirt::Utils::dmidecode;
 
-our $VERSION = '0.4.0';
-
 ImVirt::register_vmd(__PACKAGE__);
 
 sub detect() {

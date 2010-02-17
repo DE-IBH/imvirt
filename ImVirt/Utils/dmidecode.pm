@@ -37,7 +37,7 @@ our @EXPORT = qw(
     dmidecode_type
 );
 
-our $VERSION = '0.4.0';
+our $VERSION = '0.1';
 
 my $dmidecode = '/usr/sbin/dmidecode';
 my $devmem = '/dev/mem';

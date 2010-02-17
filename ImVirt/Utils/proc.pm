@@ -24,26 +24,27 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package ImVirt::VMD::VirtualPC;
+package ImVirt::Utils::proc;
 
 use strict;
 use warnings;
-use constant PRODUCT => 'VirtualPC';
+use IO::Handle;
+require Exporter;
+our @ISA = qw(Exporter);
 
-use ImVirt;
-use ImVirt::Utils::dmidecode;
+our @EXPORT = qw(
+    proc_getmp
+    proc_isdir
+);
 
-ImVirt::register_vmd(__PACKAGE__);
+our $VERSION = '0.1';
 
-sub detect() {
-    if(defined(my $spn = dmidecode_string('system-product-name'))) {
-	if ($spn =~ /^Virtual Machine/) {
-	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
-	}
-	else {
-	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
-	}
-    }
+my $procdir = '/proc';
+
+sub proc_getmp() {
+    return $procdir;
 }
 
-1;
+sub proc_isdir($) {
+    return -d join('/', get_mp(), shift);
+}

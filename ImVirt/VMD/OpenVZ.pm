@@ -24,25 +24,22 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package ImVirt::VMD::VirtualPC;
+package ImVirt::VMD::OpenVZ;
 
 use strict;
 use warnings;
-use constant PRODUCT => 'VirtualPC';
+use constant PRODUCT => 'OpenVZ';
 
 use ImVirt;
-use ImVirt::Utils::dmidecode;
+use ImVirt::Utils::proc;
 
 ImVirt::register_vmd(__PACKAGE__);
 
 sub detect() {
-    if(defined(my $spn = dmidecode_string('system-product-name'))) {
-	if ($spn =~ /^Virtual Machine/) {
-	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
-	}
-	else {
-	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
-	}
+    if(proc_isdir('vz') && !proc_isdir('bc')) {
+	ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+    else {
+	ImVirt::dec_pts(IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT);
     }
 }
 

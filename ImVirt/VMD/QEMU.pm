@@ -33,8 +33,6 @@ use constant PRODUCT => 'QEMU';
 use ImVirt;
 use ImVirt::Utils::dmidecode;
 
-our $VERSION = '0.4.0';
-
 ImVirt::register_vmd(__PACKAGE__);
 
 sub detect() {
@@ -46,8 +44,6 @@ sub detect() {
 	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
     }
-
-    return 1;
 }
 
 1;
