@@ -84,7 +84,7 @@ sub _ksyms_provides($$) {
 	if(/^([a-f\d]+) (\w) (\S+)\s*(\[([^\]]+)\])?/) {
 	    ${$k{$3}}{'value'} = $1;
 	    ${$k{$3}}{'type'} = $2;
-	    ${$k{$3}}{'module'} = $5 unless;
+	    ${$k{$3}}{'module'} = $5 if(defined($5));
 	}
     }
 
@@ -96,3 +96,5 @@ sub ksym_provides($$) {
 
     return exists($kallsyms{$name}) && (${$kallsyms{$name}}{'type'} eq uc($type));
 }
+
+1;

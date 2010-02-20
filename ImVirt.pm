@@ -28,6 +28,8 @@ package ImVirt;
 
 use strict;
 use warnings;
+use Module::Find;
+
 use constant {
     KV_POINTS	=> 'prop',
     KV_SUBPRODS	=> 'prods',
@@ -50,6 +52,7 @@ our @EXPORT = qw(
     IMV_PHYSICAL
     IMV_VIRTUAL
     IMV_PTS_MINOR
+    IMV_PTS_NORMAL
     IMV_PTS_MAJOR
     IMV_PTS_DRASTIC
 );
@@ -115,6 +118,11 @@ sub _dump_vmd($\%) {
 	printf "$ident+ [%3d] %s\n", ${${$detected}{$prod}}{KV_POINTS}, $prod;
 	&_dump_vmd("$ident\t", ${${$detected}{$prod}}{KV_SUBPRODS});
     }
+}
+
+# autoload VMD modules
+foreach my $module (findsubmod ImVirt::VMD) {
+    eval "use $module;";
 }
 
 1;

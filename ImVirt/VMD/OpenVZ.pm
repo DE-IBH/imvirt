@@ -38,6 +38,7 @@ ImVirt::register_vmd(__PACKAGE__);
 sub detect() {
     if(proc_isdir('vz') && !proc_isdir('bc')) {
 	ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+    }
     else {
 	ImVirt::dec_pts(IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT);
     }

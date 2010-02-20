@@ -31,11 +31,29 @@ use warnings;
 use constant PRODUCT => 'UML';
 
 use ImVirt;
-use ImVirt::Utils::dmidecode;
+use ImVirt::Utils::cpuinfo;
 
 ImVirt::register_vmd(__PACKAGE__);
 
 sub detect() {
+    my %cpuinfo = cpuinfo_read();
+    foreach my $cpu (keys %cpuinfo) {
+	if(${$cpuinfo{$cpu}}{'vendor_id'} eq 'User Mode Linux') {
+	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	}
+
+	if(${$cpuinfo{$cpu}}{'model name'} eq 'UML') {
+	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	}
+
+	if(${$cpuinfo{$cpu}}{'model'} eq 'skas') {
+	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	}
+
+	if(${$cpuinfo{$cpu}}{'host'}) {
+	    ImVirt::inc_pts(IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT);
+	}
+    }
 }
 
 1;
