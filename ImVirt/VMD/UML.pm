@@ -32,10 +32,13 @@ use constant PRODUCT => 'UML';
 
 use ImVirt;
 use ImVirt::Utils::cpuinfo;
+use ImVirt::Utils::dmesg;
 
 ImVirt::register_vmd(__PACKAGE__);
 
 sub detect() {
+    # Check /proc/cpuinfo
+    ImVirt::debug(__PACKAGE__, 'check cpuinfo');
     my %cpuinfo = cpuinfo_read();
     foreach my $cpu (keys %cpuinfo) {
 	if(${$cpuinfo{$cpu}}{'vendor_id'} eq 'User Mode Linux') {
@@ -52,6 +55,17 @@ sub detect() {
 
 	if(${$cpuinfo{$cpu}}{'host'}) {
 	    ImVirt::inc_pts(IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT);
+	}
+    }
+
+    # Look for dmesg lines
+    ImVirt::debug(__PACKAGE__, 'check dmidecode');
+    if(defined(my $m = dmesg_match('UML Watchdog Timer' => IMV_PTS_NORMAL))) {
+	if($m > 0) {
+	    ImVirt::inc_pts($m, IMV_VIRTUAL, PRODUCT);
+	}
+	else {
+	    ImVirt::dec_pts(IMV_PTS_MINOR, IMV_VIRTUAL, PRODUCT);
 	}
     }
 }

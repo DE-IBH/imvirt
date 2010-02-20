@@ -32,13 +32,31 @@ use constant PRODUCT => 'QEMU';
 
 use ImVirt;
 use ImVirt::Utils::dmidecode;
+use ImVirt::Utils::dmesg;
 
 ImVirt::register_vmd(__PACKAGE__);
 
 sub detect() {
+    ImVirt::debug(__PACKAGE__, 'check dmidecode');
     if(defined(my $spn = dmidecode_string('bios-vendor'))) {
 	if ($spn =~ /^QEMU/) {
 	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	}
+	else {
+	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	}
+    }
+
+    # Look for dmesg lines
+    ImVirt::debug(__PACKAGE__, 'check dmesg');
+    if(defined(my $m = dmesg_match(
+	' QEMUAPIC ' => IMV_PTS_NORMAL,
+	'QEMU Virtual CPU' => IMV_PTS_NORMAL,
+	': QEMU HARDDISK,' => IMV_PTS_NORMAL,
+	': QEMU CD-ROM,' => IMV_PTS_NORMAL,
+      ))) {
+	if($m > 0) {
+	    ImVirt::inc_pts($m, IMV_VIRTUAL, PRODUCT);
 	}
 	else {
 	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);

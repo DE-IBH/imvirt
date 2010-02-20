@@ -31,11 +31,25 @@ use warnings;
 use constant PRODUCT => 'VirtualBox';
 
 use ImVirt;
-use ImVirt::Utils::dmidecode;
+use ImVirt::Utils::dmesg;
 
 ImVirt::register_vmd(__PACKAGE__);
 
 sub detect() {
+    # Look for dmesg lines
+    ImVirt::debug(__PACKAGE__, 'check dmesg');
+    if(defined(my $m = dmesg_match(
+	' VBOXBIOS ' => IMV_PTS_NORMAL,
+	': VBOX HARDDISK,' => IMV_PTS_NORMAL,
+	': VBOX CD-ROM,' => IMV_PTS_NORMAL,
+      ))) {
+	if($m > 0) {
+	    ImVirt::inc_pts($m, IMV_VIRTUAL, PRODUCT);
+	}
+	else {
+	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	}
+    }
 }
 
 1;

@@ -24,7 +24,7 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package ImVirt::Utils::proc;
+package ImVirt::Utils::dmesg;
 
 use strict;
 use warnings;
@@ -33,18 +33,53 @@ require Exporter;
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
-    proc_getmp
-    proc_isdir
+    dmesg_match
 );
 
 our $VERSION = '0.1';
 
-my $procdir = '/proc';
+my $dmesg = '/bin/dmesg';
+my $logfile = '/var/log/dmesg';
 
-sub proc_getmp() {
-    return $procdir;
+sub dmesg_match(%) {
+    return -1 unless (-x $dmesg || -r $logfile);
+
+    my %regexs = @_;
+    my $pts = 0;
+    my %lines;
+
+    if(-x $dmesg) {
+	pipe(PARENT_RDR, CHILD_WTR);
+	if(my $pid = fork()) {
+	    close(CHILD_WTR);
+	    %lines = map { $_, 1 } <PARENT_RDR>;
+	    close(PARENT_RDR);
+	} else {
+	    die "Cannot fork: $!\n" unless defined($pid);
+	
+	    close(PARENT_RDR);
+	    open(STDOUT, '>&CHILD_WTR') || die "Could not dup: $!\n";
+	
+	    exec($dmesg);
+
+	    die("Cannot exec $dmesg: $!\n");
+	}
+    }
+
+    if(-r $logfile) {
+	open(HLOG, $logfile) || die;
+	%lines = (%lines, map { chomp($_), 1 } <HLOG>);
+	close(HLOG);
+    }
+
+    foreach my $line (keys %lines) {
+	chomp($line);
+	foreach my $regex (keys %regexs) {
+	    $pts += $regexs{$regex} if($line =~ /$regex/);
+	}
+    }
+
+    return $pts;
 }
 
-sub proc_isdir($) {
-    return -d join('/', proc_getmp(), shift);
-}
+1;

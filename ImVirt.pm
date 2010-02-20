@@ -47,8 +47,8 @@ require Exporter;
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
-    detect_vmd
-    dump_vmd
+    detect_vm
+    dump_vm
     IMV_PHYSICAL
     IMV_VIRTUAL
     IMV_PTS_MINOR
@@ -61,6 +61,7 @@ our $VERSION = '0.4.0';
 
 my @vmds = ();
 my %detected;
+my $debug = 0;
 
 sub register_vmd($) {
     my $vmd = shift || return;
@@ -68,7 +69,7 @@ sub register_vmd($) {
     push(@vmds, $vmd);
 }
 
-sub detect_vmd() {
+sub detect_vm() {
     %detected = ();
 
     foreach my $vmd (@vmds) {
@@ -106,18 +107,26 @@ sub _change_pts($\%@) {
     }
 }
 
-sub dump_vmd() {
-    _dump_vmd('', \%detected);
+sub dump_vm() {
+    _dump_vm('', \%detected);
 }
 
-sub _dump_vmd($\%) {
+sub _dump_vm($\%) {
     my $ident = shift;
     my $detected = shift;
 
     foreach my $prod (keys %{$detected}) {
-	printf "$ident+ [%3d] %s\n", ${${$detected}{$prod}}{KV_POINTS}, $prod;
-	&_dump_vmd("$ident\t", ${${$detected}{$prod}}{KV_SUBPRODS});
+	printf "$ident\[%3d\] %s\n", ${${$detected}{$prod}}{KV_POINTS}, $prod;
+	&_dump_vm("$ident\t", ${${$detected}{$prod}}{KV_SUBPRODS});
     }
+}
+
+sub set_debug($) {
+    $debug = $1;
+}
+
+sub debug($$) {
+    printf STDERR "%24s: %s\n", @_;
 }
 
 # autoload VMD modules

@@ -32,13 +32,31 @@ use constant PRODUCT => 'VMware';
 
 use ImVirt;
 use ImVirt::Utils::dmidecode;
+use ImVirt::Utils::dmesg;
 
 ImVirt::register_vmd(__PACKAGE__);
 
 sub detect() {
+    ImVirt::debug(__PACKAGE__, 'check dmidecode');
     if(defined(my $spn = dmidecode_string('system-product-name'))) {
 	if ($spn =~ /^VMware/) {
 	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	}
+	else {
+	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	}
+    }
+
+    # Look for dmesg lines
+    ImVirt::debug(__PACKAGE__, 'check dmesg');
+    if(defined(my $m = dmesg_match(
+	'VMware vmxnet virtual NIC driver' => IMV_PTS_NORMAL,
+	'Vendor: VMware\s+Model: Virtual disk' => IMV_PTS_NORMAL,
+	'Vendor: VMware,\s+Model: VMware Virtual ' => IMV_PTS_NORMAL,
+	': VMware Virtual IDE CDROM Drive' => IMV_PTS_NORMAL,
+      ))) {
+	if($m > 0) {
+	    ImVirt::inc_pts($m, IMV_VIRTUAL, PRODUCT);
 	}
 	else {
 	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
