@@ -29,6 +29,7 @@ package ImVirt::Utils::dmesg;
 use strict;
 use warnings;
 use IO::Handle;
+use File::Slurp;
 require Exporter;
 our @ISA = qw(Exporter);
 
@@ -66,11 +67,7 @@ sub dmesg_match(%) {
 	}
     }
 
-    if(-r $logfile) {
-	open(HLOG, $logfile) || die;
-	%lines = (%lines, map { chomp($_), 1 } <HLOG>);
-	close(HLOG);
-    }
+    %lines = (%lines, map { chomp($_), 1 } read_file($logfile)) if(-r $logfile);
 
     foreach my $line (keys %lines) {
 	chomp($line);

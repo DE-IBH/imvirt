@@ -31,6 +31,7 @@ use warnings;
 use constant PRODUCT => 'QEMU';
 
 use ImVirt;
+use ImVirt::Utils::blkdev;
 use ImVirt::Utils::dmidecode;
 use ImVirt::Utils::dmesg;
 
@@ -52,8 +53,6 @@ sub detect() {
     if(defined(my $m = dmesg_match(
 	' QEMUAPIC ' => IMV_PTS_NORMAL,
 	'QEMU Virtual CPU' => IMV_PTS_NORMAL,
-	': QEMU HARDDISK,' => IMV_PTS_NORMAL,
-	': QEMU CD-ROM,' => IMV_PTS_NORMAL,
       ))) {
 	if($m > 0) {
 	    ImVirt::inc_pts($m, IMV_VIRTUAL, PRODUCT);
@@ -61,6 +60,17 @@ sub detect() {
 	else {
 	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
+    }
+
+    my $p = blkdev_match(
+	'QEMU HARDDISK,' => IMV_PTS_NORMAL,
+	'QEMU CD-ROM,' => IMV_PTS_NORMAL,
+    );
+    if($p > 0) {
+	ImVirt::inc_pts($p, IMV_VIRTUAL, PRODUCT);
+    }
+    else {
+	ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
     }
 }
 

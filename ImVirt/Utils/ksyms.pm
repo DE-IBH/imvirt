@@ -29,7 +29,7 @@ package ImVirt::Utils::ksyms;
 use strict;
 use warnings;
 use IO::Handle;
-use ImVirt::Utils::proc;
+use ImVirt::Utils::procfs;
 use constant {
     KSYM_STYPE_ABSOL	=> 'A',
     KSYM_STYPE_UDATA	=> 'B',
@@ -75,7 +75,7 @@ my %kallsyms;
 sub _ksyms_provides($$) {
     return %kallsyms if(%kallsyms);
 
-    my $procdir = proc_getmp();
+    my $procdir = procfs_getmp();
     my %k;
 
     open(HKAS, "$procdir/kallsyms");

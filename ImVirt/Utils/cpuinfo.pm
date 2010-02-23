@@ -29,7 +29,7 @@ package ImVirt::Utils::cpuinfo;
 use strict;
 use warnings;
 use IO::Handle;
-use ImVirt::Utils::proc;
+use ImVirt::Utils::procfs;
 
 require Exporter;
 our @ISA = qw(Exporter);
@@ -41,16 +41,20 @@ our @EXPORT = qw(
 our $VERSION = '0.1';
 
 sub cpuinfo_read() {
-    open(HCPUINFO, proc_getmp(), "/cpuinfo") || die;
+    open(HCPUINFO, procfs_getmp().'/cpuinfo') || die;
 
     my %res;
     my $proc;
     while(my $line = <HCPUINFO>) {
 	chomp($line);
-	if(/^(\w[^:]+)\s+: (.+)$/) {
+	if($line =~ /^(\w[^:]+\S)\s+: (.+)$/) {
 	    $proc = $2 if($1 eq 'processor');
 	    ${$res{$proc}}{$1} = $2;
 	}
     }
     close(HCPUINFO);
+
+    return %res;
 }
+
+1;

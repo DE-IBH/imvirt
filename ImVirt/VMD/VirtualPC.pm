@@ -31,6 +31,7 @@ use warnings;
 use constant PRODUCT => 'VirtualPC';
 
 use ImVirt;
+use ImVirt::Utils::blkdev;
 use ImVirt::Utils::dmidecode;
 use ImVirt::Utils::dmesg;
 
@@ -47,18 +48,15 @@ sub detect() {
 	}
     }
 
-    # Look for dmesg lines
-    ImVirt::debug(__PACKAGE__, 'check dmesg');
-    if(defined(my $m = dmesg_match(
+    my $p = blkdev_match(
 	'Virtual HD' => IMV_PTS_NORMAL,
 	'Virtual CD' => IMV_PTS_NORMAL,
-      ))) {
-	if($m > 0) {
-	    ImVirt::inc_pts($m, IMV_VIRTUAL, PRODUCT);
-	}
-	else {
-	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
-	}
+    );
+    if($p > 0) {
+	ImVirt::inc_pts($p, IMV_VIRTUAL, PRODUCT);
+    }
+    else {
+	ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
     }
 }
 

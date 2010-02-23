@@ -31,8 +31,9 @@ use warnings;
 use constant PRODUCT => 'VMware';
 
 use ImVirt;
-use ImVirt::Utils::dmidecode;
+use ImVirt::Utils::blkdev;
 use ImVirt::Utils::dmesg;
+use ImVirt::Utils::dmidecode;
 
 ImVirt::register_vmd(__PACKAGE__);
 
@@ -51,9 +52,6 @@ sub detect() {
     ImVirt::debug(__PACKAGE__, 'check dmesg');
     if(defined(my $m = dmesg_match(
 	'VMware vmxnet virtual NIC driver' => IMV_PTS_NORMAL,
-	'Vendor: VMware\s+Model: Virtual disk' => IMV_PTS_NORMAL,
-	'Vendor: VMware,\s+Model: VMware Virtual ' => IMV_PTS_NORMAL,
-	': VMware Virtual IDE CDROM Drive' => IMV_PTS_NORMAL,
       ))) {
 	if($m > 0) {
 	    ImVirt::inc_pts($m, IMV_VIRTUAL, PRODUCT);
@@ -61,6 +59,18 @@ sub detect() {
 	else {
 	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
+    }
+
+    my $p = blkdev_match(
+	'Vendor: VMware\s+Model: Virtual disk' => IMV_PTS_NORMAL,
+	'Vendor: VMware,\s+Model: VMware Virtual ' => IMV_PTS_NORMAL,
+	'VMware Virtual IDE CDROM Drive' => IMV_PTS_NORMAL,
+    );
+    if($p > 0) {
+	ImVirt::inc_pts($p, IMV_VIRTUAL, PRODUCT);
+    }
+    else {
+	ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
     }
 }
 

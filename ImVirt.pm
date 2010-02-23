@@ -74,6 +74,7 @@ sub detect_vm() {
 
     foreach my $vmd (@vmds) {
 	eval "${vmd}::detect();";
+	warn "Error in ${vmd}::detect(): $@\n" if $@;
     }
 }
 
@@ -126,12 +127,13 @@ sub set_debug($) {
 }
 
 sub debug($$) {
-    printf STDERR "%24s: %s\n", @_;
+    printf STDERR "%24s: %s\n", @_ if($debug);
 }
 
 # autoload VMD modules
 foreach my $module (findsubmod ImVirt::VMD) {
     eval "use $module;";
+    die "Error loading $module: $@\n" if $@;
 }
 
 1;

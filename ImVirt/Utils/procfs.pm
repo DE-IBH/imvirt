@@ -24,7 +24,7 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package ImVirt::Utils::sysfs;
+package ImVirt::Utils::procfs;
 
 use strict;
 use warnings;
@@ -34,25 +34,25 @@ require Exporter;
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
-    sysfs_getmp
-    sysfs_isdir
-    sysfs_read
+    procfs_getmp
+    procfs_isdir
+    procfs_read
 );
 
 our $VERSION = '0.1';
 
-my $sysfsdir = '/sys';
+my $procdir = '/proc';
 
-sub sysfs_getmp() {
-    return $sysfsdir;
+sub procfs_getmp() {
+    return $procdir;
 }
 
-sub sysfs_isdir($) {
-    return -d join('/', sysfs_getmp(), shift);
+sub procfs_isdir($) {
+    return -d join('/', procfs_getmp(), shift);
 }
 
-sub sysfs_read($) {
-    my $fn = join('/', sysfs_getmp(), shift);
+sub procfs_read($) {
+    my $fn = join('/', procfs_getmp(), shift);
     return read_file($fn) if(-r $fn);
 
     return undef;

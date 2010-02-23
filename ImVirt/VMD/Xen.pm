@@ -33,6 +33,8 @@ use constant PRODUCT => 'Xen';
 use ImVirt;
 use ImVirt::Utils::dmidecode;
 use ImVirt::Utils::dmesg;
+use ImVirt::Utils::procfs;
+use ImVirt::Utils::sysfs;
 
 ImVirt::register_vmd(__PACKAGE__);
 
@@ -45,6 +47,20 @@ sub detect() {
 	}
 	else {
 	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	}
+    }
+
+    # Look for paravirutalized oldstyle Xen
+    if(procfs_isdir('xen')) {
+	ImVirt::inc_pts(IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT, 'PV');
+    }
+    # Look for paravirutalized newstyle Xen
+    elsif(defined(my $cs = sysfs_read('devices/system/clocksource/clocksource0/available_clocksource'))) {
+	if($cs =~ /xen/) {
+	    ImVirt::inc_pts(IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT, 'PV');
+	}
+	else {
+	    ImVirt::dec_pts(IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT, 'PV');
 	}
     }
 
@@ -82,6 +98,14 @@ sub detect() {
 		ImVirt::dec_pts(IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT, 'PV');
 	    }
 	}
+    }
+
+    # Xen PV does not have ide/scsi drives
+    if(procfs_isdir('ide') || procfs_isdir('scsi')) {
+	ImVirt::dec_pts(IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT, 'PV');
+    }
+    else {
+	ImVirt::dec_pts(IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT, 'HVM');
     }
 }
 

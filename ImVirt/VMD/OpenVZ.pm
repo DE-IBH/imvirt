@@ -31,13 +31,13 @@ use warnings;
 use constant PRODUCT => 'OpenVZ';
 
 use ImVirt;
-use ImVirt::Utils::proc;
+use ImVirt::Utils::procfs;
 
 ImVirt::register_vmd(__PACKAGE__);
 
 sub detect() {
     ImVirt::debug(__PACKAGE__, 'check /proc directories');
-    if(proc_isdir('vz') && !proc_isdir('bc')) {
+    if(procfs_isdir('vz') && !procfs_isdir('bc')) {
 	ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
     }
     else {

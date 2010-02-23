@@ -31,6 +31,7 @@ use warnings;
 use constant PRODUCT => 'VirtualBox';
 
 use ImVirt;
+use ImVirt::Utils::blkdev;
 use ImVirt::Utils::dmesg;
 
 ImVirt::register_vmd(__PACKAGE__);
@@ -49,6 +50,17 @@ sub detect() {
 	else {
 	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
+    }
+
+    my $p = blkdev_match(
+	'VBOX HARDDISK' => IMV_PTS_NORMAL,
+	'VBOX CD-ROM' => IMV_PTS_NORMAL,
+    );
+    if($p > 0) {
+	ImVirt::inc_pts($p, IMV_VIRTUAL, PRODUCT);
+    }
+    else {
+	ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
     }
 }
 
