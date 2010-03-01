@@ -98,7 +98,9 @@ static int do_vmware() {
     return 0;
 }
 
-int detect_vmware() {
+int main(int argc, char **argv) {
+    helper_main(argc, argv);
+
     pid_t pid = fork();
     switch (pid) {
     case 0:

@@ -37,8 +37,9 @@ use ImVirt::Utils::dmesg;
 ImVirt::register_vmd(__PACKAGE__);
 
 sub detect() {
+    ImVirt::debug(__PACKAGE__, 'detect()');
+
     # Look for dmesg lines
-    ImVirt::debug(__PACKAGE__, 'check dmesg');
     if(defined(my $m = dmesg_match(
 	' VBOXBIOS ' => IMV_PTS_NORMAL,
 	': VBOX HARDDISK,' => IMV_PTS_NORMAL,

@@ -35,26 +35,40 @@ require Exporter;
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
-    cpuinfo_read
+    cpuinfo_get
+    cpuinfo_hasflags
 );
 
 our $VERSION = '0.1';
 
-sub cpuinfo_read() {
-    open(HCPUINFO, procfs_getmp().'/cpuinfo') || die;
+open(HCPUINFO, procfs_getmp().'/cpuinfo') || die;
 
-    my %res;
-    my $proc;
-    while(my $line = <HCPUINFO>) {
-	chomp($line);
-	if($line =~ /^(\w[^:]+\S)\s+: (.+)$/) {
-	    $proc = $2 if($1 eq 'processor');
-	    ${$res{$proc}}{$1} = $2;
+my %cpuinfo;
+my $proc;
+while(my $line = <HCPUINFO>) {
+    chomp($line);
+    if($line =~ /^(\w[^:]+\S)\s+: (.+)$/) {
+	$proc = $2 if($1 eq 'processor');
+	${$cpuinfo{$proc}}{$1} = $2;
+    }
+}
+close(HCPUINFO);
+
+sub cpuinfo_get() {
+    return %cpuinfo;
+}
+
+sub cpuinfo_hasflags(%) {
+    my %regexs = @_;
+    my $pts = 0;
+
+    foreach my $cpuinfo (keys %cpuinfo) {
+	foreach my $regex (keys %regexs) {
+	    $pts += $regexs{$regex} if(${$cpuinfo{$cpuinfo}}{'flags'} =~ /$regex/);
 	}
     }
-    close(HCPUINFO);
 
-    return %res;
+    return $pts;
 }
 
 1;

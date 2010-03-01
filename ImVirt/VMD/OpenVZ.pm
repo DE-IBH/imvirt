@@ -36,7 +36,8 @@ use ImVirt::Utils::procfs;
 ImVirt::register_vmd(__PACKAGE__);
 
 sub detect() {
-    ImVirt::debug(__PACKAGE__, 'check /proc directories');
+    ImVirt::debug(__PACKAGE__, 'detect()');
+
     if(procfs_isdir('vz') && !procfs_isdir('bc')) {
 	ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
     }

@@ -34,8 +34,8 @@ use constant {
     KV_POINTS	=> 'prop',
     KV_SUBPRODS	=> 'prods',
 
-    IMV_PHYSICAL	=> 'PM',
-    IMV_VIRTUAL		=> 'VM',
+    IMV_PHYSICAL	=> 'Physical',
+    IMV_VIRTUAL		=> 'Virtual',
 
     IMV_PTS_MINOR	=> 1,
     IMV_PTS_NORMAL	=> 3,

@@ -24,41 +24,53 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package ImVirt::VMD::VirtualPC;
+package ImVirt::Utils::kmods;
 
 use strict;
 use warnings;
-use constant PRODUCT => 'VirtualPC';
+use IO::Handle;
+use ImVirt::Utils::procfs;
 
-use ImVirt;
-use ImVirt::Utils::blkdev;
-use ImVirt::Utils::dmidecode;
-use ImVirt::Utils::dmesg;
+require Exporter;
+our @ISA = qw(Exporter);
 
-ImVirt::register_vmd(__PACKAGE__);
+our @EXPORT = qw(
+    kmods_get
+    kmods_match
+);
 
-sub detect() {
-    ImVirt::debug(__PACKAGE__, 'detect()');
+our $VERSION = '0.1';
 
-    if(defined(my $spn = dmidecode_string('system-product-name'))) {
-	if ($spn =~ /^Virtual Machine/) {
-	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+my $procdir = procfs_getmp();
+my %kmods;
+
+open(HKMS, "$procdir/modules");
+while(<HKMS>) {
+	chomp;
+	if(/^(\S+) (\d+) (\d+) (\S+) (\S+) (0x[a-f\d]+)/) {
+	    ${$kmods{$1}}{'size'} = $2;
+	    ${$kmods{$1}}{'type'} = $3;
+	    ${$kmods{$1}}{'used'} = $4;
+	    ${$kmods{$1}}{'state'} = $5;
+	    ${$kmods{$1}}{'by'} = $6;
 	}
-	else {
-	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+}
+
+sub kmods_get() {
+    return %kmods;
+}
+
+sub kmods_match(%) {
+    my %regexs = @_;
+    my $pts = 0;
+
+    foreach my $kmod (keys %kmods) {
+	foreach my $regex (keys %regexs) {
+	    $pts += $regexs{$regex} if($kmod =~ /$regex/);
 	}
     }
 
-    my $p = blkdev_match(
-	'Virtual HD' => IMV_PTS_NORMAL,
-	'Virtual CD' => IMV_PTS_NORMAL,
-    );
-    if($p > 0) {
-	ImVirt::inc_pts($p, IMV_VIRTUAL, PRODUCT);
-    }
-    else {
-	ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
-    }
+    return $pts;
 }
 
 1;

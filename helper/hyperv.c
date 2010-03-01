@@ -36,7 +36,9 @@
 #include "detect.h"
 #include "hyperv.h"
 
-int detect_hyperv(void) {
+int main(int argc, char **argv) {
+    helper_main(argc, argv);
+
     uint32_t eax = 0, ebx = 0, ecx = 0, edx = 0;
     char signature[13];
 

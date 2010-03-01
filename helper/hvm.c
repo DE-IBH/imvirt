@@ -35,7 +35,9 @@
 #include "detect.h"
 #include "hvm.h"
 
-int detect_hvm(void) {
+int main(int argc, char **argv) {
+    helper_main(argc, argv);
+
     uint32_t eax = 0, ebx = 0, ecx = 0, edx = 0;
     char signature[13];
 

@@ -51,8 +51,6 @@ our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
     ksyms_provides
-    ksyms_builtin
-    ksyms_module
     KSYM_STYPE_ABSOL
     KSYM_STYPE_UDATA
     KSYM_STYPE_COMMON
@@ -70,25 +68,17 @@ our @EXPORT = qw(
 
 our $VERSION = '0.1';
 
+my $procdir = procfs_getmp();
 my %kallsyms;
 
-sub _ksyms_provides($$) {
-    return %kallsyms if(%kallsyms);
-
-    my $procdir = procfs_getmp();
-    my %k;
-
-    open(HKAS, "$procdir/kallsyms");
-    while(<HKAS>) {
+open(HKAS, "$procdir/kallsyms");
+while(<HKAS>) {
 	chomp;
 	if(/^([a-f\d]+) (\w) (\S+)\s*(\[([^\]]+)\])?/) {
-	    ${$k{$3}}{'value'} = $1;
-	    ${$k{$3}}{'type'} = $2;
-	    ${$k{$3}}{'module'} = $5 if(defined($5));
+	    ${$kallsyms{$3}}{'value'} = $1;
+	    ${$kallsyms{$3}}{'type'} = $2;
+	    ${$kallsyms{$3}}{'module'} = $5 if(defined($5));
 	}
-    }
-
-    return %kallsyms = %k;
 }
 
 sub ksym_provides($$) {

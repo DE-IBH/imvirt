@@ -48,6 +48,8 @@ sub blkdev_match(%) {
     # scan SCSI devices
     if(my @scsi = procfs_read('scsi/scsi')) {
 	foreach my $scsi (@scsi) {
+	    last unless(defined($scsi));
+
 	    chomp($scsi);
 	    foreach my $regex (keys %regexs) {
 		$pts += $regexs{$regex} if($scsi =~ /$regex/);
@@ -61,6 +63,8 @@ sub blkdev_match(%) {
 	my @ide = read_file($hd);
 
 	foreach my $ide (@ide) {
+	    last unless(defined($ide));
+
 	    chomp($ide);
 	    foreach my $regex (keys %regexs) {
 		$pts += $regexs{$regex} if($ide =~ /$regex/);

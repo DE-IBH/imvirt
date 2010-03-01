@@ -34,11 +34,13 @@ use ImVirt;
 use ImVirt::Utils::blkdev;
 use ImVirt::Utils::dmesg;
 use ImVirt::Utils::dmidecode;
+use ImVirt::Utils::kmods;
 
 ImVirt::register_vmd(__PACKAGE__);
 
 sub detect() {
-    ImVirt::debug(__PACKAGE__, 'check dmidecode');
+    ImVirt::debug(__PACKAGE__, 'detect()');
+
     if(defined(my $spn = dmidecode_string('system-product-name'))) {
 	if ($spn =~ /^VMware/) {
 	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
@@ -49,7 +51,6 @@ sub detect() {
     }
 
     # Look for dmesg lines
-    ImVirt::debug(__PACKAGE__, 'check dmesg');
     if(defined(my $m = dmesg_match(
 	'VMware vmxnet virtual NIC driver' => IMV_PTS_NORMAL,
       ))) {
@@ -61,10 +62,30 @@ sub detect() {
 	}
     }
 
+    # Look for block device names
     my $p = blkdev_match(
 	'Vendor: VMware\s+Model: Virtual disk' => IMV_PTS_NORMAL,
 	'Vendor: VMware,\s+Model: VMware Virtual ' => IMV_PTS_NORMAL,
 	'VMware Virtual IDE CDROM Drive' => IMV_PTS_NORMAL,
+    );
+    if($p > 0) {
+	ImVirt::inc_pts($p, IMV_VIRTUAL, PRODUCT);
+    }
+    else {
+	ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+    }
+
+    # Look for loaded modules
+    $p = kmods_match(
+	'^vmblock$' => IMV_PTS_NORMAL,
+	'^vmhgfs$' => IMV_PTS_NORMAL,
+	'^vmmemctl$' => IMV_PTS_NORMAL,
+	'^vmxnet$' => IMV_PTS_NORMAL,
+	'^vmxnet3$' => IMV_PTS_NORMAL,
+	'^vmblock$' => IMV_PTS_NORMAL,
+	'^vmsync$' => IMV_PTS_NORMAL,
+	'^vmci$' => IMV_PTS_NORMAL,
+	'^vsock$' => IMV_PTS_NORMAL,
     );
     if($p > 0) {
 	ImVirt::inc_pts($p, IMV_VIRTUAL, PRODUCT);

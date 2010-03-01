@@ -44,7 +44,7 @@
 
 int debug_cpuid = 0;
 
-int main(int argc, char **argv) {
+void helper_main(int argc, char **argv) {
     int opts;
 
     while ((opts = getopt(argc, argv, "c")) != EOF) {
@@ -53,16 +53,8 @@ int main(int argc, char **argv) {
 		debug_cpuid = 1;
 		break;
 	    default:
-		fprintf(stderr, "Usage: detect [-c]\n\t-c\tdebug CPUID calls\n\n");
+		fprintf(stderr, "Usage: %s [-c]\n\t-c\tdebug CPUID calls\n\n", argv[0]);
 		exit(1);
 	}
     }
-
-    if(detect_hyperv()) return 1;
-    if(detect_vmware()) return 1;
-    if(detect_xen()) return 1;
-
-    if(detect_hvm()) return 1;
-
-    return 0;
 }

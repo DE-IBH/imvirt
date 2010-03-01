@@ -24,40 +24,27 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package ImVirt::VMD::VirtualPC;
+package ImVirt::VMD::Generic;
 
 use strict;
 use warnings;
-use constant PRODUCT => 'VirtualPC';
 
 use ImVirt;
-use ImVirt::Utils::blkdev;
-use ImVirt::Utils::dmidecode;
-use ImVirt::Utils::dmesg;
+use ImVirt::Utils::cpuinfo;
+use ImVirt::Utils::procfs;
 
 ImVirt::register_vmd(__PACKAGE__);
 
 sub detect() {
     ImVirt::debug(__PACKAGE__, 'detect()');
 
-    if(defined(my $spn = dmidecode_string('system-product-name'))) {
-	if ($spn =~ /^Virtual Machine/) {
-	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+    if(defined(my $f = cpuinfo_hasflags(
+	'vmx' => IMV_PTS_NORMAL,
+	'svm' => IMV_PTS_NORMAL,
+      ))) {
+	if($f > 0) {
+	    ImVirt::inc_pts($f, IMV_PHYSICAL);
 	}
-	else {
-	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
-	}
-    }
-
-    my $p = blkdev_match(
-	'Virtual HD' => IMV_PTS_NORMAL,
-	'Virtual CD' => IMV_PTS_NORMAL,
-    );
-    if($p > 0) {
-	ImVirt::inc_pts($p, IMV_VIRTUAL, PRODUCT);
-    }
-    else {
-	ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
     }
 }
 

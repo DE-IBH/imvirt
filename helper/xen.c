@@ -77,7 +77,9 @@ static void sigh(int signum) {
     exit(0);
 }
 
-int detect_xen(void) {
+int main(int argc, char **argv) {
+    helper_main(argc, argv);
+
     pid_t pid;
     int status;
     uint32_t dummy;

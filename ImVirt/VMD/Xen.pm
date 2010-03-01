@@ -39,8 +39,9 @@ use ImVirt::Utils::sysfs;
 ImVirt::register_vmd(__PACKAGE__);
 
 sub detect() {
+    ImVirt::debug(__PACKAGE__, 'detect()');
+
     # Check dmidecode
-    ImVirt::debug(__PACKAGE__, 'check dmidecode');
     if(defined(my $spn = dmidecode_string('bios-vendor'))) {
 	if ($spn =~ /^Xen/) {
 	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
@@ -65,7 +66,6 @@ sub detect() {
     }
 
     # Look for dmesg lines
-    ImVirt::debug(__PACKAGE__, 'check dmesg');
     if(defined(my $m = dmesg_match(
 	'Hypervisor signature: xen' => IMV_PTS_NORMAL,
 	'Xen virtual console successfully installed' => IMV_PTS_NORMAL,

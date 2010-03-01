@@ -38,7 +38,8 @@ use ImVirt::Utils::dmesg;
 ImVirt::register_vmd(__PACKAGE__);
 
 sub detect() {
-    ImVirt::debug(__PACKAGE__, 'check dmidecode');
+    ImVirt::debug(__PACKAGE__, 'detect()');
+
     if(defined(my $spn = dmidecode_string('bios-vendor'))) {
 	if ($spn =~ /^QEMU/) {
 	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
@@ -49,7 +50,6 @@ sub detect() {
     }
 
     # Look for dmesg lines
-    ImVirt::debug(__PACKAGE__, 'check dmesg');
     if(defined(my $m = dmesg_match(
 	' QEMUAPIC ' => IMV_PTS_NORMAL,
 	'QEMU Virtual CPU' => IMV_PTS_NORMAL,

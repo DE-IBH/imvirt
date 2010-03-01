@@ -37,9 +37,10 @@ use ImVirt::Utils::dmesg;
 ImVirt::register_vmd(__PACKAGE__);
 
 sub detect() {
+    ImVirt::debug(__PACKAGE__, 'detect()');
+
     # Check /proc/cpuinfo
-    ImVirt::debug(__PACKAGE__, 'check cpuinfo');
-    my %cpuinfo = cpuinfo_read();
+    my %cpuinfo = cpuinfo_get();
     foreach my $cpu (keys %cpuinfo) {
 	if(${$cpuinfo{$cpu}}{'vendor_id'} eq 'User Mode Linux') {
 	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
@@ -59,7 +60,6 @@ sub detect() {
     }
 
     # Look for dmesg lines
-    ImVirt::debug(__PACKAGE__, 'check dmidecode');
     if(defined(my $m = dmesg_match('UML Watchdog Timer' => IMV_PTS_NORMAL))) {
 	if($m > 0) {
 	    ImVirt::inc_pts($m, IMV_VIRTUAL, PRODUCT);
