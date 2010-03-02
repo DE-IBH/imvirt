@@ -37,15 +37,17 @@ use ImVirt::Utils::dmesg;
 
 ImVirt::register_vmd(__PACKAGE__);
 
-sub detect() {
+sub detect($) {
     ImVirt::debug(__PACKAGE__, 'detect()');
+
+    my $dref = shift;
 
     if(defined(my $spn = dmidecode_string('system-product-name'))) {
 	if ($spn =~ /^Virtual Machine/) {
-	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
 	else {
-	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
     }
 
@@ -54,10 +56,10 @@ sub detect() {
 	'Virtual CD' => IMV_PTS_NORMAL,
     );
     if($p > 0) {
-	ImVirt::inc_pts($p, IMV_VIRTUAL, PRODUCT);
+	ImVirt::inc_pts($dref, $p, IMV_VIRTUAL, PRODUCT);
     }
     else {
-	ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
     }
 }
 

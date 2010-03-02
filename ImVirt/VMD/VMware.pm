@@ -38,15 +38,17 @@ use ImVirt::Utils::kmods;
 
 ImVirt::register_vmd(__PACKAGE__);
 
-sub detect() {
+sub detect($) {
     ImVirt::debug(__PACKAGE__, 'detect()');
+
+    my $dref = shift;
 
     if(defined(my $spn = dmidecode_string('system-product-name'))) {
 	if ($spn =~ /^VMware/) {
-	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
 	else {
-	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
     }
 
@@ -55,10 +57,10 @@ sub detect() {
 	'VMware vmxnet virtual NIC driver' => IMV_PTS_NORMAL,
       ))) {
 	if($m > 0) {
-	    ImVirt::inc_pts($m, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::inc_pts($dref, $m, IMV_VIRTUAL, PRODUCT);
 	}
 	else {
-	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
     }
 
@@ -69,10 +71,10 @@ sub detect() {
 	'VMware Virtual IDE CDROM Drive' => IMV_PTS_NORMAL,
     );
     if($p > 0) {
-	ImVirt::inc_pts($p, IMV_VIRTUAL, PRODUCT);
+	ImVirt::inc_pts($dref, $p, IMV_VIRTUAL, PRODUCT);
     }
     else {
-	ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
     }
 
     # Look for loaded modules
@@ -88,10 +90,10 @@ sub detect() {
 	'^vsock$' => IMV_PTS_NORMAL,
     );
     if($p > 0) {
-	ImVirt::inc_pts($p, IMV_VIRTUAL, PRODUCT);
+	ImVirt::inc_pts($dref, $p, IMV_VIRTUAL, PRODUCT);
     }
     else {
-	ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
     }
 }
 

@@ -35,16 +35,16 @@ use ImVirt::Utils::procfs;
 
 ImVirt::register_vmd(__PACKAGE__);
 
-sub detect() {
+sub detect($) {
     ImVirt::debug(__PACKAGE__, 'detect()');
+
+    my $dref = shift;
 
     if(defined(my $f = cpuinfo_hasflags(
 	'vmx' => IMV_PTS_NORMAL,
 	'svm' => IMV_PTS_NORMAL,
       ))) {
-	if($f > 0) {
-	    ImVirt::inc_pts($f, IMV_PHYSICAL);
-	}
+	ImVirt::inc_pts($dref, $f, IMV_PHYSICAL) if($f > 0);
     }
 }
 

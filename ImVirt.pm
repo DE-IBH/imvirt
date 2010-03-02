@@ -29,13 +29,18 @@ package ImVirt;
 use strict;
 use warnings;
 use Module::Find;
+use List::Util qw(sum);
+use Data::Dumper;
 
 use constant {
-    KV_POINTS	=> 'prop',
+    KV_POINTS	=> 'points',
     KV_SUBPRODS	=> 'prods',
+    KV_PROB	=> 'prob',
 
     IMV_PHYSICAL	=> 'Physical',
     IMV_VIRTUAL		=> 'Virtual',
+
+    IMV_PROP_DEFAULT	=> 0.9,
 
     IMV_PTS_MINOR	=> 1,
     IMV_PTS_NORMAL	=> 3,
@@ -47,8 +52,10 @@ require Exporter;
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
-    detect_vm
-    dump_vm
+    imv_detect
+    imv_get
+    imv_get_all
+    IMV_PROP_DEFAULT
     IMV_PHYSICAL
     IMV_VIRTUAL
     IMV_PTS_MINOR
@@ -60,7 +67,6 @@ our @EXPORT = qw(
 our $VERSION = '0.4.0';
 
 my @vmds = ();
-my %detected;
 my $debug = 0;
 
 sub register_vmd($) {
@@ -69,25 +75,34 @@ sub register_vmd($) {
     push(@vmds, $vmd);
 }
 
-sub detect_vm() {
-    %detected = ();
+sub imv_detect() {
+    my %detected;
+    $detected{ImVirt::IMV_PHYSICAL} = {KV_POINTS => IMV_PTS_MINOR};
 
     foreach my $vmd (@vmds) {
-	eval "${vmd}::detect();";
+	eval "${vmd}::detect(\\\%detected);";
 	warn "Error in ${vmd}::detect(): $@\n" if $@;
     }
+
+    return %detected;
 }
 
-sub inc_pts($@) {
+sub inc_pts($$@) {
+    debug(__PACKAGE__, 'inc_pts('.join(', ',@_).')');
+
+    my $dref = shift;
     my $prop = shift;
 
-    _change_pts($prop, \%detected, @_);
+    _change_pts($prop, $dref, @_);
 }
 
-sub dec_pts($@) {
+sub dec_pts($$@) {
+    debug(__PACKAGE__, 'dec_pts('.join(', ',@_).')');
+
+    my $dref = shift;
     my $prop = shift;
 
-    _change_pts(-$prop, \%detected, @_);
+    _change_pts(-$prop, $dref, @_);
 }
 
 sub _change_pts($\%@) {
@@ -108,22 +123,60 @@ sub _change_pts($\%@) {
     }
 }
 
-sub dump_vm() {
-    _dump_vm('', \%detected);
-}
+sub _calc_vm($$$) {
+    my $dref = shift;
+    my $cref = shift;
+    my $pts = shift;
 
-sub _dump_vm($\%) {
-    my $ident = shift;
-    my $detected = shift;
+    foreach my $prod (keys %{$dref}) {
+	my $href = ${$dref}{$prod};
 
-    foreach my $prod (keys %{$detected}) {
-	printf "$ident\[%3d\] %s\n", ${${$detected}{$prod}}{KV_POINTS}, $prod;
-	&_dump_vm("$ident\t", ${${$detected}{$prod}}{KV_SUBPRODS});
+	if(keys %{${$href}{KV_SUBPRODS}}) {
+	    &_calc_vm(${$href}{KV_SUBPRODS}, $cref, $pts + ${$href}{KV_POINTS});
+	}
+	else {
+	    ${$cref}{$prod} = $pts + ${$href}{KV_POINTS};
+	}
     }
 }
 
+sub imv_get_all(%) {
+    my (%detected) = @_;
+    my %calc;
+
+    _calc_vm(\%detected, \%calc, 0);
+
+    my $psum = sum grep { $_ > 0 } values %calc;
+
+    foreach my $prod (keys %calc) {
+	my $pts = $calc{$prod};
+
+	$calc{$prod} = {};
+	if((${calc{$prod}}{KV_POINTS} = $pts) > 0) {
+	    ${calc{$prod}}{KV_PROB} = $calc{$prod}/$psum;
+	}
+	else {
+	    ${calc{$prod}}{KV_PROB} = 0;
+	}
+    }
+
+    return %calc;
+}
+
+sub imv_get($%) {
+    my $prob = shift;
+
+    my %calc = imv_get_all(@_);
+    my @calc = sort { ${$calc{$b}}{KV_POINTS} > ${$calc{$a}}{KV_POINTS} } keys %calc;
+    my $vm = shift @calc;
+
+    return $vm if(${$calc{$vm}}{KV_PROB} >= $prob);
+
+    return 'Unknown';
+}
+
 sub set_debug($) {
-    $debug = $1;
+    $debug = shift;
 }
 
 sub debug($$) {

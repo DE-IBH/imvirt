@@ -37,15 +37,17 @@ use ImVirt::Utils::dmesg;
 
 ImVirt::register_vmd(__PACKAGE__);
 
-sub detect() {
+sub detect($) {
     ImVirt::debug(__PACKAGE__, 'detect()');
+
+    my $dref = shift;
 
     if(defined(my $spn = dmidecode_string('bios-vendor'))) {
 	if ($spn =~ /^QEMU/) {
-	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
 	else {
-	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
     }
 
@@ -55,10 +57,10 @@ sub detect() {
 	'QEMU Virtual CPU' => IMV_PTS_NORMAL,
       ))) {
 	if($m > 0) {
-	    ImVirt::inc_pts($m, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::inc_pts($dref, $m, IMV_VIRTUAL, PRODUCT);
 	}
 	else {
-	    ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
     }
 
@@ -67,10 +69,10 @@ sub detect() {
 	'QEMU CD-ROM,' => IMV_PTS_NORMAL,
     );
     if($p > 0) {
-	ImVirt::inc_pts($p, IMV_VIRTUAL, PRODUCT);
+	ImVirt::inc_pts($dref, $p, IMV_VIRTUAL, PRODUCT);
     }
     else {
-	ImVirt::dec_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
     }
 }
 

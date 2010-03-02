@@ -36,36 +36,38 @@ use ImVirt::Utils::dmesg;
 
 ImVirt::register_vmd(__PACKAGE__);
 
-sub detect() {
+sub detect($) {
     ImVirt::debug(__PACKAGE__, 'detect()');
+
+    my $dref = shift;
 
     # Check /proc/cpuinfo
     my %cpuinfo = cpuinfo_get();
     foreach my $cpu (keys %cpuinfo) {
 	if(${$cpuinfo{$cpu}}{'vendor_id'} eq 'User Mode Linux') {
-	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
 
 	if(${$cpuinfo{$cpu}}{'model name'} eq 'UML') {
-	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
 
 	if(${$cpuinfo{$cpu}}{'model'} eq 'skas') {
-	    ImVirt::inc_pts(IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
 
 	if(${$cpuinfo{$cpu}}{'host'}) {
-	    ImVirt::inc_pts(IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::inc_pts($dref, IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT);
 	}
     }
 
     # Look for dmesg lines
     if(defined(my $m = dmesg_match('UML Watchdog Timer' => IMV_PTS_NORMAL))) {
 	if($m > 0) {
-	    ImVirt::inc_pts($m, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::inc_pts($dref, $m, IMV_VIRTUAL, PRODUCT);
 	}
 	else {
-	    ImVirt::dec_pts(IMV_PTS_MINOR, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::dec_pts($dref, IMV_PTS_MINOR, IMV_VIRTUAL, PRODUCT);
 	}
     }
 }
