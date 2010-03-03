@@ -48,14 +48,11 @@ GetOptions(
 ) or HELP_MESSAGE();
 
 unless(ImVirt::get_debug()) {
-    print imv_get(IMV_PROP_DEFAULT, imv_detect()),"\n";
+    print imv_get(IMV_PROB_DEFAULT),"\n";
 }
 else {
     use Data::Dumper;
 
-    my %detect = imv_detect();
-    print "imv_detect: ", Dumper(\%detect);
-
-    my %res = imv_get_all(%detect);
-    print "imv_get_all: ", Dumper(\%res);
+    my %res = imv_get_all();
+    print Dumper(\%res);
 }

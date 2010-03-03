@@ -1,0 +1,16 @@
+Changes in 0.9.0
+================
+
+The previous imvirt script has been ported into a perl package framework.
+
+package tree:
+
+ImVirt.pm		- generic interface to use the imvirt framework
+ImVirt::Utils::...	- common helper modules used by ImVirt::VMD::* packages
+ImVirt::VMD::...	- Virtual Machine Detection packages
+
+New VMD packages can ne added by putting them into perl's search path.
+ImVirt.pm uses Module::Find to load any ImVirt::VMD::* package.
+
+The new imvirt script can be used as a dropin replacement for the old 
+legacy imvirt script.

@@ -26,21 +26,80 @@
 
 package ImVirt;
 
+=head1 NAME
+
+ImVirt - detects several virtualizations
+
+=head1 SYNOPSIS
+
+    use ImVirt;
+    print imv_get(IMV_PROB_DEFAULT, imv_detect()),"\n";
+
+=head1 DESCRIPTION
+
+The C<ImVirt> package tries to detect if it is run in a
+virtualization container. At least the following container
+should be detected:
+
+=over 4
+
+=item KVM
+=item OpenVZ
+=item QEMU
+=item UML
+=item VirtualBox
+=item Virtual PC/Server
+=item VMware
+=item Xen
+
+=back
+
+=head1 DETECTION HEURISTIC
+
+The detection is based on a heuristic - you should not trust the result at all.
+
+ImVirt probes for different well-known characteristics of different
+virtualization containers. Any characteristics found or not found are weighted
+by their significance.
+
+The result of the heuristic is a weighted tree. The leaves are the (not)
+detected containers.
+
+=head1 FUNCTIONS
+
+The following functions should be used to retrieve the detected virtualization
+containers:
+
+=over 4
+
+=item imv_get($prob)
+Returns exactly one string describing the detected container. If the detected
+container has a smaller match probability than $prob the string 'Unknown' is
+returned.
+
+=item imv_get_all()
+Returns a hash any positive detected containers as keys and their corresponding
+match probability as value.
+
+=back
+
+=cut
+
 use strict;
 use warnings;
 use Module::Find;
 use List::Util qw(sum);
 
 use constant {
-    KV_POINTS	=> 'points',
-    KV_SUBPRODS	=> 'prods',
-    KV_PROB	=> 'prob',
+    KV_POINTS		=> 'points',
+    KV_SUBPRODS		=> 'prods',
+    KV_PROB		=> 'prob',
 
     IMV_PHYSICAL	=> 'Physical',
     IMV_VIRTUAL		=> 'Virtual',
     IMV_UNKNOWN		=> 'Unknown',
 
-    IMV_PROP_DEFAULT	=> 0.9,
+    IMV_PROB_DEFAULT	=> 0.9,
 
     IMV_PTS_MINOR	=> 1,
     IMV_PTS_NORMAL	=> 3,
@@ -55,9 +114,10 @@ our @EXPORT = qw(
     imv_detect
     imv_get
     imv_get_all
-    IMV_PROP_DEFAULT
+    IMV_PROB_DEFAULT
     IMV_PHYSICAL
     IMV_VIRTUAL
+    IMV_UNKNOWN
     IMV_PTS_MINOR
     IMV_PTS_NORMAL
     IMV_PTS_MAJOR
@@ -79,6 +139,8 @@ sub get_libexecdir() {
 
 my @vmds = ();
 my $debug = 0;
+my %detected;
+my %rtree;
 
 sub register_vmd($) {
     my $vmd = shift || return;
@@ -86,16 +148,51 @@ sub register_vmd($) {
     push(@vmds, $vmd);
 }
 
+sub _rtree_vm($$$@) {
+    my $dref = shift;
+    my $cref = shift;
+    my $pts = shift;
+
+    foreach my $prod (keys %{$dref}) {
+	my $href = ${$dref}{$prod};
+
+	if(keys %{${$href}{KV_SUBPRODS}}) {
+	    &_rtree_vm(${$href}{KV_SUBPRODS}, $cref, $pts + ${$href}{KV_POINTS}, @_, $prod);
+	}
+	else {
+	    if(${$href}{KV_POINTS} > 0) {
+		my $n = join(' ', @_, $prod);
+		$n =~ s/^.*\|([^\|]+)/$1/ if($n =~ /\|/);
+		${$cref}{$n} = $pts + ${$href}{KV_POINTS};
+	    }
+	}
+    }
+}
+
 sub imv_detect() {
-    my %detected;
-    $detected{ImVirt::IMV_PHYSICAL} = {KV_POINTS => IMV_PTS_MINOR};
+    %detected = (ImVirt::IMV_PHYSICAL => {KV_POINTS => IMV_PTS_MINOR});
 
     foreach my $vmd (@vmds) {
 	eval "${vmd}::detect(\\\%detected);";
 	warn "Error in ${vmd}::detect(): $@\n" if $@;
     }
 
-    return %detected;
+    %rtree = ();
+
+    _rtree_vm(\%detected, \%rtree, 0);
+
+    my $psum = sum grep { $_ > 0 } values %rtree;
+
+    foreach my $prod (keys %rtree) {
+	my $pts = $rtree{$prod};
+
+	if($pts > 0) {
+	    $rtree{$prod} = $pts/$psum;
+	}
+	else {
+	    $rtree{$prod} = 0;
+	}
+    }
 }
 
 sub inc_pts($$@) {
@@ -133,59 +230,17 @@ sub _change_pts($\%@) {
 	${$href}{KV_POINTS} += $prop;
     }
 }
-
-sub _calc_vm($$$@) {
-    my $dref = shift;
-    my $cref = shift;
-    my $pts = shift;
-
-    foreach my $prod (keys %{$dref}) {
-	my $href = ${$dref}{$prod};
-
-	if(keys %{${$href}{KV_SUBPRODS}}) {
-	    &_calc_vm(${$href}{KV_SUBPRODS}, $cref, $pts + ${$href}{KV_POINTS}, @_, $prod);
-	}
-	else {
-	    if(${$href}{KV_POINTS} > 0) {
-		my $n = join(' ', @_, $prod);
-		$n =~ s/^.*\|([^\|]+)/$1/ if($n =~ /\|/);
-		${$cref}{$n} = $pts + ${$href}{KV_POINTS};
-	    }
-	}
-    }
+sub imv_get_all() {
+    return %rtree;
 }
 
-sub imv_get_all(%) {
-    my (%detected) = @_;
-    my %calc;
-
-    _calc_vm(\%detected, \%calc, 0);
-
-    my $psum = sum grep { $_ > 0 } values %calc;
-
-    foreach my $prod (keys %calc) {
-	my $pts = $calc{$prod};
-
-	$calc{$prod} = {};
-	if((${calc{$prod}}{KV_POINTS} = $pts) > 0) {
-	    ${calc{$prod}}{KV_PROB} = $pts/$psum;
-	}
-	else {
-	    ${calc{$prod}}{KV_PROB} = 0;
-	}
-    }
-
-    return %calc;
-}
-
-sub imv_get($%) {
+sub imv_get($) {
     my $prob = shift;
 
-    my %calc = imv_get_all(@_);
-    my @calc = sort { ${$calc{$b}}{KV_POINTS} > ${$calc{$a}}{KV_POINTS} } keys %calc;
-    my $vm = shift @calc;
+    my @res = sort { $rtree{$b} > $rtree{$a} } keys %rtree;
+    my $vm = shift @res;
 
-    return $vm if(${$calc{$vm}}{KV_PROB} >= $prob);
+    return $vm if($rtree{$vm} >= $prob);
 
     return IMV_UNKNOWN;
 }
@@ -202,10 +257,13 @@ sub debug($$) {
     printf STDERR "%24s: %s\n", @_ if($debug);
 }
 
+
 # autoload VMD modules
 foreach my $module (findsubmod ImVirt::VMD) {
     eval "use $module;";
     die "Error loading $module: $@\n" if $@;
 }
+
+imv_detect();
 
 1;
