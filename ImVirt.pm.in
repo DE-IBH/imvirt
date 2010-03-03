@@ -30,7 +30,6 @@ use strict;
 use warnings;
 use Module::Find;
 use List::Util qw(sum);
-use Data::Dumper;
 
 use constant {
     KV_POINTS	=> 'points',
@@ -39,6 +38,7 @@ use constant {
 
     IMV_PHYSICAL	=> 'Physical',
     IMV_VIRTUAL		=> 'Virtual',
+    IMV_UNKNOWN		=> 'Unknown',
 
     IMV_PROP_DEFAULT	=> 0.9,
 
@@ -64,7 +64,18 @@ our @EXPORT = qw(
     IMV_PTS_DRASTIC
 );
 
-our $VERSION = '0.4.0';
+our $VERSION = '@PACKAGE_VERSION@';
+
+my $libexecdir;
+{
+    my $prefix = "@prefix@";
+    my $exec_prefix = "@exec_prefix@";
+    $libexecdir = "@libexecdir@/@PACKAGE@";
+}
+
+sub get_libexecdir() {
+    return $libexecdir;
+}
 
 my @vmds = ();
 my $debug = 0;
@@ -153,7 +164,7 @@ sub imv_get_all(%) {
 
 	$calc{$prod} = {};
 	if((${calc{$prod}}{KV_POINTS} = $pts) > 0) {
-	    ${calc{$prod}}{KV_PROB} = $calc{$prod}/$psum;
+	    ${calc{$prod}}{KV_PROB} = $pts/$psum;
 	}
 	else {
 	    ${calc{$prod}}{KV_PROB} = 0;
@@ -172,11 +183,15 @@ sub imv_get($%) {
 
     return $vm if(${$calc{$vm}}{KV_PROB} >= $prob);
 
-    return 'Unknown';
+    return IMV_UNKNOWN;
 }
 
 sub set_debug($) {
     $debug = shift;
+}
+
+sub get_debug() {
+    return $debug;
 }
 
 sub debug($$) {

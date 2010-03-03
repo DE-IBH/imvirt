@@ -33,6 +33,7 @@ use constant PRODUCT => 'Xen';
 use ImVirt;
 use ImVirt::Utils::dmidecode;
 use ImVirt::Utils::dmesg;
+use ImVirt::Utils::helper;
 use ImVirt::Utils::procfs;
 use ImVirt::Utils::sysfs;
 
@@ -108,6 +109,11 @@ sub detect($) {
     }
     else {
 	ImVirt::dec_pts($dref, IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT, 'HVM');
+    }
+
+    # Check helper output
+    if(my $hlp = helper('xen')) {
+	ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT, split(/\s+/, $hlp));
     }
 }
 

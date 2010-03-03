@@ -6,7 +6,7 @@
  *   Thomas Liske <liske@ibh.de>
  *
  * Copyright Holder:
- *   2009 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+ *   2009 - 2010 (C) IBH IT-Service GmbH [http://www.ibh.de/]
  *
  * License:
  *   This program is free software; you can redistribute it and/or modify
@@ -37,7 +37,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include "detect.h"
-#include "vmware.h"
 
 #define VMWARE_MAGIC 0x564d5868
 #define VMWARE_PORT 0x5658

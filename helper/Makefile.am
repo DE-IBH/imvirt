@@ -4,26 +4,22 @@ libexec_PROGRAMS = hvm hyperv vmware xen
 hvm_SOURCES =			\
 	detect.c		\
 	detect.h		\
-	hvm.c			\
-	hvm.h
+	hvm.c
 
-hyperv_SOURCES =			\
+hyperv_SOURCES =		\
 	detect.c		\
 	detect.h		\
-	hyperv.c			\
-	hyperv.h
+	hyperv.c
 
-vmware_SOURCES =			\
+vmware_SOURCES =		\
 	detect.c		\
 	detect.h		\
-	vmware.c			\
-	vmware.h
+	vmware.c
 
 xen_SOURCES =			\
 	detect.c		\
 	detect.h		\
-	xen.c			\
-	xen.h
+	xen.c
 endif
 
 AM_CFLAGS = -Wall

@@ -40,7 +40,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include "detect.h"
-#include "xen.h"
 
 static int pv_context;
 
@@ -66,9 +65,9 @@ static int check_for_xen(void) {
         return 0;
 
     cpuid(0x40000001, &eax, &ebx, &ecx, &edx);
-    printf("Xen %d.%d %s\n",
-           (uint16_t)(eax >> 16), (uint16_t)eax,
-           pv_context ? "PV" : "HVM");
+    printf("%s %d.%d\n",
+           pv_context ? "PV" : "HVM",
+           (uint16_t)(eax >> 16), (uint16_t)eax);
 
     return 1;
 }
@@ -86,7 +85,7 @@ int main(int argc, char **argv) {
 
     /* Check for execution in HVM context. */
     if (check_for_xen())
-        return 0;
+        return 1;
 
     /* Now we check for execution in PV context. */
     pv_context = 1;
@@ -113,7 +112,6 @@ int main(int argc, char **argv) {
         cpuid(0x40000000, &dummy, &dummy, &dummy, &dummy);
         exit(1);
     case -1:
-//        fprintf(stderr, "Fork failed.\n");
         return 0;
     }
 
@@ -125,6 +123,5 @@ int main(int argc, char **argv) {
     if ( WIFEXITED(status) && WEXITSTATUS(status) && check_for_xen() )
         return 0;
 
-//    printf("Not running on Xen.\n");
     return 0;
 }

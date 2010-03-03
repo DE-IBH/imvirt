@@ -1,6 +1,4 @@
-#!/usr/bin/perl
-
-# imvirt - I'm virtualized?
+# ImVirt - I'm virtualized?
 #
 # $Id$
 #
@@ -8,7 +6,7 @@
 #   Thomas Liske <liske@ibh.de>
 #
 # Copyright Holder:
-#   2008-2010 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#   2009 - 2010 (C) IBH IT-Service GmbH [http://www.ibh.de/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -26,33 +24,34 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
+package ImVirt::Utils::helper;
+
 use strict;
 use warnings;
-use ImVirt;
-use Getopt::Long;
+require Exporter;
+our @ISA = qw(Exporter);
 
-sub HELP_MESSAGE {
-    print STDERR <<EOH;
+our @EXPORT = qw(
+    helper
+);
 
-Usage: $0 [-d]
-    -d	debug
+our $VERSION = '0.1';
 
-EOH
-    exit;
+my %helpers;
+foreach my $glob (ImVirt::get_libexecdir().'/*', 'helper/*') {
+    foreach my $helper (glob $glob) {
+	if(-x $helper) {
+	    my $out;
+	    $helpers{$helper} = $out if(defined($out = ` "$helper"`));
+	}
+    }
 }
 
-my %opts;
-GetOptions(
-    'd' => sub { ImVirt::set_debug(1); },
-    help => sub { HELP_MESSAGE(); },
-) or HELP_MESSAGE();
+sub helper($) {
+    my $helper = shift;
+    return $helpers{$helper} if (exists($helpers{$helper}));
 
-unless(ImVirt::get_debug()) {
-    print imv_get(IMV_PROP_DEFAULT, imv_detect()),"\n";
+    return undef;
 }
-else {
-    use Data::Dumper;
 
-    my %res = imv_get_all(imv_detect());
-    print Dumper(\%res);
-}
+1;

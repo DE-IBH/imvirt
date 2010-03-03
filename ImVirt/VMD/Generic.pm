@@ -30,6 +30,7 @@ use strict;
 use warnings;
 
 use ImVirt;
+use ImVirt::Utils::helper;
 use ImVirt::Utils::cpuinfo;
 use ImVirt::Utils::procfs;
 
@@ -45,6 +46,11 @@ sub detect($) {
 	'svm' => IMV_PTS_NORMAL,
       ))) {
 	ImVirt::inc_pts($dref, $f, IMV_PHYSICAL) if($f > 0);
+    }
+
+    # Check helper output
+    if(my $hlp = helper('hvm')) {
+	ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL);
     }
 }
 

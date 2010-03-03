@@ -1,3 +1,13 @@
+imvirt (0.9.0) unstable; urgency=low
+
+  * Rewrite imvirt as a perl module framework.
+  * Detection changed from "first best match" to a weighted
+    characteristics aproach.
+  * Add legacy replacement script 'imvirt' as a replacement
+    for the old monolitic script.
+
+ -- Thomas Liske <liske@ibh.de>  Wed, 03 Mar 2010 10:50:41 +0100
+
 imvirt (0.3.3) unstable; urgency=low
 
   * Make modern GCC versions stop warning about breaking

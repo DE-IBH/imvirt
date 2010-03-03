@@ -32,6 +32,7 @@ use constant PRODUCT => 'VMware';
 
 use ImVirt;
 use ImVirt::Utils::blkdev;
+use ImVirt::Utils::helper;
 use ImVirt::Utils::dmesg;
 use ImVirt::Utils::dmidecode;
 use ImVirt::Utils::kmods;
@@ -94,6 +95,11 @@ sub detect($) {
     }
     else {
 	ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+    }
+
+    # Check helper output
+    if(my $hlp = helper('vmware')) {
+	ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT, split(/\s+/, $hlp));
     }
 }
 

@@ -1,4 +1,4 @@
-/* imvirt / generic HyperVisor Manager detection code
+/* imvirt / Generic HyperVisor Manager detection code
  *
  * $Id$
  *
@@ -6,7 +6,7 @@
  *   Thomas Liske <liske@ibh.de>
  *
  * Copyright Holder:
- *   2009 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+ *   2009 - 2010 (C) IBH IT-Service GmbH [http://www.ibh.de/]
  *
  * License:
  *   This program is free software; you can redistribute it and/or modify
@@ -33,7 +33,6 @@
 #include <string.h>
 #include <ctype.h>
 #include "detect.h"
-#include "hvm.h"
 
 int main(int argc, char **argv) {
     helper_main(argc, argv);
@@ -55,7 +54,7 @@ int main(int argc, char **argv) {
 	return 0;
 
     if(strlen(signature) && isprint(signature[0])) {
-	printf("HVM: %s\n", signature);
+	printf("%s\n", signature);
 	return 1;
     }
 

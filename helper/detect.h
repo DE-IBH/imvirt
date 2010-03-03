@@ -1,4 +1,4 @@
-/* imvirt / VMware detection code
+/* imvirt / Generic detection code
  *
  * $Id$
  *
@@ -6,7 +6,7 @@
  *   Thomas Liske <liske@ibh.de>
  *
  * Copyright Holder:
- *   2009 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+ *   2009 - 2010 (C) IBH IT-Service GmbH [http://www.ibh.de/]
  *
  * License:
  *   This program is free software; you can redistribute it and/or modify
@@ -27,6 +27,8 @@
 #include "config.h"
 
 extern int debug_cpuid;
+
+void helper_main(int, char **);
 
 #define CPUID(idx,a,b,c,d)\
   asm volatile("cpuid": "=a" (a), "=b" (b), "=c" (c), "=d" (d) : "0" (idx)); \
