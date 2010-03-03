@@ -28,7 +28,7 @@ package ImVirt::VMD::Xen;
 
 use strict;
 use warnings;
-use constant PRODUCT => 'Xen';
+use constant PRODUCT => '|Xen';
 
 use ImVirt;
 use ImVirt::Utils::dmidecode;

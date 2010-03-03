@@ -134,7 +134,7 @@ sub _change_pts($\%@) {
     }
 }
 
-sub _calc_vm($$$) {
+sub _calc_vm($$$@) {
     my $dref = shift;
     my $cref = shift;
     my $pts = shift;
@@ -143,10 +143,14 @@ sub _calc_vm($$$) {
 	my $href = ${$dref}{$prod};
 
 	if(keys %{${$href}{KV_SUBPRODS}}) {
-	    &_calc_vm(${$href}{KV_SUBPRODS}, $cref, $pts + ${$href}{KV_POINTS});
+	    &_calc_vm(${$href}{KV_SUBPRODS}, $cref, $pts + ${$href}{KV_POINTS}, @_, $prod);
 	}
 	else {
-	    ${$cref}{$prod} = $pts + ${$href}{KV_POINTS};
+	    if(${$href}{KV_POINTS} > 0) {
+		my $n = join(' ', @_, $prod);
+		$n =~ s/^.*\|([^\|]+)/$1/ if($n =~ /\|/);
+		${$cref}{$n} = $pts + ${$href}{KV_POINTS};
+	    }
 	}
     }
 }

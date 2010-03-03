@@ -28,7 +28,7 @@ package ImVirt::VMD::OpenVZ;
 
 use strict;
 use warnings;
-use constant PRODUCT => 'OpenVZ';
+use constant PRODUCT => '|OpenVZ';
 
 use ImVirt;
 use ImVirt::Utils::procfs;

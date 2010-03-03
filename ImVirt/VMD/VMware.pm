@@ -28,7 +28,7 @@ package ImVirt::VMD::VMware;
 
 use strict;
 use warnings;
-use constant PRODUCT => 'VMware';
+use constant PRODUCT => '|VMware';
 
 use ImVirt;
 use ImVirt::Utils::blkdev;

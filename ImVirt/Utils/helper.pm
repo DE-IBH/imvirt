@@ -42,7 +42,10 @@ foreach my $glob (ImVirt::get_libexecdir().'/*', 'helper/*') {
     foreach my $helper (glob $glob) {
 	if(-x $helper) {
 	    my $out;
-	    $helpers{$helper} = $out if(defined($out = ` "$helper"`));
+	    my $hname = $helper;
+	    $hname =~ s@^.+/([^/]+)$@$1@;
+
+	    $helpers{$hname} = $out if(defined($out = ` "$helper"`));
 	}
     }
 }

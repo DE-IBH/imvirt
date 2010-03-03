@@ -28,7 +28,7 @@ package ImVirt::VMD::VirtualBox;
 
 use strict;
 use warnings;
-use constant PRODUCT => 'VirtualBox';
+use constant PRODUCT => '|VirtualBox';
 
 use ImVirt;
 use ImVirt::Utils::blkdev;

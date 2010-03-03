@@ -28,7 +28,7 @@ package ImVirt::VMD::VirtualPC;
 
 use strict;
 use warnings;
-use constant PRODUCT => 'VirtualPC';
+use constant PRODUCT => '|VirtualPC';
 
 use ImVirt;
 use ImVirt::Utils::blkdev;

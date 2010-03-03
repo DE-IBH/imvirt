@@ -53,6 +53,9 @@ unless(ImVirt::get_debug()) {
 else {
     use Data::Dumper;
 
-    my %res = imv_get_all(imv_detect());
-    print Dumper(\%res);
+    my %detect = imv_detect();
+    print "imv_detect: ", Dumper(\%detect);
+
+    my %res = imv_get_all(%detect);
+    print "imv_get_all: ", Dumper(\%res);
 }

@@ -28,7 +28,7 @@ package ImVirt::VMD::QEMU;
 
 use strict;
 use warnings;
-use constant PRODUCT => 'QEMU';
+use constant PRODUCT => '|QEMU';
 
 use ImVirt;
 use ImVirt::Utils::blkdev;

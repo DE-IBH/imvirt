@@ -28,7 +28,7 @@ package ImVirt::VMD::UML;
 
 use strict;
 use warnings;
-use constant PRODUCT => 'UML';
+use constant PRODUCT => '|UML';
 
 use ImVirt;
 use ImVirt::Utils::cpuinfo;
