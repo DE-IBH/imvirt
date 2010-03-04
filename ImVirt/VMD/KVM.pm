@@ -24,15 +24,15 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package ImVirt::VMD::Generic;
+package ImVirt::VMD::KVM;
 
 use strict;
 use warnings;
+use constant PRODUCT => '|KVM';
 
 use ImVirt;
-use ImVirt::Utils::helper;
 use ImVirt::Utils::cpuinfo;
-use ImVirt::Utils::procfs;
+use ImVirt::Utils::pcidevs;
 
 ImVirt::register_vmd(__PACKAGE__);
 
@@ -41,24 +41,20 @@ sub detect($) {
 
     my $dref = shift;
 
-    # Is hardware virtualization available?
-    if(defined(my $f = cpuinfo_hasflags(
-	'vmx' => IMV_PTS_NORMAL,
-	'svm' => IMV_PTS_NORMAL,
-      ))) {
-	ImVirt::inc_pts($dref, $f, IMV_PHYSICAL) if($f > 0);
+    # Check /proc/cpuinfo
+    my %cpuinfo = cpuinfo_get();
+    foreach my $cpu (keys %cpuinfo) {
+	if(${$cpuinfo{$cpu}}{'model name'} =~ /QEMU Virtual CPU/) {
+	    ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	}
     }
 
-    # Does the kernel reports a hypervisor?
-    if(defined(my $f = cpuinfo_hasflags(
-	'hypervisor' => IMV_PTS_DRASTIC,
-      ))) {
-	ImVirt::inc_pts($dref, $f, IMV_VIRTUAL) if($f > 0);
-    }
-
-    # Check helper output for hypervisor detection
-    if(my $hlp = helper('hvm')) {
-	ImVirt::inc_pts($dref, IMV_PTS_NORMAL, IMV_VIRTUAL);
+    # Check /proc/bus/pci/devices
+    my %pcidevs = pcidevs_get();
+    foreach my $addr (keys %pcidevs) {
+	if(${$pcidevs{$addr}}{'device'} =~ /Qumranet, Inc\. Virtio/) {
+	    ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	}
     }
 }
 

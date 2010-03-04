@@ -28,7 +28,6 @@ package ImVirt::Utils::kmods;
 
 use strict;
 use warnings;
-use IO::Handle;
 use ImVirt::Utils::procfs;
 
 require Exporter;

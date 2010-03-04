@@ -46,7 +46,7 @@ sub dmidecode_string($) {
     return dmidecode('-s', shift)
 }
 sub dmidecode_type($) {
-    return dmidecode('-s', shift)
+    return dmidecode('-t', shift)
 }
 
 sub dmidecode() {

@@ -24,42 +24,54 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package ImVirt::VMD::Generic;
+package ImVirt::Utils::pcidevs;
 
 use strict;
 use warnings;
+use IO::Handle;
+require Exporter;
+our @ISA = qw(Exporter);
 
-use ImVirt;
-use ImVirt::Utils::helper;
-use ImVirt::Utils::cpuinfo;
-use ImVirt::Utils::procfs;
+our @EXPORT = qw(
+    pcidevs_get
+);
 
-ImVirt::register_vmd(__PACKAGE__);
+our $VERSION = '0.1';
 
-sub detect($) {
-    ImVirt::debug(__PACKAGE__, 'detect()');
+my %pcidevs;
 
-    my $dref = shift;
+pipe(PARENT_RDR, CHILD_WTR);
+if(my $pid = fork()) {
+    close(CHILD_WTR);
+    foreach my $line (<PARENT_RDR>) {
+	chomp($line);
+	unless($line =~ /^([\da-f:.]+) "([^"]*)" "([^"]*)" "([^"]*)" ([^"]*) ?"([^"]*)" "([^"]*)"$/) {
+	    warn "Unexpected output from lspci: $line\n";
+	    next;
+	}
 
-    # Is hardware virtualization available?
-    if(defined(my $f = cpuinfo_hasflags(
-	'vmx' => IMV_PTS_NORMAL,
-	'svm' => IMV_PTS_NORMAL,
-      ))) {
-	ImVirt::inc_pts($dref, $f, IMV_PHYSICAL) if($f > 0);
+	$pcidevs{$1} = {
+	    'addr' => $1,
+	    'type' => $2,
+	    'vendor' => $3,
+	    'device' => $4,
+	    'rev' => $5,
+	};
     }
+    close(PARENT_RDR);
+} else {
+    die "Cannot fork: $!\n" unless defined($pid);
 
-    # Does the kernel reports a hypervisor?
-    if(defined(my $f = cpuinfo_hasflags(
-	'hypervisor' => IMV_PTS_DRASTIC,
-      ))) {
-	ImVirt::inc_pts($dref, $f, IMV_VIRTUAL) if($f > 0);
-    }
+    close(PARENT_RDR);
+    open(STDOUT, '>&CHILD_WTR') || die "Could not dup: $!\n";
 
-    # Check helper output for hypervisor detection
-    if(my $hlp = helper('hvm')) {
-	ImVirt::inc_pts($dref, IMV_PTS_NORMAL, IMV_VIRTUAL);
-    }
+    exec('lspci', '-m');
+
+    die("Cannot exec lspci: $!\n");
+}
+
+sub pcidevs_get() {
+    return %pcidevs;
 }
 
 1;

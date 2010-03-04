@@ -28,7 +28,6 @@ package ImVirt::Utils::procfs;
 
 use strict;
 use warnings;
-use IO::Handle;
 use File::Slurp;
 require Exporter;
 our @ISA = qw(Exporter);

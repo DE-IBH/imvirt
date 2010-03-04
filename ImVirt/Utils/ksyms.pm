@@ -28,7 +28,6 @@ package ImVirt::Utils::ksyms;
 
 use strict;
 use warnings;
-use IO::Handle;
 use ImVirt::Utils::procfs;
 use constant {
     KSYM_STYPE_ABSOL	=> 'A',

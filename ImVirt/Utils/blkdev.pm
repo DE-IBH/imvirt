@@ -28,7 +28,6 @@ package ImVirt::Utils::blkdev;
 
 use strict;
 use warnings;
-use IO::Handle;
 use File::Slurp;
 use ImVirt::Utils::procfs;
 
