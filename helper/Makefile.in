@@ -33,7 +33,7 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 @X86ARCH_TRUE@libexec_PROGRAMS = hvm$(EXEEXT) hyperv$(EXEEXT) \
-@X86ARCH_TRUE@	vmware$(EXEEXT) xen$(EXEEXT)
+@X86ARCH_TRUE@	vmware$(EXEEXT) xen$(EXEEXT) redpill$(EXEEXT)
 subdir = helper
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(srcdir)/config.h.in
@@ -55,6 +55,9 @@ am__hyperv_SOURCES_DIST = detect.c detect.h hyperv.c
 @X86ARCH_TRUE@am_hyperv_OBJECTS = detect.$(OBJEXT) hyperv.$(OBJEXT)
 hyperv_OBJECTS = $(am_hyperv_OBJECTS)
 hyperv_LDADD = $(LDADD)
+redpill_SOURCES = redpill.c
+redpill_OBJECTS = redpill.$(OBJEXT)
+redpill_LDADD = $(LDADD)
 am__vmware_SOURCES_DIST = detect.c detect.h vmware.c
 @X86ARCH_TRUE@am_vmware_OBJECTS = detect.$(OBJEXT) vmware.$(OBJEXT)
 vmware_OBJECTS = $(am_vmware_OBJECTS)
@@ -71,10 +74,10 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(hvm_SOURCES) $(hyperv_SOURCES) $(vmware_SOURCES) \
+SOURCES = $(hvm_SOURCES) $(hyperv_SOURCES) redpill.c $(vmware_SOURCES) \
 	$(xen_SOURCES)
 DIST_SOURCES = $(am__hvm_SOURCES_DIST) $(am__hyperv_SOURCES_DIST) \
-	$(am__vmware_SOURCES_DIST) $(am__xen_SOURCES_DIST)
+	redpill.c $(am__vmware_SOURCES_DIST) $(am__xen_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -185,6 +188,9 @@ top_srcdir = @top_srcdir@
 @X86ARCH_TRUE@	detect.h		\
 @X86ARCH_TRUE@	xen.c
 
+@X86ARCH_TRUE@redpill_SOURCE = \
+@X86ARCH_TRUE@	redpill.c
+
 AM_CFLAGS = -Wall
 AM_LDFLAGS = -Wl,--as-needed
 all: config.h
@@ -282,6 +288,9 @@ hvm$(EXEEXT): $(hvm_OBJECTS) $(hvm_DEPENDENCIES)
 hyperv$(EXEEXT): $(hyperv_OBJECTS) $(hyperv_DEPENDENCIES) 
 	@rm -f hyperv$(EXEEXT)
 	$(LINK) $(hyperv_OBJECTS) $(hyperv_LDADD) $(LIBS)
+redpill$(EXEEXT): $(redpill_OBJECTS) $(redpill_DEPENDENCIES) 
+	@rm -f redpill$(EXEEXT)
+	$(LINK) $(redpill_OBJECTS) $(redpill_LDADD) $(LIBS)
 vmware$(EXEEXT): $(vmware_OBJECTS) $(vmware_DEPENDENCIES) 
 	@rm -f vmware$(EXEEXT)
 	$(LINK) $(vmware_OBJECTS) $(vmware_LDADD) $(LIBS)
@@ -298,6 +307,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/detect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hvm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hyperv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/redpill.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vmware.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xen.Po@am__quote@
 

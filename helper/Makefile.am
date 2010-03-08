@@ -1,5 +1,5 @@
 if X86ARCH
-libexec_PROGRAMS = hvm hyperv vmware xen
+libexec_PROGRAMS = hvm hyperv vmware xen redpill
 
 hvm_SOURCES =			\
 	detect.c		\
@@ -20,6 +20,10 @@ xen_SOURCES =			\
 	detect.c		\
 	detect.h		\
 	xen.c
+
+redpill_SOURCE =		\
+	redpill.c
+
 endif
 
 AM_CFLAGS = -Wall
