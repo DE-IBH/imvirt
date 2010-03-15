@@ -60,6 +60,15 @@ sub detect($) {
     if(my $hlp = helper('hvm')) {
 	ImVirt::inc_pts($dref, IMV_PTS_NORMAL, IMV_VIRTUAL);
     }
+
+    # Check redpill helper
+    if(my $rp = helper('redpill')) {
+	my %rp = split(/,/, $rp);
+
+#	foreach my $r (keys %rp) {
+#	    print STDERR "$r => $rp{$r}\n";
+#	}
+    }
 }
 
 1;
