@@ -9,6 +9,9 @@ AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([helper/detect.c])
 AC_CONFIG_HEADER([helper/config.h])
 
+# Set CFLAG to something sensible (-O2 breakes helper/redpill.c).
+CFLAGS=-g
+
 # Checks for programs.
 AC_PROG_CC
 

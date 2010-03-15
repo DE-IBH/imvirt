@@ -2720,6 +2720,9 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers helper/config.h"
 
 
+# Set CFLAG to something sensible (-O2 breakes helper/redpill.c).
+CFLAGS=-g
+
 # Checks for programs.
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'

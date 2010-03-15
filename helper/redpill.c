@@ -45,15 +45,15 @@ int main () {
 
   loc = 0;
   asm("sgdt %0\n" : :"m"(loc));
-  printf("sgdt: %#x\n", loc);
+  printf("gdt: %#x\n", loc);
 
   loc = 0;
   asm("sldt %0\n" : :"m"(loc));
-  printf("sldt: %#x\n", loc);
+  printf("ldt: %#x\n", loc);
 
   loc = 0;
   asm("str %0\n" : :"m"(loc));
-  printf("str: %#x\n", loc);
+  printf("tr: %#x\n", loc);
 
   exit(0);
 }
