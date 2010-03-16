@@ -38,7 +38,8 @@
 #include <stdlib.h>
 
 int main () {
-  unsigned int loc;
+  volatile unsigned int loc;
+
   loc = 0;
   asm("sidt %0\n" : :"m"(loc));
   printf("idt,%#x,", loc);
