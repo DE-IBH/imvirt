@@ -33,7 +33,8 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 @X86ARCH_TRUE@libexec_PROGRAMS = hvm$(EXEEXT) hyperv$(EXEEXT) \
-@X86ARCH_TRUE@	vmware$(EXEEXT) xen$(EXEEXT) redpill$(EXEEXT)
+@X86ARCH_TRUE@	vmware$(EXEEXT) xen$(EXEEXT) redpill$(EXEEXT) \
+@X86ARCH_TRUE@	redpill_gdt$(EXEEXT) redpill_idt$(EXEEXT)
 subdir = helper
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(srcdir)/config.h.in
@@ -58,6 +59,12 @@ hyperv_LDADD = $(LDADD)
 redpill_SOURCES = redpill.c
 redpill_OBJECTS = redpill.$(OBJEXT)
 redpill_LDADD = $(LDADD)
+redpill_gdt_SOURCES = redpill_gdt.c
+redpill_gdt_OBJECTS = redpill_gdt.$(OBJEXT)
+redpill_gdt_LDADD = $(LDADD)
+redpill_idt_SOURCES = redpill_idt.c
+redpill_idt_OBJECTS = redpill_idt.$(OBJEXT)
+redpill_idt_LDADD = $(LDADD)
 am__vmware_SOURCES_DIST = detect.c detect.h vmware.c
 @X86ARCH_TRUE@am_vmware_OBJECTS = detect.$(OBJEXT) vmware.$(OBJEXT)
 vmware_OBJECTS = $(am_vmware_OBJECTS)
@@ -74,10 +81,11 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(hvm_SOURCES) $(hyperv_SOURCES) redpill.c $(vmware_SOURCES) \
-	$(xen_SOURCES)
+SOURCES = $(hvm_SOURCES) $(hyperv_SOURCES) redpill.c redpill_gdt.c \
+	redpill_idt.c $(vmware_SOURCES) $(xen_SOURCES)
 DIST_SOURCES = $(am__hvm_SOURCES_DIST) $(am__hyperv_SOURCES_DIST) \
-	redpill.c $(am__vmware_SOURCES_DIST) $(am__xen_SOURCES_DIST)
+	redpill.c redpill_gdt.c redpill_idt.c \
+	$(am__vmware_SOURCES_DIST) $(am__xen_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -188,9 +196,6 @@ top_srcdir = @top_srcdir@
 @X86ARCH_TRUE@	detect.h		\
 @X86ARCH_TRUE@	xen.c
 
-@X86ARCH_TRUE@redpill_SOURCE = \
-@X86ARCH_TRUE@	redpill.c
-
 AM_CFLAGS = -Wall
 AM_LDFLAGS = -Wl,--as-needed
 all: config.h
@@ -291,6 +296,12 @@ hyperv$(EXEEXT): $(hyperv_OBJECTS) $(hyperv_DEPENDENCIES)
 redpill$(EXEEXT): $(redpill_OBJECTS) $(redpill_DEPENDENCIES) 
 	@rm -f redpill$(EXEEXT)
 	$(LINK) $(redpill_OBJECTS) $(redpill_LDADD) $(LIBS)
+redpill_gdt$(EXEEXT): $(redpill_gdt_OBJECTS) $(redpill_gdt_DEPENDENCIES) 
+	@rm -f redpill_gdt$(EXEEXT)
+	$(LINK) $(redpill_gdt_OBJECTS) $(redpill_gdt_LDADD) $(LIBS)
+redpill_idt$(EXEEXT): $(redpill_idt_OBJECTS) $(redpill_idt_DEPENDENCIES) 
+	@rm -f redpill_idt$(EXEEXT)
+	$(LINK) $(redpill_idt_OBJECTS) $(redpill_idt_LDADD) $(LIBS)
 vmware$(EXEEXT): $(vmware_OBJECTS) $(vmware_DEPENDENCIES) 
 	@rm -f vmware$(EXEEXT)
 	$(LINK) $(vmware_OBJECTS) $(vmware_LDADD) $(LIBS)
@@ -308,6 +319,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hvm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hyperv.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/redpill.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/redpill_gdt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/redpill_idt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vmware.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xen.Po@am__quote@
 
