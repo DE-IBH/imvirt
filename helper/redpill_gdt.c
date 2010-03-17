@@ -25,8 +25,8 @@
  */
 
 /*
- * This code retrieves multiple processor registers (using SIDT, SGDT,
- * SLDT and STR calls).
+ * This code retrieves the Interrupt Descriptor Table Register
+ * and checks for a constant value on one CPU.
  *
  * More details can be found in:
  *  "On the Cutting Edge: Thwarting Virtual Machine Detection"
@@ -34,21 +34,55 @@
  *  at http://www.offensivecomputing.net/files/active/0/vm.pdf
  */
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <inttypes.h>
+#include <unistd.h>
+#include <sched.h>
 
 int main () {
-  volatile uint64_t loc;
+  cpu_set_t mask;
 
-  loc = 0;
-  asm("sldt %0\n" : :"m"(loc));
-  printf("ldt,0x%" PRIx64 ",", loc);
+  if(sched_getaffinity(0, sizeof(mask), &mask) < 0) {
+    perror("sched_getaffinity");
+    return -1;
+  }
 
-  loc = 0;
-  asm("str %0\n" : :"m"(loc));
-  printf("tr,0x%" PRIx64 "\n", loc);
+  /* Retrieve first online cpu. */
+  int n;
+  for(n = 0; n < CPU_SETSIZE; n++) {
+    if(CPU_ISSET(n, &mask)) {
+	CPU_ZERO(&mask);
+	CPU_SET(n, &mask);
+	break;
+    }
+  }
+  if(!CPU_ISSET(n, &mask)) {
+    fprintf(stderr, "Oops, could not find an online CPU!\n");
+    return -1;
+  }
 
-  exit(0);
+  if (sched_setaffinity(0, sizeof(mask), &mask) < 0) {
+    perror("sched_setaffinity");
+    return -1;
+  }
+
+  volatile uint64_t gdt = 0;
+
+  asm("sgdt %0" : :"m"(gdt));
+  uint64_t old = gdt;
+
+  unsigned int i;
+  for(i=0; i<0xffffff; i++) {
+    asm("sgdt %0" : :"m"(gdt));
+    if(old != gdt) {
+	printf("cpu,%d,gdt,0x%" PRIx64 ",gdt2,0x%" PRIx64 "\n", n, old, gdt);
+	return 0;
+    }
+  }
+
+  printf("cpu,%d,gdt,0x%" PRIx64 "\n", n, old);
+  return 0;
 }
