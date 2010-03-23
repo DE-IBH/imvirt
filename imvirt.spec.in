@@ -8,15 +8,17 @@ Version:	%{version}
 Release:	%{release}
 URL:		http://micky.ibh.net/~liske/imvirt.html
 Source:		%{name}-%{version}.tar.gz
-License:	GPL
-Group:		System/Management
+License:	GPLv2+
+Group:		Applications/System
 Requires:	perl
-Buildroot:	%{_tmppath}/%{name}-buildroot
+Buildroot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Vendor:		IBH IT-Service GmbH (http://www.ibh.de/)
 
 %description
 
-This little perl script tries to detect if it is called from within a virtualization container. This is detected by looking for wellknown boot messages, directories and reading DMI (Desktop Management Interface) data.
+This little Perl script tries to detect if it is called from within 
+a virtualization container. This is detected by looking for well known boot 
+messages, directories and reading DMI (Desktop Management Interface) data.
 
 The following containers are detected:
 
@@ -36,9 +38,10 @@ The following containers are detected:
 
 %configure --prefix=%{_prefix} --libexec=%{_libexecdir}/imvirt
 
-make
+make %{?_smp_mflags}
 
 %install
+rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 %clean
@@ -46,9 +49,10 @@ rm -rf $RPM_BUILD_ROOT
 make clean
 
 %files
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %{_bindir}/*
 %dir %{_libexecdir}/imvirt
 %{_libexecdir}/imvirt/*
 %doc AUTHORS COPYING ChangeLog README
 %{_mandir}/man1/*.1*
+%{perl_vendorlib}/*

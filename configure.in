@@ -46,7 +46,7 @@ Makefile
 helper/Makefile
 man/Makefile
 imvirt.spec
-ImVirt.pm
+perl/lib/ImVirt.pm
 ])
 
 AC_OUTPUT
