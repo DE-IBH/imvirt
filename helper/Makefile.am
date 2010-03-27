@@ -1,5 +1,5 @@
 if X86ARCH
-libexec_PROGRAMS = hvm hyperv vmware xen pillbox
+pkglibexec_PROGRAMS = hvm hyperv vmware xen pillbox
 
 hvm_SOURCES =			\
 	detect.c		\

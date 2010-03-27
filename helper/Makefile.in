@@ -32,7 +32,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-@X86ARCH_TRUE@libexec_PROGRAMS = hvm$(EXEEXT) hyperv$(EXEEXT) \
+@X86ARCH_TRUE@pkglibexec_PROGRAMS = hvm$(EXEEXT) hyperv$(EXEEXT) \
 @X86ARCH_TRUE@	vmware$(EXEEXT) xen$(EXEEXT) pillbox$(EXEEXT)
 subdir = helper
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
@@ -45,8 +45,8 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am__installdirs = "$(DESTDIR)$(libexecdir)"
-PROGRAMS = $(libexec_PROGRAMS)
+am__installdirs = "$(DESTDIR)$(pkglibexecdir)"
+PROGRAMS = $(pkglibexec_PROGRAMS)
 am__hvm_SOURCES_DIST = detect.c detect.h hvm.c
 @X86ARCH_TRUE@am_hvm_OBJECTS = detect.$(OBJEXT) hvm.$(OBJEXT)
 hvm_OBJECTS = $(am_hvm_OBJECTS)
@@ -242,10 +242,10 @@ $(srcdir)/config.h.in:  $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f config.h stamp-h1
-install-libexecPROGRAMS: $(libexec_PROGRAMS)
+install-pkglibexecPROGRAMS: $(pkglibexec_PROGRAMS)
 	@$(NORMAL_INSTALL)
-	test -z "$(libexecdir)" || $(MKDIR_P) "$(DESTDIR)$(libexecdir)"
-	@list='$(libexec_PROGRAMS)'; test -n "$(libexecdir)" || list=; \
+	test -z "$(pkglibexecdir)" || $(MKDIR_P) "$(DESTDIR)$(pkglibexecdir)"
+	@list='$(pkglibexec_PROGRAMS)'; test -n "$(pkglibexecdir)" || list=; \
 	for p in $$list; do echo "$$p $$p"; done | \
 	sed 's/$(EXEEXT)$$//' | \
 	while read p p1; do if test -f $$p; \
@@ -262,23 +262,23 @@ install-libexecPROGRAMS: $(libexec_PROGRAMS)
 	while read type dir files; do \
 	    if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
 	    test -z "$$files" || { \
-	      echo " $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files '$(DESTDIR)$(libexecdir)$$dir'"; \
-	      $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(libexecdir)$$dir" || exit $$?; \
+	      echo " $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files '$(DESTDIR)$(pkglibexecdir)$$dir'"; \
+	      $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(pkglibexecdir)$$dir" || exit $$?; \
 	    } \
 	; done
 
-uninstall-libexecPROGRAMS:
+uninstall-pkglibexecPROGRAMS:
 	@$(NORMAL_UNINSTALL)
-	@list='$(libexec_PROGRAMS)'; test -n "$(libexecdir)" || list=; \
+	@list='$(pkglibexec_PROGRAMS)'; test -n "$(pkglibexecdir)" || list=; \
 	files=`for p in $$list; do echo "$$p"; done | \
 	  sed -e 'h;s,^.*/,,;s/$(EXEEXT)$$//;$(transform)' \
 	      -e 's/$$/$(EXEEXT)/' `; \
 	test -n "$$list" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(libexecdir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(libexecdir)" && rm -f $$files
+	echo " ( cd '$(DESTDIR)$(pkglibexecdir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(pkglibexecdir)" && rm -f $$files
 
-clean-libexecPROGRAMS:
-	-test -z "$(libexec_PROGRAMS)" || rm -f $(libexec_PROGRAMS)
+clean-pkglibexecPROGRAMS:
+	-test -z "$(pkglibexec_PROGRAMS)" || rm -f $(pkglibexec_PROGRAMS)
 hvm$(EXEEXT): $(hvm_OBJECTS) $(hvm_DEPENDENCIES) 
 	@rm -f hvm$(EXEEXT)
 	$(LINK) $(hvm_OBJECTS) $(hvm_LDADD) $(LIBS)
@@ -408,7 +408,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(PROGRAMS) config.h
 installdirs:
-	for dir in "$(DESTDIR)$(libexecdir)"; do \
+	for dir in "$(DESTDIR)$(pkglibexecdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -438,7 +438,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libexecPROGRAMS mostlyclean-am
+clean-am: clean-generic clean-pkglibexecPROGRAMS mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -464,7 +464,7 @@ install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-libexecPROGRAMS
+install-exec-am: install-pkglibexecPROGRAMS
 
 install-html: install-html-am
 
@@ -503,22 +503,23 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libexecPROGRAMS
+uninstall-am: uninstall-pkglibexecPROGRAMS
 
 .MAKE: all install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-libexecPROGRAMS ctags distclean distclean-compile \
+	clean-pkglibexecPROGRAMS ctags distclean distclean-compile \
 	distclean-generic distclean-hdr distclean-tags distdir dvi \
 	dvi-am html html-am info info-am install install-am \
 	install-data install-data-am install-dvi install-dvi-am \
 	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-libexecPROGRAMS \
-	install-man install-pdf install-pdf-am install-ps \
+	install-info install-info-am install-man install-pdf \
+	install-pdf-am install-pkglibexecPROGRAMS install-ps \
 	install-ps-am install-strip installcheck installcheck-am \
 	installdirs maintainer-clean maintainer-clean-generic \
 	mostlyclean mostlyclean-compile mostlyclean-generic pdf pdf-am \
-	ps ps-am tags uninstall uninstall-am uninstall-libexecPROGRAMS
+	ps ps-am tags uninstall uninstall-am \
+	uninstall-pkglibexecPROGRAMS
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
