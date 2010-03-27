@@ -67,7 +67,7 @@ sub dmesg_match(%) {
 	}
     }
 
-    %lines = (%lines, map { chomp($_), 1 } read_file($logfile)) if(-r $logfile);
+    %lines = (%lines, map { $_, 1 } read_file($logfile)) if(-r $logfile);
 
     foreach my $line (keys %lines) {
 	chomp($line);

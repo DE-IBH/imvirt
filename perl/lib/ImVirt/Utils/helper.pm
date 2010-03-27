@@ -38,7 +38,7 @@ our @EXPORT = qw(
 our $VERSION = '0.1';
 
 my %helpers;
-foreach my $glob (ImVirt::get_libexecdir().'/*', 'helper/*') {
+foreach my $glob (ImVirt::get_libexecdir().'/*') {
     foreach my $helper (glob $glob) {
 	if(-x $helper) {
 	    my $out;

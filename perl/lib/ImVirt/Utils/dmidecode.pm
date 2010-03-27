@@ -58,13 +58,18 @@ sub dmidecode() {
 	my @res = <PARENT_RDR>;
 	close(PARENT_RDR);
 
-	return @res;
+	my $res = join(' ', @res);
+
+	return $res if($res);
+
+	return undef;
     } else {
 	die "Cannot fork: $!\n" unless defined($pid);
 	
 	close(PARENT_RDR);
 	open(STDOUT, '>&CHILD_WTR') || die "Could not dup: $!\n";
-	
+	close(STDERR);
+
 	exec($dmidecode, '-d', $devmem, @_);
 
 	die("Cannot exec $dmidecode: $!\n");
