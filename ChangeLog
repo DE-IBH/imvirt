@@ -1,13 +1,12 @@
-imvirt (0.9.0-pre1) unstable; urgency=low
+imvirt (0.9.0) unstable; urgency=low
 
   * Rewrite imvirt as a perl module framework.
   * Detection changed from "first best match" to a weighted
     characteristics aproach.
   * Add legacy replacement script 'imvirt' as a replacement
     for the old monolitic script.
-  * This is a pre-release, please try and report any bugs.
 
- -- Thomas Liske <liske@ibh.de>  Thu, 04 Mar 2010 21:52:21 +0100
+ -- Thomas Liske <liske@ibh.de>  Mon, 29 Mar 2010 19:55:14 +0200
 
 imvirt (0.3.3) unstable; urgency=low
 
