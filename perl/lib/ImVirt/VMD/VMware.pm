@@ -103,4 +103,16 @@ sub detect($) {
     }
 }
 
+sub pres() {
+    my @prods = (
+	    PRODUCT,
+	    PRODUCT.' Express',
+	    PRODUCT.' ESX Server',
+	    PRODUCT.' GSX Server',
+	    PRODUCT.' Workstation',
+    );
+
+    return @prods;
+}
+
 1;

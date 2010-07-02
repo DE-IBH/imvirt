@@ -117,4 +117,14 @@ sub detect($) {
     }
 }
 
+sub pres() {
+    my @prods = (
+	    PRODUCT,
+	    PRODUCT.' PV',
+	    PRODUCT.' HVM',
+    );
+
+    return @prods;
+}
+
 1;

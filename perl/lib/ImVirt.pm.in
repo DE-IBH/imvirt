@@ -81,6 +81,11 @@ returned.
 Returns a hash any positive detected containers as keys and their corresponding
 match probability as value.
 
+=item imv_get_pos_results()
+Returns a list of all possible results which might be returned by all detection
+modules. The list entries might be appended by some additional data like version
+numbers etc.
+
 =back
 
 =cut
@@ -114,6 +119,7 @@ our @EXPORT = qw(
     imv_detect
     imv_get
     imv_get_all
+    imv_get_pos_results
     IMV_PROB_DEFAULT
     IMV_PHYSICAL
     IMV_VIRTUAL
@@ -236,6 +242,16 @@ sub imv_get($) {
     return $vm if($rtree{$vm} >= $prob);
 
     return IMV_UNKNOWN;
+}
+
+sub imv_get_pos_results {
+    my @pres;
+
+    foreach my $vmd (@vmds) {
+	eval "\@pres = (\@pres, ${vmd}::pres());";
+    }
+
+    return sort map { s/^.*\|([^|]+)$/$1/; $_; } @pres;
 }
 
 sub set_debug($) {

@@ -37,7 +37,10 @@ sub HELP_MESSAGE {
 Usage: $0 [-d]
     -d	debug
 
+Output:
 EOH
+    print "    ",join("\n    ", imv_get_pos_results()),"\n\n";
+
     exit;
 }
 

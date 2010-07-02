@@ -62,4 +62,8 @@ sub detect($) {
     }
 }
 
+sub pres() {
+    return (IMV_PHYSICAL, IMV_VIRTUAL);
+}
+
 1;

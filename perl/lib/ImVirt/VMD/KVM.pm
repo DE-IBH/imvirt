@@ -58,4 +58,8 @@ sub detect($) {
     }
 }
 
+sub pres() {
+    return (PRODUCT);
+}
+
 1;

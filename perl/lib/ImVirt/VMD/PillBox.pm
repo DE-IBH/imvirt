@@ -86,4 +86,8 @@ sub detect($) {
     }
 }
 
+sub pres() {
+    return ('|VMware');
+}
+
 1;
