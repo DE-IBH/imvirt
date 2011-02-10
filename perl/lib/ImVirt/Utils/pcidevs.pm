@@ -67,7 +67,7 @@ if(my $pid = fork()) {
 
     exec('lspci', '-m');
 
-    die("Cannot exec lspci: $!\n");
+    exit;
 }
 
 sub pcidevs_get() {
