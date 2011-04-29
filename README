@@ -12,11 +12,12 @@ Detected virtualizations:
  - Xen (para and non-para virtualized)
  - OpenVZ/Virtuozzo
  - UML
+ - lguest
  - any HVM providing CPUID 0x40000000 detection
 
 imvirt is comparable with virt-what [1]. imvirt was written to run as
-non-root - virt-what requires to be run as root but might give some more
-details on Xen (Dom0/DomU/HVM).
+non-root - virt-what requires to be run as root but had some more
+details on Xen (Dom0/DomU/HVM) in the past.
 
 Some random links taken as suggestions:
 
@@ -33,4 +34,4 @@ Some random links taken as suggestions:
 [11] http://www.s21sec.com/descargas/vmware-eng.pdf
 [12] http://www.trapkit.de/research/vmm/scoopyng/index.html
 
- -- Thomas Liske <liske@ibh.de>  Sat, 05 Sep 2009 12:27:41 +0200
+ -- Thomas Liske <liske@ibh.de>  Fri, 29 Apr 2011 08:17:39 +0200

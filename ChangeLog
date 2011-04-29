@@ -3,6 +3,9 @@ imvirt (0.9.1) unstable; urgency=low
   * Output possible result lines on help output.
   * Don't die in Utils/pcidevs.pm if lspci is not available.
     (Closes Debian Bug#612735 by Stefan Bühler)
+  * Parse new kernel paravirtualization lines (KVM, VMware).
+  * Improve KVM w/ virtio detection.
+  * Add basic lguest detection support.
 
  -- Thomas Liske <liske@ibh.de>  
 

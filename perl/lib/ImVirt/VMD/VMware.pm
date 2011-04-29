@@ -6,7 +6,7 @@
 #   Thomas Liske <liske@ibh.de>
 #
 # Copyright Holder:
-#   2009 - 2010 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#   2009 - 2011 (C) IBH IT-Service GmbH [http://www.ibh.de/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -55,6 +55,7 @@ sub detect($) {
 
     # Look for dmesg lines
     if(defined(my $m = dmesg_match(
+	'Booting paravirtualized kernel on vmi' => IMV_PTS_MAJOR,
 	'VMware vmxnet virtual NIC driver' => IMV_PTS_NORMAL,
       ))) {
 	if($m > 0) {

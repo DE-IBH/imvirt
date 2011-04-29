@@ -6,7 +6,7 @@
 #   Thomas Liske <liske@ibh.de>
 #
 # Copyright Holder:
-#   2009 - 2010 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#   2011 (C) IBH IT-Service GmbH [http://www.ibh.de/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -24,15 +24,15 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package ImVirt::VMD::KVM;
+package ImVirt::VMD::UML;
 
 use strict;
 use warnings;
-use constant PRODUCT => '|KVM';
+use constant PRODUCT => '|lguest';
 
 use ImVirt;
 use ImVirt::Utils::cpuinfo;
-use ImVirt::Utils::pcidevs;
+use ImVirt::Utils::dmesg;
 
 ImVirt::register_vmd(__PACKAGE__);
 
@@ -41,25 +41,9 @@ sub detect($) {
 
     my $dref = shift;
 
-    # Check /proc/cpuinfo
-    my %cpuinfo = cpuinfo_get();
-    foreach my $cpu (keys %cpuinfo) {
-	if(${$cpuinfo{$cpu}}{'model name'} =~ /QEMU Virtual CPU/) {
-	    ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
-	}
-    }
-
-    # Check /proc/bus/pci/devices
-    my %pcidevs = pcidevs_get();
-    foreach my $addr (keys %pcidevs) {
-	if(${$pcidevs{$addr}}{'device'} =~ /Qumranet, Inc\. Virtio/) {
-	    ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
-	}
-    }
-
     # Look for a dmesg paravirtualization line
     if(defined(my $m = dmesg_match(
-	'Booting paravirtualized kernel on KVM' => IMV_PTS_MAJOR,
+	'Booting paravirtualized kernel on lguest' => IMV_PTS_MAJOR,
      ))) {
 	ImVirt::inc_pts($dref, $m, IMV_VIRTUAL, PRODUCT) if($m > 0);
     }
