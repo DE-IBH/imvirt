@@ -31,7 +31,7 @@ use warnings;
 use constant PRODUCT => '|lguest';
 
 use ImVirt;
-use ImVirt::Utils::cpuinfo;
+use ImVirt::Utils::kmods;
 use ImVirt::Utils::dmesg;
 
 ImVirt::register_vmd(__PACKAGE__);
