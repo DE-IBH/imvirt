@@ -38,7 +38,10 @@ my $dmidecode = '/usr/sbin/dmidecode';
 my $devmem = '/dev/mem';
 
 sub available() {
-    return (-r $devmem && -x $dmidecode);
+    my $avail = (-r $devmem && -x $dmidecode);
+    ImVirt::debug(__PACKAGE__, "(-r $devmem && -x $dmidecode) => $avail");
+
+    return $avail;
 }
 
 sub dmidecode_string($) {

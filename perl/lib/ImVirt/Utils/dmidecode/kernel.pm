@@ -40,7 +40,10 @@ my $sysfs_relp = 'class/dmi/id';
 my $sysfs_absp = join('/', sysfs_getmp(), $sysfs_relp);
 
 sub available() {
-    return sysfs_isdir('class/dmi/id');
+    my $avail = sysfs_isdir('class/dmi/id')
+    ImVirt::debug(__PACKAGE__, "sysfs_isdir('class/dmi/id') = $avail");
+
+    return $avail;
 }
 
 sub dmidecode_string($) {
