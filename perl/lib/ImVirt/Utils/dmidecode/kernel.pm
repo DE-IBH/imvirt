@@ -29,46 +29,42 @@ package ImVirt::Utils::dmidecode::kernel;
 use strict;
 use warnings;
 use IO::Handle;
+use ImVirt::Utils::sysfs;
+
 require Exporter;
 our @ISA = qw(Exporter);
 
 our $VERSION = '0.1';
 
-my $dmidecode = '/usr/sbin/dmidecode';
-my $devmem = '/dev/mem';
+my $sysfs_relp = 'class/dmi/id';
+my $sysfs_absp = join('/', sysfs_getmp(), $sysfs_relp);
+
+sub available() {
+    return sysfs_isdir('class/dmi/id');
+}
 
 sub dmidecode_string($) {
-    return dmidecode('-s', shift)
+    open(HR, '<', join('/', $sysfs_absp, shift));
+    my @res = <HR>;
+    close(HR);
+
+    my $res = join(' ', @res);
+
+    return $res if($res);
+
+    return undef;
 }
+
 sub dmidecode_type($) {
-    return dmidecode('-t', shift)
-}
+    my @res;
 
-sub dmidecode() {
-    return () unless (-r $devmem && -x $dmidecode);
-
-    pipe(PARENT_RDR, CHILD_WTR);
-    if(my $pid = fork()) {
-	close(CHILD_WTR);
-	my @res = <PARENT_RDR>;
-	close(PARENT_RDR);
-
-	my $res = join(' ', @res);
-
-	return $res if($res);
-
-	return undef;
-    } else {
-	die "Cannot fork: $!\n" unless defined($pid);
-	
-	close(PARENT_RDR);
-	open(STDOUT, '>&CHILD_WTR') || die "Could not dup: $!\n";
-	close(STDERR);
-
-	exec($dmidecode, '-d', $devmem, @_);
-
-	die("Cannot exec $dmidecode: $!\n");
+    foreach my $string (glob join('/', $sysfs_absp, shift."-*")) {
+	push(@res, dmidecode_string($string));
     }
+
+    return $res if($res);
+
+    return undef;
 }
 
 1;

@@ -37,6 +37,10 @@ our $VERSION = '0.1';
 my $dmidecode = '/usr/sbin/dmidecode';
 my $devmem = '/dev/mem';
 
+sub available() {
+    return (-r $devmem && -x $dmidecode);
+}
+
 sub dmidecode_string($) {
     return dmidecode('-s', shift)
 }
