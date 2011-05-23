@@ -65,7 +65,7 @@ sub detect($) {
     }
 
     # Look for virtio modules
-    $p = kmods_match(
+    my $p = kmods_match(
 	'^virtio_(blk|pci|net|ballon)$' => IMV_PTS_MINOR,
     );
     if($p > 0) {
