@@ -6,7 +6,7 @@
 #   Thomas Liske <liske@ibh.de>
 #
 # Copyright Holder:
-#   2009 - 2011 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#   2009 - 2010 (C) IBH IT-Service GmbH [http://www.ibh.de/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -24,28 +24,51 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package ImVirt::Utils::dmidecode;
+package ImVirt::Utils::dmidecode::kernel;
 
 use strict;
 use warnings;
 use IO::Handle;
-use ImVirt::Utils::dmidecode::pipe;
-
 require Exporter;
 our @ISA = qw(Exporter);
 
-our @EXPORT = qw(
-    dmidecode_string
-    dmidecode_type
-);
+our $VERSION = '0.1';
 
-our $VERSION = '0.2';
+my $dmidecode = '/usr/sbin/dmidecode';
+my $devmem = '/dev/mem';
 
 sub dmidecode_string($) {
-    return ImVirt::Utils::dmidecode_pipe::dmidecode_string(shift);
+    return dmidecode('-s', shift)
 }
 sub dmidecode_type($) {
-    return ImVirt::Utils::dmidecode_pipe::dmidecode_type(shift);
+    return dmidecode('-t', shift)
+}
+
+sub dmidecode() {
+    return () unless (-r $devmem && -x $dmidecode);
+
+    pipe(PARENT_RDR, CHILD_WTR);
+    if(my $pid = fork()) {
+	close(CHILD_WTR);
+	my @res = <PARENT_RDR>;
+	close(PARENT_RDR);
+
+	my $res = join(' ', @res);
+
+	return $res if($res);
+
+	return undef;
+    } else {
+	die "Cannot fork: $!\n" unless defined($pid);
+	
+	close(PARENT_RDR);
+	open(STDOUT, '>&CHILD_WTR') || die "Could not dup: $!\n";
+	close(STDERR);
+
+	exec($dmidecode, '-d', $devmem, @_);
+
+	die("Cannot exec $dmidecode: $!\n");
+    }
 }
 
 1;
