@@ -32,6 +32,8 @@ use constant PRODUCT => '|KVM';
 
 use ImVirt;
 use ImVirt::Utils::cpuinfo;
+use ImVirt::Utils::dmesg;
+use ImVirt::Utils::kmods;
 use ImVirt::Utils::pcidevs;
 
 ImVirt::register_vmd(__PACKAGE__);
