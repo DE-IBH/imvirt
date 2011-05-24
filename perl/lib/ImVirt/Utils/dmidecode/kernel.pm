@@ -29,6 +29,7 @@ package ImVirt::Utils::dmidecode::kernel;
 use strict;
 use warnings;
 use IO::Handle;
+use ImVirt;
 use ImVirt::Utils::sysfs;
 
 require Exporter;
@@ -40,14 +41,22 @@ my $sysfs_relp = 'class/dmi/id';
 my $sysfs_absp = join('/', sysfs_getmp(), $sysfs_relp);
 
 sub available() {
-    my $avail = sysfs_isdir('class/dmi/id')
+    my $avail = sysfs_isdir('class/dmi/id');
     ImVirt::debug(__PACKAGE__, "sysfs_isdir('class/dmi/id') = $avail");
 
     return $avail;
 }
 
 sub dmidecode_string($) {
-    open(HR, '<', join('/', $sysfs_absp, shift));
+    my $s = shift;
+    $s =~ s/^system-//;
+    $s =~ s/-/_/g;
+
+    my $fn = join('/', $sysfs_absp, $s);
+
+    ImVirt::debug(__PACKAGE__, "reading '$fn'");
+
+    open(HR, '<', $fn);
     my @res = <HR>;
     close(HR);
 
@@ -61,9 +70,12 @@ sub dmidecode_string($) {
 sub dmidecode_type($) {
     my @res;
 
-    foreach my $string (glob join('/', $sysfs_absp, shift."-*")) {
+    shift;
+    foreach my $string (glob join('/', $sysfs_absp, "${_}_*")) {
 	push(@res, dmidecode_string($string));
     }
+
+    my $res = join(' ', @res);
 
     return $res if($res);
 
