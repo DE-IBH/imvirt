@@ -138,7 +138,7 @@ sub get_libexecdir() {
 
 my @vmds = ();
 my $debug = 0;
-my %detected;
+my %detected = ();
 my %rtree;
 
 sub register_vmd($) {
@@ -169,6 +169,8 @@ sub _rtree_vm($$$@) {
 }
 
 sub imv_detect() {
+    imv_init() unless (@vmds);
+
     %detected = (ImVirt::IMV_PHYSICAL => {KV_POINTS => IMV_PTS_MINOR});
 
     foreach my $vmd (@vmds) {
@@ -230,10 +232,14 @@ sub _change_pts($\%@) {
     }
 }
 sub imv_get_all() {
+    imv_detect() unless (%detected);
+
     return %rtree;
 }
 
 sub imv_get($) {
+    imv_detect() unless (%detected);
+
     my $prob = shift;
 
     my @res = sort { $rtree{$b} > $rtree{$a} } keys %rtree;
@@ -245,6 +251,8 @@ sub imv_get($) {
 }
 
 sub imv_get_pos_results {
+    imv_init() unless (@vmds);
+
     my @pres;
 
     foreach my $vmd (@vmds) {
@@ -266,13 +274,12 @@ sub debug($$) {
     printf STDERR "%24s: %s\n", @_ if($debug);
 }
 
-
-# autoload VMD modules
-foreach my $module (findsubmod ImVirt::VMD) {
-    eval "use $module;";
-    die "Error loading $module: $@\n" if $@;
+sub imv_init() {
+    # autoload VMD modules
+    foreach my $module (findsubmod ImVirt::VMD) {
+	eval "use $module;";
+	die "Error loading $module: $@\n" if $@;
+    }
 }
-
-imv_detect();
 
 1;
