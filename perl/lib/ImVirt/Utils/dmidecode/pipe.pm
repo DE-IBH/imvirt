@@ -29,6 +29,8 @@ package ImVirt::Utils::dmidecode::pipe;
 use strict;
 use warnings;
 use IO::Handle;
+use ImVirt;
+
 require Exporter;
 our @ISA = qw(Exporter);
 

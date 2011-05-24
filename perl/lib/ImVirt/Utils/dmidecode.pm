@@ -46,7 +46,7 @@ sub dmidecode_string($) {
     return ImVirt::Utils::dmidecode::kernel::dmidecode_string(shift)
 	if(ImVirt::Utils::dmidecode::kernel::available());
 
-    return ImVirt::Utils::dmidecode::pipe::dmidecode_string(shift);
+    return ImVirt::Utils::dmidecode::pipe::dmidecode_string(shift)
 	if(ImVirt::Utils::dmidecode::pipe::available());
 
     return ();
@@ -55,7 +55,7 @@ sub dmidecode_type($) {
     return ImVirt::Utils::dmidecode::kernel::dmidecode_type(shift)
 	if(ImVirt::Utils::dmidecode::kernel::available());
 
-    return ImVirt::Utils::dmidecode::pipe::dmidecode_type(shift);
+    return ImVirt::Utils::dmidecode::pipe::dmidecode_type(shift)
 	if(ImVirt::Utils::dmidecode::pipe::available());
 
     return ();
