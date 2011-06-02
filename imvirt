@@ -33,6 +33,7 @@ use Getopt::Long;
 
 sub HELP_MESSAGE {
     print STDERR <<EOH;
+ImVirt $ImVirt::VERSION - Thomas Liske <liske\@ibh.de>
 
 Usage: $0 [-d]
     -d	debug
