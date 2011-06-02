@@ -8,8 +8,9 @@ imvirt (0.9.1) unstable; urgency=low
   * Improve KVM/QUEMU detection.
     (Contributed by Mike Gerber <mike@sprachgewalt.de>)
   * Add basic lguest detection support.
+  * Improve debugging of legacy imvirt script.
 
- -- Thomas Liske <liske@ibh.de>  
+ -- Thomas Liske <liske@ibh.de>  Thu, 02 Jun 2011 21:50:55 +0200
 
 imvirt (0.9.0) unstable; urgency=low
 
