@@ -5,6 +5,8 @@ imvirt (0.9.1) unstable; urgency=low
     (Closes Debian Bug#612735 by Stefan Bühler)
   * Parse new kernel paravirtualization lines (KVM, VMware).
   * Improve KVM w/ virtio detection.
+  * Improve KVM/QUEMU detection.
+    (Contributed by Mike Gerber <mike@sprachgewalt.de>)
   * Add basic lguest detection support.
 
  -- Thomas Liske <liske@ibh.de>  

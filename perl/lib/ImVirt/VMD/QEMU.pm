@@ -6,7 +6,7 @@
 #   Thomas Liske <liske@ibh.de>
 #
 # Copyright Holder:
-#   2009 - 2010 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#   2009 - 2011 (C) IBH IT-Service GmbH [http://www.ibh.de/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -34,6 +34,7 @@ use ImVirt;
 use ImVirt::Utils::blkdev;
 use ImVirt::Utils::dmidecode;
 use ImVirt::Utils::dmesg;
+use ImVirt::Utils::helper;
 
 ImVirt::register_vmd(__PACKAGE__);
 
@@ -74,6 +75,15 @@ sub detect($) {
     else {
 	ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
     }
+
+    # KVM?
+    # Check helper output for hypervisor detection
+    if(my $hvm = helper('hvm')) {
+        if($hvm =~ /KVM/) {
+            ImVirt::dec_pts($dref, IMV_PTS_DRASTIC, IMV_VIRTUAL, PRODUCT);
+        }
+    }
+
 }
 
 sub pres() {
