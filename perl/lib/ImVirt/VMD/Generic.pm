@@ -43,8 +43,8 @@ sub detect($) {
 
     # Is hardware virtualization available?
     if(defined(my $f = cpuinfo_hasflags(
-	'vmx' => IMV_PTS_NORMAL,
-	'svm' => IMV_PTS_NORMAL,
+	'vmx' => IMV_PTS_MINOR,
+	'svm' => IMV_PTS_MINOR,
       ))) {
 	ImVirt::inc_pts($dref, $f, IMV_PHYSICAL) if($f > 0);
     }
