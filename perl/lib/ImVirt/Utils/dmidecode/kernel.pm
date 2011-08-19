@@ -6,7 +6,7 @@
 #   Thomas Liske <liske@ibh.de>
 #
 # Copyright Holder:
-#   2009 - 2010 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#   2009 - 2011 (C) IBH IT-Service GmbH [http://www.ibh.de/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -42,7 +42,12 @@ my $sysfs_absp = join('/', sysfs_getmp(), $sysfs_relp);
 
 sub available() {
     my $avail = sysfs_isdir('class/dmi/id');
-    ImVirt::debug(__PACKAGE__, "sysfs_isdir('class/dmi/id') = $avail");
+    if(defined($avail)) {
+	ImVirt::debug(__PACKAGE__, "sysfs_isdir('class/dmi/id') = $avail");
+    }
+    else {
+	ImVirt::debug(__PACKAGE__, "sysfs_isdir('class/dmi/id') does not exist");
+    }
 
     return $avail;
 }
