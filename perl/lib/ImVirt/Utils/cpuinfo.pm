@@ -28,6 +28,7 @@ package ImVirt::Utils::cpuinfo;
 
 use strict;
 use warnings;
+use Data::Dumper;
 use ImVirt::Utils::procfs;
 
 require Exporter;
@@ -52,6 +53,7 @@ while(my $line = <HCPUINFO>) {
     }
 }
 close(HCPUINFO);
+ImVirt::debug(__PACKAGE__, Dumper(\%cpuinfo));
 
 sub cpuinfo_get() {
     return %cpuinfo;

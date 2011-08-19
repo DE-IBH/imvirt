@@ -28,6 +28,7 @@ package ImVirt::Utils::kmods;
 
 use strict;
 use warnings;
+use Data::Dumper;
 use ImVirt::Utils::procfs;
 
 require Exporter;
@@ -54,6 +55,7 @@ while(<HKMS>) {
 	    ${$kmods{$1}}{'by'} = $6;
 	}
 }
+ImVirt::debug(__PACKAGE__, Dumper(\%kmods));
 
 sub kmods_get() {
     return %kmods;

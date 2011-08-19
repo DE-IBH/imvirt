@@ -28,6 +28,7 @@ package ImVirt::Utils::pcidevs;
 
 use strict;
 use warnings;
+use Data::Dumper;
 use IO::Handle;
 require Exporter;
 our @ISA = qw(Exporter);
@@ -69,6 +70,7 @@ if(my $pid = fork()) {
 
     exit;
 }
+ImVirt::debug(__PACKAGE__, Dumper(\%pcidevs));
 
 sub pcidevs_get() {
     return %pcidevs;

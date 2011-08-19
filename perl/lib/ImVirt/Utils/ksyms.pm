@@ -28,6 +28,7 @@ package ImVirt::Utils::ksyms;
 
 use strict;
 use warnings;
+use Data::Dumper;
 use ImVirt::Utils::procfs;
 use constant {
     KSYM_STYPE_ABSOL	=> 'A',
@@ -79,6 +80,7 @@ while(<HKAS>) {
 	    ${$kallsyms{$3}}{'module'} = $5 if(defined($5));
 	}
 }
+ImVirt::debug(__PACKAGE__, Dumper(\%kallsyms));
 
 sub ksym_provides($$) {
     my ($type, $name) = @_;
