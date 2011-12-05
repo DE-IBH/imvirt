@@ -6,7 +6,7 @@
 #   Thomas Liske <liske@ibh.de>
 #
 # Copyright Holder:
-#   2009 - 2010 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#   2009 - 2011 (C) IBH IT-Service GmbH [http://www.ibh.de/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -194,6 +194,8 @@ sub imv_detect() {
 	    $rtree{$prod} = 0;
 	}
     }
+
+    debug(__PACKAGE__, "imvirt_detect():\n".Dumper(\%rtree));
 }
 
 sub inc_pts($$@) {
@@ -271,7 +273,7 @@ sub get_debug() {
 }
 
 sub debug($$) {
-    printf STDERR "%24s: %s\n", @_ if($debug);
+    printf STDERR "%s: %s\n", @_ if($debug);
 }
 
 sub imv_init() {
