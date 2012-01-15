@@ -94,6 +94,7 @@ use strict;
 use warnings;
 use Module::Find;
 use List::Util qw(sum);
+use Data::Dumper;
 
 use constant {
     KV_POINTS		=> 'points',
