@@ -59,13 +59,13 @@ sub dmidecode_string($) {
 
     my $fn = join('/', $sysfs_absp, $s);
 
-    ImVirt::debug(__PACKAGE__, "reading '$fn'");
-
     open(HR, '<', $fn);
     my @res = <HR>;
     close(HR);
 
     my $res = join(' ', @res);
+
+    ImVirt::debug(__PACKAGE__, "reading '$fn': $res");
 
     return $res if($res);
 
