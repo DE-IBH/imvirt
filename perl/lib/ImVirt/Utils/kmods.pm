@@ -67,7 +67,10 @@ sub kmods_match(%) {
 
     foreach my $kmod (keys %kmods) {
 	foreach my $regex (keys %regexs) {
-	    $pts += $regexs{$regex} if($kmod =~ /$regex/);
+	    if($kmod =~ /$regex/) {
+		$pts += $regexs{$regex};
+		delete($regexs{$regex});
+	    }
 	}
     }
 
