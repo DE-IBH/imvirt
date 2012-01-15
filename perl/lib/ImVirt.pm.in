@@ -248,6 +248,22 @@ sub imv_get($) {
     my @res = sort { $rtree{$b} > $rtree{$a} } keys %rtree;
     my $vm = shift @res;
 
+    return $vm if(eval {
+	my $m = (sum values %rtree)/($#res+2);
+	debug(__PACKAGE__, "imv_get: m = $m");
+
+	my $s = 0;
+	foreach my $v (values %rtree) {
+	    $s += ($v - $m)**2;
+	}
+	$s /=($#res+1);
+	debug(__PACKAGE__, "imv_get: s² = $s");
+
+	my $vm2 = shift @res;
+	debug(__PACKAGE__, "imv_get: $rtree{$vm} - sqrt($s) > $rtree{$vm2}");
+	$rtree{$vm} - sqrt($s) > $rtree{$vm2};
+    });
+
     return $vm if($rtree{$vm} >= $prob);
 
     return IMV_UNKNOWN;
