@@ -51,7 +51,7 @@ sub detect($) {
 
     # Check dmidecode
     if(defined(my $spn = dmidecode_string('system-product-name'))) {
-        if ($spn =~ /^KVM/) {
+        if ($spn =~ /^(KVM|Bochs)/) {
             ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
         }
         else {
@@ -59,7 +59,7 @@ sub detect($) {
         }
     }
     if(defined(my $spn = dmidecode_string('bios-vendor'))) {
-        if ($spn =~ /^QEMU/) {
+        if ($spn =~ /^(QEMU|Bochs)/) {
             ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
         }
         else {
