@@ -18,6 +18,6 @@ perl: perl/Makefile
 	cd perl && $(MAKE)
 
 perl/Makefile: perl/Makefile.PL
-	cd perl && perl Makefile.PL PREFIX=$(prefix)
+	cd perl && perl Makefile.PL PREFIX=$(prefix) INSTALLDIRS=vendor
 
 .PHONY: perl
