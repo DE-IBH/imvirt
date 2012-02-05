@@ -8,7 +8,7 @@ installed tools etc.
 Detected virtualizations:
  - Virtual PC/Server
  - VMware
- - QEMU/KVM (experimental)
+ - QEMU/KVM
  - Xen (para and non-para virtualized)
  - OpenVZ/Virtuozzo
  - UML
