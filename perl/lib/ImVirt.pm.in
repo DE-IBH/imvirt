@@ -42,7 +42,7 @@ virtualization container. At least the following container
 should be detected:
 
 =over 4
-
+=item lguest
 =item KVM
 =item OpenVZ
 =item QEMU
@@ -51,7 +51,6 @@ should be detected:
 =item Virtual PC/Server
 =item VMware
 =item Xen
-
 =back
 
 =head1 DETECTION HEURISTIC
