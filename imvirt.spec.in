@@ -7,10 +7,11 @@ Summary:	Detects several virtualizations
 Version:	%{version}
 Release:	%{release}
 URL:		http://micky.ibh.net/~liske/imvirt.html
-Source:		%{name}-%{version}.tar.gz
+Source0:	http://downloads.sourceforge.net/project/%{name}/%{name}/%{version}/%{name}-%{version}.tar.gz
 License:	GPLv2+
 Group:		Applications/System
-Requires:	perl
+Requires:	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:	perl(ExtUtils::MakeMaker)
 Buildroot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Vendor:		IBH IT-Service GmbH (http://www.ibh.de/)
 
@@ -33,17 +34,22 @@ The following containers are detected:
     * any HVM providing CPUID 0x40000000 detection
 
 %prep
-%setup
+%setup -q
 
 %build
 
 %configure --prefix=%{_prefix} --libexec=%{_libexecdir}/imvirt
-
 make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
+
+rm $RPM_BUILD_ROOT%{perl_vendorarch}/auto/ImVirt/.packlist
+rm $RPM_BUILD_ROOT%{perl_archlib}/perllocal.pod
+
+%check
+#make check
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -56,4 +62,5 @@ make clean
 %{_libexecdir}/imvirt/*
 %doc AUTHORS COPYING ChangeLog README
 %{_mandir}/man1/*.1*
+%{_mandir}/man3/*.3*
 %{perl_vendorlib}/*
