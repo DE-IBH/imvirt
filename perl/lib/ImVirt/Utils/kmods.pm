@@ -77,4 +77,20 @@ sub kmods_match(%) {
     return $pts;
 }
 
+sub kmods_match_used(%) {
+    my %regexs = @_;
+    my $pts = 0;
+
+    foreach my $kmod (keys %kmods) {
+	foreach my $regex (keys %regexs) {
+	    if($kmod =~ /$regex/ && ${$kmods{$kmod}}{'used'} > 0) {
+		$pts += $regexs{$regex};
+		delete($regexs{$regex});
+	    }
+	}
+    }
+
+    return $pts;
+}
+
 1;
