@@ -25,10 +25,11 @@ The following containers are detected:
     * Virtual PC/Virtual Server
     * VirtualBox
     * VMware
-    * QEMU/KVM (experimental)
+    * QEMU/KVM
     * Xen (para and non-para virtualized)
     * OpenVZ/Virtuozzo
     * UML
+    * lguest
     * any HVM providing CPUID 0x40000000 detection
 
 %prep
