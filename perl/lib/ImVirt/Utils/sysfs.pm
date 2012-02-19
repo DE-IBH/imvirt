@@ -6,7 +6,7 @@
 #   Thomas Liske <liske@ibh.de>
 #
 # Copyright Holder:
-#   2009 - 2010 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#   2009 - 2012 (C) IBH IT-Service GmbH [http://www.ibh.de/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -38,7 +38,7 @@ our @EXPORT = qw(
     sysfs_read
 );
 
-our $VERSION = '0.1';
+our $VERSION = '0.2';
 
 my $sysfsdir = '/sys';
 
