@@ -41,6 +41,13 @@ sub detect($) {
 
     my $dref = shift;
 
+    # Check machine type
+    my %uname = uname();
+    if(exists($uname{machine}) && $uname{machine} ne 'm68k') {
+	ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	return;
+    }
+
     # Look for a dmesg line
     if(defined(my $m = dmesg_match(
 	'NatFeats found \(ARAnyM,' => IMV_PTS_MAJOR,
