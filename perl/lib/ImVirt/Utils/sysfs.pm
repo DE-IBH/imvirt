@@ -52,7 +52,11 @@ sub sysfs_isdir($) {
 
 sub sysfs_read($) {
     my $fn = join('/', sysfs_getmp(), shift);
-    return read_file($fn) if(-r $fn);
+    if(-r $fn) {
+	my $f = read_file($fn);
+	chomp($f);
+	return $f;
+    }
 
     return undef;
 }
