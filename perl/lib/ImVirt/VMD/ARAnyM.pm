@@ -54,6 +54,16 @@ sub detect($) {
      ))) {
 	ImVirt::inc_pts($dref, $m, IMV_VIRTUAL, PRODUCT) if($m > 0);
     }
+
+    # Clocksource should be jiffies
+    if(defined(my $cs = sysfs_read('devices/system/clocksource/clocksource0/available_clocksource'))) {
+	if($cs eq 'jiffies') {
+	    ImVirt::inc_pts($dref, IMV_PTS_MINOR, IMV_VIRTUAL, PRODUCT);
+	}
+	else {
+	    ImVirt::dec_pts($dref, IMV_PTS_MINOR, IMV_VIRTUAL, PRODUCT);
+	}
+    }
 }
 
 sub pres() {
