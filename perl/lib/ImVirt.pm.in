@@ -102,6 +102,8 @@ use constant {
 
     IMV_PHYSICAL	=> 'Physical',
     IMV_VIRTUAL		=> 'Virtual',
+    IMV_EMULATOR	=> 'Emulator',
+    IMV_CONTAINER	=> 'Container',
     IMV_UNKNOWN		=> 'Unknown',
 
     IMV_PROB_DEFAULT	=> 0.9,
