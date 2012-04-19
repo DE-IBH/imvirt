@@ -37,6 +37,7 @@ our @ISA = qw(Exporter);
 our @EXPORT = qw(
     kmods_get
     kmods_match
+    kmods_match_used
 );
 
 our $VERSION = '0.1';
