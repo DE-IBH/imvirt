@@ -33,6 +33,7 @@ use constant PRODUCT => '|ARAnyM';
 use ImVirt;
 use ImVirt::Utils::dmesg;
 use ImVirt::Utils::uname;
+use ImVirt::Utils::sysfs;
 
 ImVirt::register_vmd(__PACKAGE__);
 
