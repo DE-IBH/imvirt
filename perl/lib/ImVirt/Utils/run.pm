@@ -38,11 +38,11 @@ our @EXPORT = qw(
 
 our $VERSION = '0.1';
 
-eval { use File::Which; };
+eval 'use File::Which;';
 my $nowhich = $@;
 
 sub run_exec(@) {
-    my $cmd = which(shift);
+    my $cmd = (defined($nowhich) ? shift : which(shift));
     exec($cmd, @_) if(defined($cmd));
 }
 
