@@ -28,6 +28,7 @@ package ImVirt::Utils::uname;
 
 use strict;
 use warnings;
+use Data::Dumper;
 use POSIX;
 
 require Exporter;
