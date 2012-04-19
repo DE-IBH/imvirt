@@ -6,12 +6,15 @@ This is done by looking for wellknown boot messages, device names,
 installed tools etc.
 
 Detected virtualizations:
- - Virtual PC/Server
- - VMware
- - QEMU/KVM
- - Xen (para and non-para virtualized)
+ - ARAnyM
+ - KVM
  - OpenVZ/Virtuozzo
+ - QEMU
  - UML
+ - VMware GSX, ESX, Workstation
+ - Virtual PC/Virtual Server
+ - VirtualBox
+ - Xen (para and non-para virtualized)
  - lguest
  - any HVM providing CPUID 0x40000000 detection
 
@@ -34,4 +37,4 @@ Some random links taken as suggestions:
 [11] http://www.s21sec.com/descargas/vmware-eng.pdf
 [12] http://www.trapkit.de/research/vmm/scoopyng/index.html
 
- -- Thomas Liske <liske@ibh.de>  Fri, 29 Apr 2011 08:17:39 +0200
+ -- Thomas Liske <liske@ibh.de>  Thu, 19 Apr 2012 21:16:12 +0200

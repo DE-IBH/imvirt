@@ -1,9 +1,10 @@
 imvirt (0.9.3) unstable; urgency=low
 
-  * New detectors:
-     ARAnyM
-     lguest
+  * Add ARAnyM detection support.
   * Reduce perl warnings.
+  * Use File::Which if available (no shell used to execute binaries).
+  * Take only used virtio kernel modules into account.
+  * Improve imvirt.spec.in (thanks to Miroslav Suchý <msuchy@redhat.com>).
 
  -- Thomas Liske <liske@ibh.de>  
 

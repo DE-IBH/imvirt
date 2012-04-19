@@ -23,13 +23,15 @@ messages, directories and reading DMI (Desktop Management Interface) data.
 
 The following containers are detected:
 
+    * ARAnyM
+    * KVM
+    * OpenVZ/Virtuozzo
+    * QEMU
+    * UML
+    * VMware GSX, ESX, Workstation
     * Virtual PC/Virtual Server
     * VirtualBox
-    * VMware
-    * QEMU/KVM
     * Xen (para and non-para virtualized)
-    * OpenVZ/Virtuozzo
-    * UML
     * lguest
     * any HVM providing CPUID 0x40000000 detection
 
