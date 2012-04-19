@@ -28,14 +28,13 @@ package ImVirt::Utils::uname;
 
 use strict;
 use warnings;
-use Data::Dumper;
 use POSIX;
 
 require Exporter;
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
-    uname
+    posix_uname
 );
 
 our $VERSION = '0.1';
@@ -50,7 +49,7 @@ my %uname = (
 );
 ImVirt::debug(__PACKAGE__, Dumper(\%uname));
 
-sub uname() {
+sub posix_uname() {
     return %uname;
 }
 

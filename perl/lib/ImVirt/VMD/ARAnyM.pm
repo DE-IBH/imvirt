@@ -43,7 +43,7 @@ sub detect($) {
     my $dref = shift;
 
     # Check machine type
-    my %uname = uname();
+    my %uname = posix_uname();
     if(exists($uname{machine}) && $uname{machine} ne 'm68k') {
 	ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	return;
