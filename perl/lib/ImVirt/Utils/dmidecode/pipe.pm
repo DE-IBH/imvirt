@@ -41,7 +41,7 @@ my $devmem = '/dev/mem';
 
 sub available() {
     my $avail = (-r $devmem && -x $dmidecode);
-    ImVirt::debug(__PACKAGE__, "(-r $devmem && -x $dmidecode) => $avail");
+    ImVirt::debug(__PACKAGE__, "(-r $devmem && -x $dmidecode) => ".defined($avail));
 
     return $avail;
 }
