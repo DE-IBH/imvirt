@@ -1,3 +1,12 @@
+imvirt (0.9.3) unstable; urgency=low
+
+  * New detectors:
+     ARAnyM
+     lguest
+  * Reduce perl warnings.
+
+ -- Thomas Liske <liske@ibh.de>  
+
 imvirt (0.9.2) unstable; urgency=low
 
   * Improve overall detection.
