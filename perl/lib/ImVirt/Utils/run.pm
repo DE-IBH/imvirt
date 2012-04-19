@@ -42,8 +42,14 @@ eval 'use File::Which;';
 my $nowhich = $@;
 
 sub run_exec(@) {
-    my $cmd = (defined($nowhich) ? shift : which(shift));
-    exec($cmd, @_) if(defined($cmd));
+    my $cmd = shift;
+    my $run = ($nowhich ne '' ? $cmd : which($cmd));
+    if(defined($run)) {
+	exec($run, @_);
+    }
+    else {
+	ImVirt::debug(__PACKAGE__, "binary $cmd not found");
+    }
 }
 
 1;
