@@ -31,6 +31,7 @@ use warnings;
 use Data::Dumper;
 use IO::Handle;
 use ImVirt::Utils::run;
+use ImVirt::Utils::procfs;
 require Exporter;
 our @ISA = qw(Exporter);
 
@@ -42,36 +43,41 @@ our $VERSION = '0.1';
 
 my %pcidevs;
 
-pipe(PARENT_RDR, CHILD_WTR);
-if(my $pid = fork()) {
-    close(CHILD_WTR);
-    foreach my $line (<PARENT_RDR>) {
-	chomp($line);
-	unless($line =~ /^([\da-f:.]+) "([^"]*)" "([^"]*)" "([^"]*)" ([^"]*) ?"([^"]*)" "([^"]*)"$/) {
-	    warn "Unexpected output from lspci: $line\n";
-	    next;
+if(procfs_isdir('bus/pci')) {
+    pipe(PARENT_RDR, CHILD_WTR);
+    if(my $pid = fork()) {
+	close(CHILD_WTR);
+	foreach my $line (<PARENT_RDR>) {
+	    chomp($line);
+	    unless($line =~ /^([\da-f:.]+) "([^"]*)" "([^"]*)" "([^"]*)" ([^"]*) ?"([^"]*)" "([^"]*)"$/) {
+		warn "Unexpected output from lspci: $line\n";
+		next;
+	    }
+
+	    $pcidevs{$1} = {
+		'addr' => $1,
+		'type' => $2,
+		'vendor' => $3,
+		'device' => $4,
+		'rev' => $5,
+	    };
 	}
+	close(PARENT_RDR);
+    } else {
+	die "Cannot fork: $!\n" unless defined($pid);
 
-	$pcidevs{$1} = {
-	    'addr' => $1,
-	    'type' => $2,
-	    'vendor' => $3,
-	    'device' => $4,
-	    'rev' => $5,
-	};
+	close(PARENT_RDR);
+	open(STDOUT, '>&CHILD_WTR') || die "Could not dup: $!\n";
+
+	run_exec('lspci', '-m');
+
+	exit;
     }
-    close(PARENT_RDR);
-} else {
-    die "Cannot fork: $!\n" unless defined($pid);
-
-    close(PARENT_RDR);
-    open(STDOUT, '>&CHILD_WTR') || die "Could not dup: $!\n";
-
-    run_exec('lspci', '-m');
-
-    exit;
+    ImVirt::debug(__PACKAGE__, Dumper(\%pcidevs));
 }
-ImVirt::debug(__PACKAGE__, Dumper(\%pcidevs));
+else {
+    ImVirt::debug(__PACKAGE__, "procfs does not contain a bus/pci directory");
+}
 
 sub pcidevs_get() {
     return %pcidevs;
