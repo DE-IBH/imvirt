@@ -65,9 +65,10 @@ sub dmidecode_string($) {
 
     my $res = join(' ', @res);
 
-    ImVirt::debug(__PACKAGE__, "reading '$fn': $res");
-
-    return $res if($res);
+    if($res) {
+	ImVirt::debug(__PACKAGE__, "dmidecode_string($s) => $res");
+	return $res;
+    }
 
     return undef;
 }
@@ -82,7 +83,10 @@ sub dmidecode_type($) {
 
     my $res = join(' ', @res);
 
-    return $res if($res);
+    if($res) {
+	ImVirt::debug(__PACKAGE__, "dmidecode_type($_) => $res");
+	return $res;
+    }
 
     return undef;
 }

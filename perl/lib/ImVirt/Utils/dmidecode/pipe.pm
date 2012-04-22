@@ -64,7 +64,10 @@ sub dmidecode() {
 
 	my $res = join(' ', @res);
 
-	return $res if($res);
+	if($res) {
+	    ImVirt::debug(__PACKAGE__, "dmidecode(".join(', ', @_).") => $res");
+	    return $res;
+	}
 
 	return undef;
     } else {

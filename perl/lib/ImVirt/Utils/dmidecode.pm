@@ -6,7 +6,7 @@
 #   Thomas Liske <liske@ibh.de>
 #
 # Copyright Holder:
-#   2009 - 2011 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#   2009 - 2012 (C) IBH IT-Service GmbH [http://www.ibh.de/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -42,21 +42,24 @@ our @EXPORT = qw(
 
 our $VERSION = '0.2';
 
+my $has_kernel = ImVirt::Utils::dmidecode::kernel::available();
+my $has_pipe = ImVirt::Utils::dmidecode::pipe::available();
+
 sub dmidecode_string($) {
     return ImVirt::Utils::dmidecode::kernel::dmidecode_string(shift)
-	if(ImVirt::Utils::dmidecode::kernel::available());
+	if($has_kernel);
 
     return ImVirt::Utils::dmidecode::pipe::dmidecode_string(shift)
-	if(ImVirt::Utils::dmidecode::pipe::available());
+	if($has_pipe);
 
     return ();
 }
 sub dmidecode_type($) {
     return ImVirt::Utils::dmidecode::kernel::dmidecode_type(shift)
-	if(ImVirt::Utils::dmidecode::kernel::available());
+	if($has_kernel);
 
     return ImVirt::Utils::dmidecode::pipe::dmidecode_type(shift)
-	if(ImVirt::Utils::dmidecode::pipe::available());
+	if($has_pipe);
 
     return ();
 }
