@@ -5,6 +5,7 @@ imvirt (0.9.3) unstable; urgency=low
   * Use File::Which if available (no shell used to execute binaries).
   * Take only used virtio kernel modules into account.
   * Improve imvirt.spec.in (thanks to Miroslav Suchý <msuchy@redhat.com>).
+  * Don't call lspci unless /proc/bus/pci is available.
 
  -- Thomas Liske <liske@ibh.de>  
 
