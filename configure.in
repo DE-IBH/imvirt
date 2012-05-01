@@ -46,7 +46,6 @@ Makefile
 helper/Makefile
 man/Makefile
 imvirt.spec
-imvirt-report
 perl/lib/ImVirt.pm
 ])
 

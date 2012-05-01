@@ -4482,7 +4482,7 @@ fi
 MYDIR=$libexecdir
 
 
-ac_config_files="$ac_config_files Makefile helper/Makefile man/Makefile imvirt.spec imvirt-report perl/lib/ImVirt.pm"
+ac_config_files="$ac_config_files Makefile helper/Makefile man/Makefile imvirt.spec perl/lib/ImVirt.pm"
 
 
 cat >confcache <<\_ACEOF
@@ -5224,7 +5224,6 @@ do
     "helper/Makefile") CONFIG_FILES="$CONFIG_FILES helper/Makefile" ;;
     "man/Makefile") CONFIG_FILES="$CONFIG_FILES man/Makefile" ;;
     "imvirt.spec") CONFIG_FILES="$CONFIG_FILES imvirt.spec" ;;
-    "imvirt-report") CONFIG_FILES="$CONFIG_FILES imvirt-report" ;;
     "perl/lib/ImVirt.pm") CONFIG_FILES="$CONFIG_FILES perl/lib/ImVirt.pm" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
