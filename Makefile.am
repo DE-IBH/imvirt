@@ -7,6 +7,7 @@ AUTOMAKE_OPTIONS =
 BUILT_SOURCES = perl
 
 bin_SCRIPTS = imvirt
+sbin_SCRIPTS = imvirt-report
 
 install-exec-local:
 	[ ! -f perl/Makefile ] || ( cd perl && $(MAKE) install )
