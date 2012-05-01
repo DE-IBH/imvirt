@@ -1,0 +1,117 @@
+#!/usr/bin/perl
+
+# imvirt - I'm virtualized?
+#
+# $Id$
+#
+# Authors:
+#   Thomas Liske <liske@ibh.de>
+#
+# Copyright Holder:
+#   2012 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#
+# License:
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this package; if not, write to the Free Software
+#   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+#
+
+use strict;
+use warnings;
+use MIME::Lite;
+use ImVirt;
+
+eval 'use File::Which;';
+my $nowhich = $@;
+
+my $to = 'imvirt@fiasko-nw.net';
+my $hostname = `hostname -f`;
+my $ivout = imv_get(IMV_PROB_DEFAULT);
+my $comment;
+
+my $msg = MIME::Lite->new(
+    To		=> $to,
+    From	=> $from,
+    Cc		=> $from,
+    Subject	=> "[imvirt-report] $hostname",
+    Type	=> 'multipart/mixed',
+);
+
+$msg->attach(
+    Type	=> 'TEXT',
+    Data	=> "Hostname: $hostname\nimvirt output: $ivout\nComment: $comment\n",
+);
+
+sub attach_path($$) {
+    my ($msg, $glob) = @_;
+
+    foreach my $path (glob $glob) {
+	my $fn = $path;
+	$fn =~ s@/@_@g;
+
+	unless (-r $path) {
+	    $msg->attach(
+		Type => 'TEXT',
+		Data => "File $path not readable!",
+		Filename => $fn,
+	    );
+	}
+	else {
+	    $msg->attach(
+		Type => 'TEXT',
+		Path => $path,
+		Filename => $fn,
+	    );
+	}
+}
+
+sub attach_cmd($$$) {
+    my ($msg, $cmd, $params) = @_;
+    my $run = ($nowhich ne '' ? $cmd : which($cmd));
+
+    unless (defined($run)) {
+	$msg->attach(
+	    Type => 'TEXT',
+	    Data => "Command $cmd not available!",
+	    Filename => $cmd,
+	);
+
+	return;
+    }
+
+    $msg->attach(
+	Type => 'TEXT',
+	Data => `$run $params 2>&1`,
+	Filename => $cmd,
+    );
+}
+
+attach_path($msg, '/proc/cmdline');
+attach_path($msg, '/proc/cpuinfo');
+attach_path($msg, '/proc/mounts');
+attach_path($msg, '/proc/modules');
+attach_path($msg, '/proc/bus/input/devices');
+attach_path($msg, '/sys/devices/system/clocksource/clocksource*/available_clocksource');
+attach_path($msg, '/sys/devices/system/cpu/cpu*/cpufreq/scaling_driver');
+attach_path($msg, '/var/log/dmesg');
+
+attach_cmd($msg, 'dmesg', '');
+attach_cmd($msg, 'dmidecode', '');
+attach_cmd($msg, 'find', '/dev');
+attach_cmd($msg, 'find', '/proc');
+attach_cmd($msg, 'find', '/sys');
+attach_cmd($msg, 'imvirt', '-d');
+attach_cmd($msg, 'lsb_release', '-a');
+attach_cmd($msg, 'uname', '-a');
+
+$msg->send();
