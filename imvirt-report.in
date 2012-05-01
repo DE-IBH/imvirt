@@ -31,25 +31,74 @@ use warnings;
 use MIME::Lite;
 use ImVirt;
 
+$|++;
+
 eval 'use File::Which;';
 my $nowhich = $@;
 
+
+print <<EOH;
+This script collects data about the running system (i.e. CPU, DMI table,
+content of various files from /proc or /sys). This might help to improve
+the heuristic of imvirt on detecting virtualization containers in future
+releases.
+
+This script will ask you for each dataset which is collected. Before
+sending any data, you will be able to review the collection.
+EOH
+
+
+my $from;
+print <<FROM;
+
+Please provide an email address which might be used by the author of
+imvirt to get in contact with you if there are any queries or
+uncertainness about your setup (you might leave it blank):
+FROM
+chomp($from = <STDIN>);
+
+
+my $comment;
+do {
+    print <<CMT;
+
+Please provide a short but complete description of your virtualization
+setup (i.e. VMware ESXi 5.0 U1):
+CMT
+
+    chomp($comment = <STDIN>);
+} while(length($comment) < 3);
+
+
+my $qa;
+do {
+    print <<QA;
+
+Would you like to be asked for each dataset which is to be collected
+(saying no will skip any confirmation but not the data review)? [Y/n]
+QA
+
+    chomp($qa = <STDIN>);
+} while(!($qa =~ /^[yn]?$/i));
+
+$qa = (lc($qa) ne 'n' ? 1 : 0);
+
+
 my $to = 'imvirt@fiasko-nw.net';
 my $hostname = `hostname -f`;
+chomp($hostname);
 my $ivout = imv_get(IMV_PROB_DEFAULT);
-my $comment;
 
 my $msg = MIME::Lite->new(
     To		=> $to,
     From	=> $from,
-    Cc		=> $from,
     Subject	=> "[imvirt-report] $hostname",
     Type	=> 'multipart/mixed',
 );
 
 $msg->attach(
     Type	=> 'TEXT',
-    Data	=> "Hostname: $hostname\nimvirt output: $ivout\nComment: $comment\n",
+    Data	=> "Hostname: $hostname\nImVirt Version: $ImVirt::VERSION\nImVirt Output: $ivout\nUser Comment: $comment\n",
 );
 
 sub attach_path($$) {
@@ -67,12 +116,26 @@ sub attach_path($$) {
 	    );
 	}
 	else {
-	    $msg->attach(
-		Type => 'TEXT',
-		Path => $path,
-		Filename => $fn,
-	    );
+	    my $allow = 1;
+	    if($qa) {
+		my $q;
+		do {
+		    print "Attach the content of '$path'? [Y/n]: ";
+		    chomp($q = <STDIN>);
+		} while(!($q =~ /^[yn]?$/i));
+		$allow = (lc($q) ne 'n');
+	    }
+
+	    if ($allow) {
+		print " Attaching '$path'.\n";
+		$msg->attach(
+		    Type => 'TEXT',
+		    Path => $path,
+		    Filename => $fn,
+		);
+	    }
 	}
+    }
 }
 
 sub attach_cmd($$$) {
@@ -89,11 +152,24 @@ sub attach_cmd($$$) {
 	return;
     }
 
-    $msg->attach(
-	Type => 'TEXT',
-	Data => `$run $params 2>&1`,
-	Filename => $cmd,
-    );
+    my $allow = 1;
+    if($qa) {
+	my $q;
+	do {
+	    print "Attach the output of `$run $params`? [Y/n]: ";
+	    chomp($q = <STDIN>);
+	} while(!($q =~ /^[yn]?$/i));
+	$allow = (lc($q) ne 'n');
+    }
+
+    if ($allow) {
+	print " Attaching `$cmd $params`.\n";
+	$msg->attach(
+	    Type => 'TEXT',
+	    Data => `$run $params 2>&1`,
+	    Filename => $cmd,
+	);
+    }
 }
 
 attach_path($msg, '/proc/cmdline');
@@ -112,6 +188,10 @@ attach_cmd($msg, 'find', '/proc');
 attach_cmd($msg, 'find', '/sys');
 attach_cmd($msg, 'imvirt', '-d');
 attach_cmd($msg, 'lsb_release', '-a');
+attach_cmd($msg, 'lspci', '');
 attach_cmd($msg, 'uname', '-a');
 
-$msg->send();
+$msg->send('smtp');
+$msg->send() unless($msg->last_send_successful());
+
+die "Sorry, failed to send mail!\n" unless($msg->last_send_successful());
