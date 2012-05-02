@@ -44,7 +44,8 @@ the heuristic of imvirt on detecting virtualization containers in future
 releases.
 
 This script will ask you for each dataset which is collected. Before
-sending any data, you will be able to review the collection.
+sending any data, you will be able to review the collection. You need a
+working e-mail setup to send the report.
 EOH
 
 
@@ -191,7 +192,42 @@ attach_cmd($msg, 'lsb_release', '-a');
 attach_cmd($msg, 'lspci', '');
 attach_cmd($msg, 'uname', '-a');
 
-$msg->send('smtp');
-$msg->send() unless($msg->last_send_successful());
+my $tempfile = `tempfile -p imvirt`;
+open(HTEMP, '>', $tempfile) || die;
+$msg->print(\*HTEMP);
+close(HTEMP);
 
-die "Sorry, failed to send mail!\n" unless($msg->last_send_successful());
+my $pager = ($nowhich ne '' ? ($ENV{PAGER} || 'less') : which( ($ENV{PAGER} || 'less') ));
+system($pager, $tempfile);
+unlink($tempfile);
+
+my $send;
+do {
+    print <<SEND;
+
+Would you like to send this data? You might say 'n' to forbid
+imvirt-report to send any data. [y/n]
+SEND
+
+    chomp($send = <STDIN>);
+} while(!($send =~ /^[yn]$/i));
+
+if(lc($send) eq 'y') {
+    $msg->send('smtp');
+    $msg->send() unless($msg->last_send_successful());
+
+    die "Sorry, failed to send mail!\n" unless($msg->last_send_successful());
+
+    print <<THX;
+
+The report has been send, thank you for contribution!
+
+THX
+}
+else {
+    print <<ABRT;
+
+Aborted on user demand.
+
+ABRT
+}
