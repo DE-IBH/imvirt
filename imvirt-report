@@ -45,7 +45,7 @@ releases.
 
 This script will ask you for each dataset which is collected. Before
 sending any data, you will be able to review the collection. You need a
-working e-mail setup to send the report.
+working e-mail setup to be able to send the report.
 EOH
 
 
@@ -76,7 +76,7 @@ do {
     print <<QA;
 
 Would you like to be asked for each dataset which is to be collected
-(saying no will skip any confirmation but not the data review)? [Y/n]
+(saying no will skip any further confirmation except the data review)? [Y/n]
 QA
 
     chomp($qa = <STDIN>);
@@ -93,7 +93,7 @@ my $ivout = imv_get(IMV_PROB_DEFAULT);
 my $msg = MIME::Lite->new(
     To		=> $to,
     From	=> $from,
-    Subject	=> "[imvirt-report] $hostname",
+    Subject	=> $hostname,
     Type	=> 'multipart/mixed',
 );
 
