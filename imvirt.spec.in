@@ -25,6 +25,8 @@ The following containers are detected:
 
     * ARAnyM
     * KVM
+    * lguest
+    * LXC
     * OpenVZ/Virtuozzo
     * QEMU
     * UML
@@ -32,7 +34,6 @@ The following containers are detected:
     * Virtual PC/Virtual Server
     * VirtualBox
     * Xen (para and non-para virtualized)
-    * lguest
     * any HVM providing CPUID 0x40000000 detection
 
 %prep

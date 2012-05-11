@@ -8,6 +8,8 @@ installed tools etc.
 Detected virtualizations:
  - ARAnyM
  - KVM
+ - lguest
+ - LXC
  - OpenVZ/Virtuozzo
  - QEMU
  - UML
@@ -15,7 +17,6 @@ Detected virtualizations:
  - Virtual PC/Virtual Server
  - VirtualBox
  - Xen (para and non-para virtualized)
- - lguest
  - any HVM providing CPUID 0x40000000 detection
 
 imvirt is comparable with virt-what [1]. imvirt was written to run as
