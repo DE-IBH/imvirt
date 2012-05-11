@@ -173,6 +173,8 @@ sub attach_cmd($$$) {
     }
 }
 
+attach_path($msg, '/proc/1/cgroup');
+attach_path($msg, '/proc/1/environ');
 attach_path($msg, '/proc/cmdline');
 attach_path($msg, '/proc/cpuinfo');
 attach_path($msg, '/proc/mounts');
