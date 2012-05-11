@@ -85,7 +85,7 @@ QA
 $qa = (lc($qa) ne 'n' ? 1 : 0);
 
 
-my $to = 'imvirt@fiasko-nw.net';
+my $to = 'imvirt-report@lists.sourceforge.net';
 my $hostname = `hostname -f`;
 chomp($hostname);
 my $ivout = imv_get(IMV_PROB_DEFAULT);
