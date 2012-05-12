@@ -167,7 +167,7 @@ sub attach_cmd($$$) {
 	print " Attaching `$cmd $params`.\n";
 	$msg->attach(
 	    Type => 'TEXT',
-	    Data => `$run $params 2>&1`,
+	    Data => scalar `$run $params 2>&1`,
 	    Filename => $cmd,
 	);
     }
