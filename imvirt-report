@@ -194,28 +194,40 @@ attach_cmd($msg, 'lsb_release', '-a');
 attach_cmd($msg, 'lspci', '');
 attach_cmd($msg, 'uname', '-a');
 
-my $tempfile = `tempfile -p imvirt`;
-open(HTEMP, '>', $tempfile) || die;
-$msg->print(\*HTEMP);
-close(HTEMP);
+my $spager;
+do {
+    print <<PAGER;
 
-my $pager = ($nowhich ne '' ? ($ENV{PAGER} || 'less') : which( ($ENV{PAGER} || 'less') ));
-system($pager, $tempfile);
-unlink($tempfile);
+Would you like to review the data? [Y/n]
+PAGER
+
+    chomp($spager = <STDIN>);
+} while(!($spager =~ /^[yn]?$/i));
+
+if(lc($spager) ne 'n') {
+    my $tempfile = `tempfile -p imvirt`;
+    open(HTEMP, '>', $tempfile) || die;
+    $msg->print(\*HTEMP);
+    close(HTEMP);
+
+    my $pager = ($nowhich ne '' ? ($ENV{PAGER} || 'less') : which( ($ENV{PAGER} || 'less') ));
+    system($pager, $tempfile);
+    unlink($tempfile);
+}
 
 my $send;
 do {
     print <<SEND;
 
-Would you like to send this data? You might say 'n' to forbid
-imvirt-report to send any data. [y/n]
+Would you like to send this data? You need to have a working MTA
+configuration on this host. You might say 'n' to forbid
+imvirt-report to send any data or send it yourself. [y/n]
 SEND
 
     chomp($send = <STDIN>);
 } while(!($send =~ /^[yn]$/i));
 
 if(lc($send) eq 'y') {
-    $msg->send('smtp');
     $msg->send() unless($msg->last_send_successful());
 
     die "Sorry, failed to send mail!\n" unless($msg->last_send_successful());
@@ -227,9 +239,24 @@ The report has been send, thank you for contribution!
 THX
 }
 else {
-    print <<ABRT;
+    my $save;
+    print <<SAVE;
 
-Aborted on user demand.
+Please enter a filename to save the data to. You might send the file
+to $to by yourself.
+Filename: [imvirt-report_${hostname}_$$.eml]
+SAVE
 
-ABRT
+    chomp($save = <STDIN>);
+    $save = "imvirt-report_${hostname}_$$.eml" if($save eq '');
+
+    open(HSAVE, '>', $save) || die;
+    $msg->print(\*HSAVE);
+    close(HSAVE);
+
+    print <<SAVED;
+
+Data saved to '$save'.
+
+SAVED
 }
