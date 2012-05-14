@@ -9,7 +9,7 @@ imvirt (0.9.3) unstable; urgency=low
   * Don't call lspci unless /proc/bus/pci is available.
   * Add imvirt-report binary.
 
- -- Thomas Liske <liske@ibh.de>  
+ -- Thomas Liske <liske@ibh.de>  Mon, 14 May 2012 19:16:57 +0200
 
 imvirt (0.9.2) unstable; urgency=low
 
