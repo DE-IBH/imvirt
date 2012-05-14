@@ -6,7 +6,7 @@
  *   Thomas Liske <liske@ibh.de>
  *
  * Copyright Holder:
- *   2009 - 2010 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+ *   2009 - 2012 (C) IBH IT-Service GmbH [http://www.ibh.de/]
  *
  * License:
  *   This program is free software; you can redistribute it and/or modify
@@ -43,12 +43,19 @@
 
 #define VMWARE_CMD_GETVERSION 0x0a
 
-#define VMWARE_CMD(cmd, eax, ebx, ecx, edx) \
+#define VMWARE_CMD(eax, ebx, ecx, edx) \
     __asm__("inl (%%dx)" : \
-    "=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) : \
-    "0"(VMWARE_MAGIC), "1"(VMWARE_CMD_##cmd), \
-    "2"(VMWARE_PORT), "3"(0) : \
-    "memory");
+	"+a"(eax), "+b"(ebx), "+c"(ecx), "+d"(edx) : \
+    );
+
+static void vmware_cmd(uint32_t cmd, uint32_t *eax, uint32_t *ebx, uint32_t *ecx, uint32_t *edx) {
+    *eax = VMWARE_MAGIC;
+    *ebx = 0xffffffff;
+    *ecx = cmd;
+    *edx = VMWARE_PORT;
+
+    VMWARE_CMD(*eax, *ebx, *ecx, *edx);
+}
 
 static void sigh(int signum) {
     exit(0);
@@ -64,7 +71,7 @@ static int do_vmware() {
     sa.sa_flags = 0;
     sigaction(SIGSEGV, &sa, NULL);
 
-    VMWARE_CMD(GETVERSION, eax, ebx, ecx, edx);
+    vmware_cmd(VMWARE_CMD_GETVERSION, &eax, &ebx, &ecx, &edx);
 
     /* sanity check: maybe VMWARE_CMD did not SEGV if there was something
      * on the I/O port - test if EBX has been set to VMWARE_MAGIC */
