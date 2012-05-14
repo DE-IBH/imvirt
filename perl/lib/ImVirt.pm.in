@@ -42,8 +42,10 @@ virtualization container. At least the following container
 should be detected:
 
 =over 4
-=item lguest
+=item ARAnyM
 =item KVM
+=item lguest
+=item LXC
 =item OpenVZ
 =item QEMU
 =item UML
