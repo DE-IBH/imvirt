@@ -31,7 +31,7 @@ extern int debug_cpuid;
 void helper_main(int, char **);
 
 #if defined(__i386__) && defined(__PIC__)
-#define cpuid(leaf, eax, ebx, ecx, edx)				\
+#define CPUID(leaf, eax, ebx, ecx, edx)				\
     __asm__ (							\
 	"xchgl %%ebx, %1;"					\
 	"cpuid;"						\
@@ -40,7 +40,7 @@ void helper_main(int, char **);
 	: "0" (leaf));						\
     if(debug_cpuid) fprintf(stderr, "%s:%d\tCPUID[0x%x]: eax=%d ebx=%d ecx=%d edx=%d\n", __FILE__, __LINE__, leaf, eax, ebx, ecx, edx)
 #else
-#define cpuid(leaf, eax, ebx, ecx, edx)				\
+#define CPUID(leaf, eax, ebx, ecx, edx)				\
     __asm__ (							\
 	"cpuid"							\
 	: "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)	\
