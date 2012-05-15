@@ -50,8 +50,8 @@ while(<HKMS>) {
 	chomp;
 	if(/^(\S+) (\d+) (\d+) (\S+) (\S+) (0x[a-f\d]+)/) {
 	    ${$kmods{$1}}{'size'} = $2;
-	    ${$kmods{$1}}{'type'} = $3;
-	    ${$kmods{$1}}{'used'} = $4;
+	    ${$kmods{$1}}{'instances'} = $3;
+	    ${$kmods{$1}}{'usedby'} = $4;
 	    ${$kmods{$1}}{'state'} = $5;
 	    ${$kmods{$1}}{'by'} = $6;
 	}
@@ -84,7 +84,7 @@ sub kmods_match_used(%) {
 
     foreach my $kmod (keys %kmods) {
 	foreach my $regex (keys %regexs) {
-	    if($kmod =~ /$regex/ && ${$kmods{$kmod}}{'used'} > 0) {
+	    if($kmod =~ /$regex/ && ${$kmods{$kmod}}{'instances'} > 0) {
 		$pts += $regexs{$regex};
 		delete($regexs{$regex});
 	    }
