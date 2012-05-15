@@ -31,7 +31,7 @@ use warnings;
 use constant PRODUCT => '|LXC';
 
 use ImVirt;
-use ImVirt::Utils::sysfs;
+use ImVirt::Utils::procfs;
 
 ImVirt::register_vmd(__PACKAGE__);
 
