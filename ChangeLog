@@ -1,3 +1,10 @@
+imvirt (0.9.4) unstable; urgency=low
+
+  * Fix some FTBFS due gcc 4.7.
+  * Fix pod2man error (ImVirt.pm).
+
+ -- Thomas Liske <liske@ibh.de>  
+
 imvirt (0.9.3) unstable; urgency=low
 
   * Add ARAnyM detection support.
