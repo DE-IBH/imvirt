@@ -41,18 +41,30 @@ The C<ImVirt> package tries to detect if it is run in a
 virtualization container. At least the following container
 should be detected:
 
-=over 4
+=over
+
 =item ARAnyM
+
 =item KVM
+
 =item lguest
+
 =item LXC
+
 =item OpenVZ
+
 =item QEMU
+
 =item UML
+
 =item VirtualBox
+
 =item Virtual PC/Server
+
 =item VMware
+
 =item Xen
+
 =back
 
 =head1 DETECTION HEURISTIC
