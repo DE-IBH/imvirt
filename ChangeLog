@@ -11,7 +11,7 @@ imvirt (0.9.4) unstable; urgency=low
   * Use mktemp instead of tempfile (debianutils) in imvirt-report
     (reported by Miroslav Suchý <msuchy@redhat.com>).
 
- -- Thomas Liske <liske@ibh.de>  
+ -- Thomas Liske <liske@ibh.de>  Thu, 17 May 2012 20:32:04 +0200
 
 imvirt (0.9.3) unstable; urgency=low
 
