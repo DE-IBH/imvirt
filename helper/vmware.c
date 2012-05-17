@@ -43,10 +43,20 @@
 
 #define VMWARE_CMD_GETVERSION 0x0a
 
+#if defined(__i386__) && defined(__PIC__)
+#define VMWARE_CMD(eax, ebx, ecx, edx) \
+    __asm__( \
+	"xchgl %%ebx, %1;"					\
+	"inl (%%dx)" : \
+	"xchgl %%ebx, %1"					\
+	"+a"(eax), "+r"(ebx), "+c"(ecx), "+d"(edx) : \
+    );
+#else
 #define VMWARE_CMD(eax, ebx, ecx, edx) \
     __asm__("inl (%%dx)" : \
 	"+a"(eax), "+b"(ebx), "+c"(ecx), "+d"(edx) : \
     );
+#endif
 
 static void vmware_cmd(uint32_t cmd, uint32_t *eax, uint32_t *ebx, uint32_t *ecx, uint32_t *edx) {
     *eax = VMWARE_MAGIC;
