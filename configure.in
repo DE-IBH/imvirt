@@ -4,7 +4,7 @@
 AC_REVISION($Revision$)
 
 AC_PREREQ(2.61)
-AC_INIT(imvirt, 0.9.3, liske@ibh.de)
+AC_INIT(imvirt, 0.9.4, liske@ibh.de)
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([helper/detect.c])
 AC_CONFIG_HEADER([helper/config.h])
