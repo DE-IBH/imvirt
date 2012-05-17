@@ -46,15 +46,15 @@
 #if defined(__i386__) && defined(__PIC__)
 #define VMWARE_CMD(eax, ebx, ecx, edx) \
     __asm__( \
-	"xchgl %%ebx, %1;"					\
-	"inl (%%dx)" : \
-	"xchgl %%ebx, %1"					\
-	"+a"(eax), "+r"(ebx), "+c"(ecx), "+d"(edx) : \
+	"xchgl %%ebx, %1;" \
+	"inl (%%dx);" \
+	"xchgl %%ebx, %1" \
+	: "+a"(eax), "+r"(ebx), "+c"(ecx), "+d"(edx) \
     );
 #else
 #define VMWARE_CMD(eax, ebx, ecx, edx) \
-    __asm__("inl (%%dx)" : \
-	"+a"(eax), "+b"(ebx), "+c"(ecx), "+d"(edx) : \
+    __asm__("inl (%%dx)" \
+	: "+a"(eax), "+b"(ebx), "+c"(ecx), "+d"(edx) \
     );
 #endif
 
