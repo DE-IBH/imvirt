@@ -43,6 +43,15 @@
 
 static int pv_context;
 
+#if defined(__i386__) && defined(__PIC__)
+static void cpuid(uint32_t idx, uint32_t *eax, uint32_t *ebx, uint32_t *ecx, uint32_t *edx) {
+    asm volatile (
+        "test %1,%1 ; jz 1f ; ud2a ; .ascii \"xen\" ; 1: xchgl %%ebx, %1; cpuid; xchgl %%ebx, %1"
+        : "=a" (*eax), "=r" (*ebx), "=c" (*ecx), "=d" (*edx)
+        : "0" (idx), "1" (pv_context)
+    );
+}
+#else
 static void cpuid(uint32_t idx, uint32_t *eax, uint32_t *ebx, uint32_t *ecx, uint32_t *edx) {
     asm volatile (
         "test %1,%1 ; jz 1f ; ud2a ; .ascii \"xen\" ; 1: cpuid"
@@ -50,6 +59,7 @@ static void cpuid(uint32_t idx, uint32_t *eax, uint32_t *ebx, uint32_t *ecx, uin
         : "0" (idx), "1" (pv_context)
     );
 }
+#endif
 
 static int check_for_xen(void) {
     uint32_t eax, ebx, ecx, edx;
