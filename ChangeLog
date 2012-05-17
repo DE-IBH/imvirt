@@ -8,6 +8,8 @@ imvirt (0.9.4) unstable; urgency=low
     (reported by Miroslav Suchý <msuchy@redhat.com>).
   * Fix /proc/modules interpretation
     (reported by Miroslav Suchý <msuchy@redhat.com>).
+  * Use mktemp instead of tempfile (debianutils) in imvirt-report
+    (reported by Miroslav Suchý <msuchy@redhat.com>).
 
  -- Thomas Liske <liske@ibh.de>  
 

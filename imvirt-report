@@ -205,7 +205,7 @@ PAGER
 } while(!($spager =~ /^[yn]?$/i));
 
 if(lc($spager) ne 'n') {
-    my $tempfile = `tempfile -p imvirt`;
+    my $tempfile = `mktemp --tmpdir imvirt.XXXXXXXXXX`;
     open(HTEMP, '>', $tempfile) || die;
     $msg->print(\*HTEMP);
     close(HTEMP);
