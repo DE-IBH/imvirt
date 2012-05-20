@@ -1,9 +1,16 @@
+imvirt (0.9.5) unstable; urgency=low
+
+  * Add imvirt-report manpage from Debian,
+     thanks to Patrick Matthäi <pmatthaei@debian.org>.
+
+ -- Thomas Liske <liske@ibh.de>  
+
 imvirt (0.9.4) unstable; urgency=low
 
   * Fix some FTBFS due gcc 4.7
-    (reported by Patrick Matthäi <patrick.matthaei@web.de>).
+    (reported by Patrick Matthäi <pmatthaei@debian.org>).
   * Fix pod2man error (ImVirt.pm)
-    (reported by Patrick Matthäi <patrick.matthaei@web.de>).
+    (reported by Patrick Matthäi <pmatthaei@debian.org>).
   * Fix wrong use statement in LXC.pm
     (reported by Miroslav Suchý <msuchy@redhat.com>).
   * Fix /proc/modules interpretation
