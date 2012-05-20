@@ -1,12 +1,10 @@
 # ImVirt - I'm virtualized?
 #
-# $Id$
-#
 # Authors:
 #   Thomas Liske <liske@ibh.de>
 #
 # Copyright Holder:
-#   2011 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#   2011 - 2012 (C) IBH IT-Service GmbH [http://www.ibh.de/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify

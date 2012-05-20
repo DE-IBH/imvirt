@@ -1,7 +1,5 @@
 # ImVirt - I'm virtualized?
 #
-# $Id$
-#
 # Authors:
 #   Thomas Liske <liske@ibh.de>
 #
