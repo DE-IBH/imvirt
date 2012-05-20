@@ -1,12 +1,10 @@
 /* imvirt / pillbox - retrieve several unprivileged registers
  *
- * $Id$
- *
  * Authors:
  *   Thomas Liske <liske@ibh.de>
  *
  * Copyright Holder:
- *   2010 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+ *   2012 (C) IBH IT-Service GmbH [http://www.ibh.de/]
  *
  * License:
  *   This program is free software; you can redistribute it and/or modify

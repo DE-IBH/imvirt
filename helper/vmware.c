@@ -1,7 +1,5 @@
 /* imvirt / VMware detection code
  *
- * $Id$
- *
  * Authors:
  *   Thomas Liske <liske@ibh.de>
  *

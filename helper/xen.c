@@ -1,7 +1,5 @@
 /* imvirt / Xen detection code
  *
- * $Id$
- *
  * This file has been taken from XenSource's xen_detect.c with some small
  * changes to fit imvirt requirements on output / return codes.
  *
