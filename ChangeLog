@@ -2,6 +2,9 @@ imvirt (0.9.5) unstable; urgency=low
 
   * Add imvirt-report manpage from Debian,
      thanks to Patrick Matthäi <pmatthaei@debian.org>.
+  * Move source from SourceForge SVN to github,
+    cleanup svn:keywords usage.
+  * Update perl/Makefile.PL (require File::Which).
 
  -- Thomas Liske <liske@ibh.de>  
 

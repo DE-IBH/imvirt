@@ -8,5 +8,6 @@ WriteMakefile(
     'PREREQ_PM'		=> {
 	Module::Find => 0,
 	File::Slurp => 0,
+	File::Which => 0,
     },
 );
