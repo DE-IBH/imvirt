@@ -43,8 +43,8 @@ our $VERSION = '0.1';
 my $procdir = procfs_getmp();
 my %kmods;
 
-open(HKMS, "$procdir/modules");
-while(<HKMS>) {
+if(open(HKMS, "$procdir/modules")) {
+    while(<HKMS>) {
 	chomp;
 	if(/^(\S+) (\d+) (\d+) (\S+) (\S+) (0x[a-f\d]+)/) {
 	    ${$kmods{$1}}{'size'} = $2;
@@ -53,8 +53,12 @@ while(<HKMS>) {
 	    ${$kmods{$1}}{'state'} = $5;
 	    ${$kmods{$1}}{'by'} = $6;
 	}
+    }
+    ImVirt::debug(__PACKAGE__, Dumper(\%kmods));
 }
-ImVirt::debug(__PACKAGE__, Dumper(\%kmods));
+else {
+    ImVirt::debug(__PACKAGE__, "failed to open $procdir/modules: $!");
+}
 
 sub kmods_get() {
     return %kmods;
