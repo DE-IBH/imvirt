@@ -47,6 +47,10 @@ sub detect($) {
 	ImVirt::inc_pts($dref, $f, IMV_PHYSICAL) if($f > 0);
     }
 
+    # Does the kernel provide /dev/kvm?
+    ImVirt::inc_pts($dref, IMV_PTS_MINOR, IMV_PHYSICAL)
+	if(-c '/dev/kvm');
+
     # Does the kernel reports a hypervisor?
     if(defined(my $f = cpuinfo_hasflags(
 	'hypervisor' => IMV_PTS_DRASTIC,
