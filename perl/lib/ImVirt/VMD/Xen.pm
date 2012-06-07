@@ -113,6 +113,12 @@ sub detect($) {
     if(my $hlp = helper('xen')) {
 	ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT, split(/\s+/, $hlp));
     }
+
+    # Check /sys/hypervisor/type
+    if(defined(my $hv = sysfs_read('hypervisor/type'))) {
+	ImVirt::inc_pts($dref, IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT)
+	    if($hv =~ /xen/i);
+    }
 }
 
 sub pres() {
