@@ -61,6 +61,7 @@ make clean
 %files
 %defattr(-,root,root,-)
 %{_bindir}/*
+%{_sbindir}/*
 %dir %{_libexecdir}/imvirt
 %{_libexecdir}/imvirt/*
 %doc AUTHORS COPYING ChangeLog README
