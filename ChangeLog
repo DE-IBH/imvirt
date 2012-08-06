@@ -5,6 +5,8 @@ imvirt (0.9.5) unstable; urgency=low
   * Move source from SourceForge SVN to github,
     cleanup svn:keywords usage.
   * Update perl/Makefile.PL (require File::Which).
+  * LXC: Remove inapplicable /proc from procfs_read() parameter
+    (reported by Thorsten Lüttgert <t.luettgert@enda.eu>).
 
  -- Thomas Liske <liske@ibh.de>  
 

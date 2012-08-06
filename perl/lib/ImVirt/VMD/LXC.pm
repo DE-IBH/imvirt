@@ -39,7 +39,7 @@ sub detect($) {
     my $dref = shift;
 
     # Check init's control group data
-    if(defined(my $cg = procfs_read('/proc/1/cgroup'))) {
+    if(defined(my $cg = procfs_read('1/cgroup'))) {
         if($cg =~ /^\d+:[^:]+:/.+$/) {
             ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
         }
@@ -49,7 +49,7 @@ sub detect($) {
     }
 
     # Check init's environment for LXC
-    if(defined(my $env = procfs_read('/proc/1/environ'))) {
+    if(defined(my $env = procfs_read('1/environ'))) {
         if($env =~ /lxc/i) {
             ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
         }
