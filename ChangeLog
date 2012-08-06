@@ -7,6 +7,8 @@ imvirt (0.9.5) unstable; urgency=low
   * Update perl/Makefile.PL (require File::Which).
   * LXC: Remove inapplicable /proc from procfs_read() parameter
     (reported by Thorsten Lüttgert <t.luettgert@enda.eu>).
+  * KVM: Don't count dmesg line twice
+    (reported by Thorsten Lüttgert <t.luettgert@enda.eu>).
 
  -- Thomas Liske <liske@ibh.de>  
 
