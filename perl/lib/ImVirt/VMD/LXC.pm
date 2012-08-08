@@ -30,6 +30,7 @@ use constant PRODUCT => '|LXC';
 
 use ImVirt;
 use ImVirt::Utils::procfs;
+use ImVirt::Utils::jiffies;
 
 ImVirt::register_vmd(__PACKAGE__);
 
@@ -51,6 +52,16 @@ sub detect($) {
     # Check init's environment for LXC
     if(defined(my $env = procfs_read('1/environ'))) {
         if($env =~ /lxc/i) {
+            ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+        }
+        else {
+            ImVirt::dec_pts($dref, IMV_PTS_MINOR, IMV_VIRTUAL, PRODUCT);
+        }
+    }
+
+    # Check init's starttime for LXC
+    if(defined(my $st = procfs_starttime(1))) {
+        if(jiffies_sec($st) >= 5) {
             ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
         }
         else {

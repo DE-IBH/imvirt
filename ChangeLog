@@ -5,10 +5,12 @@ imvirt (0.9.5) unstable; urgency=low
   * Move source from SourceForge SVN to github,
     cleanup svn:keywords usage.
   * Update perl/Makefile.PL (require File::Which).
-  * LXC: Remove inapplicable /proc from procfs_read() parameter
-    (reported by Thorsten Lüttgert <t.luettgert@enda.eu>).
   * KVM: Don't count dmesg line twice
     (reported by Thorsten Lüttgert <t.luettgert@enda.eu>).
+  * LXC: Remove inapplicable /proc from procfs_read() parameter
+    (reported by Thorsten Lüttgert <t.luettgert@enda.eu>).
+  * LXC: Use starttime jiffies from /proc/1/stat to detect LXC
+    (suggested by Thorsten Lüttgert <t.luettgert@enda.eu>).
 
  -- Thomas Liske <liske@ibh.de>  
 
