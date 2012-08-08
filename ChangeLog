@@ -6,11 +6,11 @@ imvirt (0.9.5) unstable; urgency=low
     cleanup svn:keywords usage.
   * Update perl/Makefile.PL (require File::Which).
   * KVM: Don't count dmesg line twice
-    (reported by Thorsten Lüttgert <t.luettgert@enda.eu>).
+    (reported by Torsten Lüttgert <t.luettgert@enda.eu>).
   * LXC: Remove inapplicable /proc from procfs_read() parameter
-    (reported by Thorsten Lüttgert <t.luettgert@enda.eu>).
+    (reported by Torsten Lüttgert <t.luettgert@enda.eu>).
   * LXC: Use starttime jiffies from /proc/1/stat to detect LXC
-    (suggested by Thorsten Lüttgert <t.luettgert@enda.eu>).
+    (suggested by Torsten Lüttgert <t.luettgert@enda.eu>).
 
  -- Thomas Liske <liske@ibh.de>  
 
