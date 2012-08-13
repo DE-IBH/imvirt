@@ -113,13 +113,6 @@ sub detect($) {
         }
     }
 
-    # Look for a dmesg paravirtualization line
-    if(defined(my $m = dmesg_match(
-	'Booting paravirtualized kernel on KVM' => IMV_PTS_MAJOR,
-     ))) {
-	ImVirt::inc_pts($dref, $m, IMV_VIRTUAL, PRODUCT) if($m > 0);
-    }
-
     # Look for virtio modules
     my $p = kmods_match_used(
 	'^virtio(_(blk|pci|net|ballon|ring))?$' => IMV_PTS_MINOR,

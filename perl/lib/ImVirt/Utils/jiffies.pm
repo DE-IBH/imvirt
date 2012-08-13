@@ -4,7 +4,7 @@
 #   Thomas Liske <liske@ibh.de>
 #
 # Copyright Holder:
-#   2009 - 2012 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#   2012 (C) IBH IT-Service GmbH [http://www.ibh.de/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -22,52 +22,51 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package ImVirt::Utils::procfs;
+package ImVirt::Utils::jiffies;
 
 use strict;
 use warnings;
 use File::Slurp;
+use ImVirt::Utils::procfs;
+
 require Exporter;
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
-    procfs_getmp
-    procfs_isdir
-    procfs_read
-    procfs_starttime
+    jiffies_hz
 );
 
-our $VERSION = '0.2';
+our $VERSION = '0.1';
 
-my $procdir = '/proc';
+my @HZ = qw(100 250 300 1000);
+my $hz = undef;
 
-sub procfs_getmp() {
-    return $procdir;
-}
+sub jiffies_hz() {
+    return $hz if(defined($hz));
 
-sub procfs_isdir($) {
-    return -d join('/', procfs_getmp(), shift);
-}
+    my $uptime = procfs_read('uptime');
+    my $tlist = procfs_read('timer_list');
 
-sub procfs_read($) {
-    my $fn = join('/', procfs_getmp(), shift);
-    if(-r $fn) {
-	my $f = read_file($fn);
-	chomp($f);
-	return $f;
+    $uptime =~ s/\s.+$//;
+    $tlist =~ /^jiffies: (\d+)$/m;
+    my $jiffies = $1 % (2**32);
+
+    $hz = $jiffies / $uptime;
+    ImVirt::debug(__PACKAGE__, "calculated jiffies: $hz");
+
+    foreach my $h (@HZ) {
+	if(abs($h - $hz) < $h*0.1) {
+	    $hz = $h;
+	    ImVirt::debug(__PACKAGE__, "estimated jiffies: $hz");
+	    last;
+	}
     }
 
-    return undef;
+    return $hz;
 }
 
-sub procfs_starttime($) {
-    my $fn = join('/', procfs_getmp(), shift, 'stat');
-    if(-r $fn) {
-	my @f = split(/\s/, read_file($fn));
-	return $f[21];
-    }
-
-    return undef;
+sub jiffies_sec($) {
+    return shift / jiffies_hz();
 }
 
 1;
