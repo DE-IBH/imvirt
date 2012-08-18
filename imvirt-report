@@ -103,11 +103,14 @@ print STDERR "Collecting data...\n";
 
 attach_path($msg, '/proc/1/cgroup');
 attach_path($msg, '/proc/1/environ');
+attach_path($msg, '/proc/1/stat');
 attach_path($msg, '/proc/cmdline');
 attach_path($msg, '/proc/cpuinfo');
 attach_path($msg, '/proc/mounts');
 attach_path($msg, '/proc/modules');
 attach_path($msg, '/proc/bus/input/devices');
+attach_path($msg, '/proc/uptime');
+attach_path($msg, '/proc/timer_list');
 attach_path($msg, '/sys/devices/system/clocksource/clocksource*/available_clocksource');
 attach_path($msg, '/sys/devices/system/cpu/cpu*/cpufreq/scaling_driver');
 attach_path($msg, '/var/log/dmesg');
