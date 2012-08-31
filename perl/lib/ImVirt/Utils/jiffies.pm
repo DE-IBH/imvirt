@@ -66,7 +66,7 @@ sub jiffies_hz() {
 }
 
 sub jiffies_sec($) {
-    return shift / jiffies_hz();
+    return (shift) / jiffies_hz();
 }
 
 1;
