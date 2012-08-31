@@ -34,6 +34,7 @@ our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
     jiffies_hz
+    jiffies_sec
 );
 
 our $VERSION = '0.1';
