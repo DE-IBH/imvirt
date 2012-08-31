@@ -30,8 +30,11 @@ use ImVirt;
 use Getopt::Long;
 
 sub HELP_MESSAGE {
+    my $prod = 'ImVirt';
+    $prod .= ' Portable' if(exists($ENV{PAR_0}) && __FILE__ =~ /^script\//);
+
     print STDERR <<EOH;
-ImVirt $ImVirt::VERSION - Thomas Liske <liske\@ibh.de>
+$prod $ImVirt::VERSION - Thomas Liske <liske\@ibh.de>
 
 Usage: $0 [-d]
     -d	debug
