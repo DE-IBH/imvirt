@@ -34,6 +34,7 @@ our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
     jiffies_hz
+    jiffies_sec
 );
 
 our $VERSION = '0.1';
@@ -66,7 +67,7 @@ sub jiffies_hz() {
 }
 
 sub jiffies_sec($) {
-    return shift / jiffies_hz();
+    return (shift) / jiffies_hz();
 }
 
 1;
