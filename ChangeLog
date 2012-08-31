@@ -11,6 +11,8 @@ imvirt (0.9.5) unstable; urgency=low
     (reported by Torsten Lüttgert <t.luettgert@enda.eu>).
   * LXC: Use starttime jiffies from /proc/1/stat to detect LXC
     (suggested by Torsten Lüttgert <t.luettgert@enda.eu>).
+  * LXC: Fix false positive (regex typo).
+  * Provide ImVirt Portable download.
 
  -- Thomas Liske <liske@ibh.de>  
 
