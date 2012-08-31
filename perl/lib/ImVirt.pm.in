@@ -147,7 +147,7 @@ our @EXPORT = qw(
 our $VERSION = '@PACKAGE_VERSION@';
 
 sub get_libexecdir() {
-    return "@libexecdir@/@PACKAGE@";
+    return '@libexecdir@/@PACKAGE@';
 }
 
 my @vmds = ();
