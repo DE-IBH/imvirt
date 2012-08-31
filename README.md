@@ -23,21 +23,21 @@ imvirt is comparable with virt-what [1]. imvirt was written to run as
 non-root - virt-what requires to be run as root but had some more
 details on Xen (Dom0/DomU/HVM) in the past.
 
-There is a portable version available: [ImVirt Portable](imvirt/tree/master/README.md)
+There is a portable version available: [ImVirt Portable](imvirt/tree/master/PORTABLE.md)
 
 Some random links taken as suggestions:
 
-[1] http://et.redhat.com/~rjones/virt-what/
-[2] http://www.dmo.ca/blog/detecting-virtualization-on-linux/
-[3] http://my.opera.com/jaelanicu/blog/2008/04/02/a-better-red-pill-scooby-for-vmware
-[4] http://my.opera.com/jaelanicu/blog/show.dml/4257341
-[5] http://www.codegurus.be/codegurus/Programming/virtualpc&vmware_en.htm
-[6] http://flierlu.blogspot.com/2008/04/virtualization-detection.html
-[7] http://www.microsoft.com/downloads/details.aspx?FamilyId=91E2E518-C62C-4FF2-8E50-3A37EA4100F5&displaylang=en
-[8] http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&cmd=displayKC&externalId=1009458
-[9] http://invisiblethings.org/papers/redpill.html
-[10] http://www.offensivecomputing.net/files/active/0/vm.pdf
-[11] http://www.s21sec.com/descargas/vmware-eng.pdf
-[12] http://www.trapkit.de/research/vmm/scoopyng/index.html
+1. http://et.redhat.com/~rjones/virt-what/
+2. http://www.dmo.ca/blog/detecting-virtualization-on-linux/
+3. http://my.opera.com/jaelanicu/blog/2008/04/02/a-better-red-pill-scooby-for-vmware
+4. http://my.opera.com/jaelanicu/blog/show.dml/4257341
+5. http://www.codegurus.be/codegurus/Programming/virtualpc&vmware_en.htm
+6. http://flierlu.blogspot.com/2008/04/virtualization-detection.html
+7. http://www.microsoft.com/downloads/details.aspx?FamilyId=91E2E518-C62C-4FF2-8E50-3A37EA4100F5&displaylang=en
+8. http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&cmd=displayKC&externalId=1009458
+9. http://invisiblethings.org/papers/redpill.html
+10. http://www.offensivecomputing.net/files/active/0/vm.pdf
+11. http://www.s21sec.com/descargas/vmware-eng.pdf
+12. http://www.trapkit.de/research/vmm/scoopyng/index.html
 
- -- Thomas Liske <liske@ibh.de>  Thu, 19 Apr 2012 21:16:12 +0200
+ -- Thomas Liske <liske@ibh.de>  Thu, 31 Aug 2012 22:36:09 +0200
