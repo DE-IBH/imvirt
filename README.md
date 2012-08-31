@@ -1,5 +1,5 @@
 imvirt - I'm virtualized?
--------------------------
+=========================
 
 This script tries to detect if it is run under a (para)virtualization.
 This is done by looking for wellknown boot messages, device names,
@@ -22,6 +22,8 @@ Detected virtualizations:
 imvirt is comparable with virt-what [1]. imvirt was written to run as
 non-root - virt-what requires to be run as root but had some more
 details on Xen (Dom0/DomU/HVM) in the past.
+
+There is a portable version available: [ImVirt Portable](imvirt/tree/master/README.md)
 
 Some random links taken as suggestions:
 

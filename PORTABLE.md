@@ -1,7 +1,7 @@
 ImVirt Portable
 ===============
 
-ImVirt Portable is a portable version of [ImVirt](imvirt/tree/master/README)
+ImVirt Portable is a portable version of [ImVirt](imvirt/tree/master/README.md)
 using the PAR Packager (pp). It is a self contained perl script but lags
 the binary helper stuff. This might result in a more inaccurate detection.
 
