@@ -291,7 +291,7 @@ sub imv_get_pos_results {
 	eval "\@pres = (\@pres, ${vmd}::pres());";
     }
 
-    return sort map { s/^.*\|([^|]+)$/$1/; $_; } @pres;
+    return sort {uc($a) cmp uc($b)} map { s/^.*\|([^|]+)$/$1/; $_; } @pres;
 }
 
 sub set_debug($) {
