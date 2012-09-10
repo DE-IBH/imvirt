@@ -107,7 +107,9 @@ sub detect($) {
 
 sub pres() {
     return (
-	PRODUCT.HYPERV
+	PRODUCT,
+	PRODUCT.' '.HYPERV,
+	PRODUCT.' '.VIRTUALPC
     );
 }
 
