@@ -74,13 +74,20 @@ sub detect($) {
     # Check /proc/bus/pci/devices
     my %pcidevs = pcidevs_get();
     foreach my $addr (keys %pcidevs) {
-	if(${$pcidevs{$addr}}{'device'} eq 'Hyper-V virtual VGA') {
+	if(
+	    ${$pcidevs{$addr}}{'device'} eq 'Hyper-V virtual VGA' &&
+	    ${$pcidevs{$addr}}{'vendor'} eq 'Microsoft Corporation'
+	) {
 	    ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT, HYPERV);
 	}
 	elsif(${$pcidevs{$addr}}{'device'} eq 'DECchip 21140 [FasterNet]') {
 	    ImVirt::inc_pts($dref, IMV_PTS_MINOR, IMV_VIRTUAL, PRODUCT);
 	}
-	elsif(${$pcidevs{$addr}}{'device'} eq 'Microsoft Corporation Device 0007') {
+	elsif(
+	    ${$pcidevs{$addr}}{'type'} eq 'Multimedia audio controller' &&
+	    ${$pcidevs{$addr}}{'vendor'} eq 'Microsoft Corporation' &&
+	    ${$pcidevs{$addr}}{'device'} eq 'Device 0007'
+	) {
 	    ImVirt::inc_pts($dref, IMV_PTS_MINOR, IMV_VIRTUAL, PRODUCT, VIRTUALPC);
 	}
     }
