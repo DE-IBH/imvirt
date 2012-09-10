@@ -30,6 +30,7 @@ use warnings;
 use ImVirt;
 use ImVirt::Utils::helper;
 use ImVirt::Utils::cpuinfo;
+use ImVirt::Utils::dmesg;
 use ImVirt::Utils::procfs;
 
 ImVirt::register_vmd(__PACKAGE__);
@@ -61,6 +62,15 @@ sub detect($) {
     # Check helper output for hypervisor detection
     if(my $hlp = helper('hvm')) {
 	ImVirt::inc_pts($dref, IMV_PTS_NORMAL, IMV_VIRTUAL);
+    }
+
+    # Look for dmesg lines
+    if(defined(my $m = dmesg_match(
+	'Booting paravirtualized kernel on bare hardware' => IMV_PTS_NORMAL,
+      ))) {
+	if($m > 0) {
+	    ImVirt::inc_pts($dref, $m, IMV_VIRTUAL);
+	}
     }
 }
 
