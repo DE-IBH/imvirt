@@ -10,11 +10,11 @@ Detected virtualizations:
  - KVM
  - lguest
  - LXC
+ - Microsoft Virtual PC / Hyper-V
  - OpenVZ/Virtuozzo
  - QEMU
  - UML
  - VMware GSX, ESX, Workstation
- - Virtual PC/Virtual Server
  - VirtualBox
  - Xen (para and non-para virtualized)
  - any HVM providing CPUID 0x40000000 detection
