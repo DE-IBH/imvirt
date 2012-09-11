@@ -22,10 +22,6 @@
  *   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-/* This code tries to detect the VMware version using the VMware backdoor's
- * GETVERSION command (http://chitchat.at.infoseek.co.jp/vmware/backdoor.html#cmd0ah).
- */
-
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>

@@ -53,6 +53,7 @@ sub detect($) {
 
     # Look for dmesg lines
     if(defined(my $m = dmesg_match(
+	'Hypervisor detected: VMware' => IMV_PTS_MAJOR,
 	'Booting paravirtualized kernel on vmi' => IMV_PTS_MAJOR,
 	'VMware vmxnet virtual NIC driver' => IMV_PTS_NORMAL,
       ))) {
@@ -88,6 +89,8 @@ sub detect($) {
 	'^vmsync$' => IMV_PTS_NORMAL,
 	'^vmci$' => IMV_PTS_NORMAL,
 	'^vsock$' => IMV_PTS_NORMAL,
+	'^vmw_balloon$' => IMV_PTS_NORMAL,
+	'^pcnet32$' => IMV_PTS_MINOR,
     );
     if($p > 0) {
 	ImVirt::inc_pts($dref, $p, IMV_VIRTUAL, PRODUCT);

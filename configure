@@ -4500,7 +4500,7 @@ fi
 MYDIR=$libexecdir
 
 
-ac_config_files="$ac_config_files Makefile helper/Makefile man/Makefile imvirt.spec perl/lib/ImVirt.pm"
+ac_config_files="$ac_config_files Makefile dist/Makefile helper/Makefile man/Makefile imvirt.spec perl/lib/ImVirt.pm"
 
 
 cat >confcache <<\_ACEOF
@@ -5227,6 +5227,7 @@ do
     "helper/config.h") CONFIG_HEADERS="$CONFIG_HEADERS helper/config.h" ;;
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "dist/Makefile") CONFIG_FILES="$CONFIG_FILES dist/Makefile" ;;
     "helper/Makefile") CONFIG_FILES="$CONFIG_FILES helper/Makefile" ;;
     "man/Makefile") CONFIG_FILES="$CONFIG_FILES man/Makefile" ;;
     "imvirt.spec") CONFIG_FILES="$CONFIG_FILES imvirt.spec" ;;
