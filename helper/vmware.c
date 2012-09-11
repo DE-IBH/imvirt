@@ -100,11 +100,11 @@ static int do_vmware() {
 		product = "Workstation";
 		break;
 	    default:
-		product = "";
+		product = "?";
 		break;
 	}
 
-	printf("VMware%s%s\n", (product[0] ? " " : ""), product);
+	printf("%s\n", product);
 
 	return 1;
     }

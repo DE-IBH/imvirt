@@ -13,6 +13,7 @@ imvirt (0.9.5) unstable; urgency=low
     (suggested by Torsten Lüttgert <t.luettgert@enda.eu>).
   * LXC: Fix false positive (regex typo).
   * Provide ImVirt Portable download.
+  * Revised Microsoft Virtual PC / Hyper-V detection.
 
  -- Thomas Liske <liske@ibh.de>  
 
