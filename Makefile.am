@@ -1,4 +1,4 @@
-SUBDIRS = helper man perl
+SUBDIRS = helper man perl dist
 
 AUTOMAKE_OPTIONS = 
 	1.9

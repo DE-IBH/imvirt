@@ -43,6 +43,7 @@ AC_SUBST(MYDIR)
 
 AC_CONFIG_FILES([
 Makefile
+dist/Makefile
 helper/Makefile
 man/Makefile
 imvirt.spec
