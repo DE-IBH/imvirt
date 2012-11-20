@@ -1,3 +1,10 @@
+imvirt (0.9.6) unstable; urgency=low
+
+  * Do not die if /proc/cpuinfo is unavailable
+    (Debian Bug #693278 by Dmitry Smirnov <onlyjob@member.fsf.org>).
+
+ -- Thomas Liske <liske@ibh.de>  
+
 imvirt (0.9.5) unstable; urgency=low
 
   * Add imvirt-report manpage from Debian,
