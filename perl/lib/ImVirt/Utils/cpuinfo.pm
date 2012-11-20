@@ -29,28 +29,45 @@ use warnings;
 use Data::Dumper;
 use ImVirt::Utils::procfs;
 
+use constant {
+    CPUINFO_UNKNOWN	=> 'UNKNOWN',
+};
+
 require Exporter;
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
     cpuinfo_get
     cpuinfo_hasflags
+    CPUINFO_UNKNOWN
 );
 
 our $VERSION = '0.1';
 
-open(HCPUINFO, procfs_getmp().'/cpuinfo') || die;
-
 my %cpuinfo;
-my $proc;
-while(my $line = <HCPUINFO>) {
-    chomp($line);
-    if($line =~ /^(\w[^:]+\S)\s+: (.+)$/) {
-	$proc = $2 if($1 eq 'processor');
-	${$cpuinfo{$proc}}{$1} = $2;
+my $fn = procfs_getmp().'/cpuinfo';
+if(open(HCPUINFO, $fn)) {
+    my $proc;
+    while(my $line = <HCPUINFO>) {
+	chomp($line);
+	if($line =~ /^(\w[^:]+\S)\s+: (.+)$/) {
+	    $proc = $2 if($1 eq 'processor');
+	    ${$cpuinfo{$proc}}{$1} = $2;
+	}
+    }
+    close(HCPUINFO);
+}
+else {
+    ImVirt::debug(__PACKAGE__, "Cannot open '$fn': $!");
+
+    $cpuinfo{0} = {
+	processor => 0,
+	vendor_id => CPUINFO_UNKNOWN,
+	flags => '',
+	model => CPUINFO_UNKNOWN,
+	'model name' => CPUINFO_UNKNOWN,
     }
 }
-close(HCPUINFO);
 ImVirt::debug(__PACKAGE__, Dumper(\%cpuinfo));
 
 sub cpuinfo_get() {
