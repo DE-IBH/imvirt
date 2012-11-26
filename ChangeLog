@@ -2,7 +2,7 @@ imvirt (0.9.6) unstable; urgency=low
 
   * Do not die if /proc/cpuinfo is unavailable
     (Debian Bug #693278 by Dmitry Smirnov <onlyjob@member.fsf.org>).
-  * Bundle core modules to ImVirt Portable build.
+  * Split ImVirt Portable into core and bundle (w/ PAR stuff) build.
 
  -- Thomas Liske <liske@ibh.de>  
 
