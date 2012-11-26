@@ -336,7 +336,7 @@ uninstall-am:
 	mostlyclean-generic pdf pdf-am ps ps-am uninstall uninstall-am
 
 imvirtp: ../imvirt ../perl/lib/ImVirt.pm ../perl/lib/ImVirt/*/*.pm
-	pp -x -s -P -o imvirtp -I ../perl/lib ../imvirt
+	pp -x -s -B -P -o imvirtp -I ../perl/lib ../imvirt
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
