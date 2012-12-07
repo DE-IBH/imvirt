@@ -12,6 +12,7 @@ Detected virtualizations:
  - LXC
  - Microsoft Virtual PC / Hyper-V
  - OpenVZ/Virtuozzo
+ - Parallels Workstation
  - QEMU
  - UML
  - VMware GSX, ESX, Workstation
