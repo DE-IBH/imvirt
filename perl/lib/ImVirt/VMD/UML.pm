@@ -42,19 +42,19 @@ sub detect($) {
     # Check /proc/cpuinfo
     my %cpuinfo = cpuinfo_get();
     foreach my $cpu (keys %cpuinfo) {
-	if(${$cpuinfo{$cpu}}{'vendor_id'} eq 'User Mode Linux') {
+	if(exists(${$cpuinfo{$cpu}}{'vendor_id'}) && ${$cpuinfo{$cpu}}{'vendor_id'} eq 'User Mode Linux') {
 	    ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
 
-	if(${$cpuinfo{$cpu}}{'model name'} eq 'UML') {
+	if(exists(${$cpuinfo{$cpu}}{'model name'}) && ${$cpuinfo{$cpu}}{'model name'} eq 'UML') {
 	    ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
 
-	if(${$cpuinfo{$cpu}}{'model'} eq 'skas') {
+	if(exists(${$cpuinfo{$cpu}}{'model'}) && ${$cpuinfo{$cpu}}{'model'} eq 'skas') {
 	    ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
 
-	if(${$cpuinfo{$cpu}}{'host'}) {
+	if(exists(${$cpuinfo{$cpu}}{'host'})) {
 	    ImVirt::inc_pts($dref, IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT);
 	}
     }
