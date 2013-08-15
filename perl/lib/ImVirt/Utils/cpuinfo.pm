@@ -79,6 +79,8 @@ sub cpuinfo_hasflags(%) {
     my $pts = 0;
 
     foreach my $cpuinfo (keys %cpuinfo) {
+	next unless(exists(${$cpuinfo{$cpuinfo}}{'flags'}));
+
 	foreach my $regex (keys %regexs) {
 	    $pts += $regexs{$regex} if(${$cpuinfo{$cpuinfo}}{'flags'} =~ /$regex/);
 	}
