@@ -93,7 +93,7 @@ sub detect($) {
     # Check /proc/cpuinfo
     my %cpuinfo = cpuinfo_get();
     foreach my $cpu (keys %cpuinfo) {
-	if(${$cpuinfo{$cpu}}{'model name'} =~ /QEMU Virtual CPU/) {
+	if(exists(${$cpuinfo{$cpu}}{'model name'}) && ${$cpuinfo{$cpu}}{'model name'} =~ /QEMU Virtual CPU/) {
 	    ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
 	}
     }
