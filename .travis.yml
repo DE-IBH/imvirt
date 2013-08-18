@@ -1,5 +1,9 @@
 language: c
 
+env:
+ - report=no
+ - report=yes
+
 before_install:
  - sudo apt-get update -qq
  - sudo apt-get install -qq libmodule-find-perl libfile-slurp-perl libfile-which-perl libmime-lite-perl
@@ -11,4 +15,4 @@ install:
 script:
  - perl -Iperl/lib imvirt
  - sudo perl -Iperl/lib imvirt
- - sudo perl -Iperl/lib imvirt-report -s /dev/stdout
+ - test "$report" = "yes" && sudo perl -Iperl/lib imvirt-report -s /dev/stdout
