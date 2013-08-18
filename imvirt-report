@@ -43,7 +43,6 @@ $Getopt::Std::STANDARD_HELP_VERSION++;
 
 sub HELP_MESSAGE {
     print <<USG;
-
 About:
   imvirt-report collects various system information and saves them to a
   mime encoded file. It might help the upstream author to provide a better
@@ -51,7 +50,6 @@ About:
   attach the output to bug reports.
 
 Usage:
-
   imvirt-report [-s <filename>]
 
     -s <filename>	where to write the collected data
@@ -74,15 +72,6 @@ License:
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
   (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this package; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 LIC
     #'
