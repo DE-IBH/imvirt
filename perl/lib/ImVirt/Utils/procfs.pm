@@ -4,7 +4,7 @@
 #   Thomas Liske <liske@ibh.de>
 #
 # Copyright Holder:
-#   2009 - 2012 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#   2009 - 2013 (C) IBH IT-Service GmbH [http://www.ibh.de/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -33,6 +33,7 @@ our @ISA = qw(Exporter);
 our @EXPORT = qw(
     procfs_getmp
     procfs_isdir
+    procfs_isfile
     procfs_read
     procfs_starttime
 );
@@ -47,6 +48,10 @@ sub procfs_getmp() {
 
 sub procfs_isdir($) {
     return -d join('/', procfs_getmp(), shift);
+}
+
+sub procfs_isfile($) {
+    return -f join('/', procfs_getmp(), shift);
 }
 
 sub procfs_read($) {

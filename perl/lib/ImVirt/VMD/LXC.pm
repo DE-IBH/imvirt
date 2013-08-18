@@ -61,12 +61,15 @@ sub detect($) {
 
     # Check init's starttime for LXC
     if(defined(my $st = procfs_starttime(1))) {
-        if(jiffies_sec($st) >= 5) {
-            ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
-        }
-        else {
-            ImVirt::dec_pts($dref, IMV_PTS_MINOR, IMV_VIRTUAL, PRODUCT);
-        }
+	my $sec = jiffies_sec($st);
+	if(defined($sec)) {
+	    if($sec >= 5) {
+		ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	    }
+	    else {
+		ImVirt::dec_pts($dref, IMV_PTS_MINOR, IMV_VIRTUAL, PRODUCT);
+	    }
+	}
     }
 }
 

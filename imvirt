@@ -34,13 +34,33 @@ sub HELP_MESSAGE {
     $prod .= ' Portable' if(exists($ENV{PAR_0}) && __FILE__ =~ /^script\//);
 
     print STDERR <<EOH;
-$prod $ImVirt::VERSION - Thomas Liske <liske\@ibh.de>
+$prod $ImVirt::VERSION - I'm virtualized?
 
-Usage: $0 [-d]
-    -d	debug
+Authors:
+  Thomas Liske <liske\@ibh.de>
+
+Copyright Holder:
+  2008 - 2013 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+
+License:
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+About:
+  imvirt tries to detect if it runs on a physical machine or on a
+  virtualized one. If it detects that it is a virtualized one it also
+  tries to find out which virtualization technology is used.
+
+Usage:
+  imvirt [-d]
+    -d			enable debug output
 
 Output:
 EOH
+    #'
+
     print "    ",join("\n    ", imv_get_pos_results()),"\n\n";
 
     exit;
