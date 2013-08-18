@@ -1,7 +1,12 @@
 language: c
 
+before_install:
+ - sudo apt-get update -qq
+ - sudo apt-get install -qq libmodule-find-perl
+
 install:
- - ./configure --prefix=$(pwd)/build && make && make install
+ - ./configure --prefix=$(pwd)/build
+ - make && make install
 
 script:
  - perl -Iperl/lib imvirt -d
