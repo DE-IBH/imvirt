@@ -4,7 +4,7 @@
 #   Thomas Liske <liske@ibh.de>
 #
 # Copyright Holder:
-#   2009 - 2012 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#   2009 - 2013 (C) IBH IT-Service GmbH [http://www.ibh.de/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -46,6 +46,10 @@ sub sysfs_getmp() {
 
 sub sysfs_isdir($) {
     return -d join('/', sysfs_getmp(), shift);
+}
+
+sub sysfs_isfile($) {
+    return -f join('/', sysfs_getmp(), shift);
 }
 
 sub sysfs_read($) {
