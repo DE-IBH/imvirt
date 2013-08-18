@@ -9,4 +9,6 @@ install:
  - make && make install
 
 script:
- - perl -Iperl/lib imvirt -d
+ - perl -Iperl/lib imvirt
+ - sudo perl -Iperl/lib imvirt
+ - sudo ./imvirt-report -s /dev/stdout 2> /dev/null
