@@ -22,11 +22,11 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package ImVirt::VMD::KVM;
+package ImVirt::VMD::Parallels;
 
 use strict;
 use warnings;
-use constant PRODUCT => '|KVM';
+use constant PRODUCT => '|Parallels';
 
 use ImVirt;
 use ImVirt::Utils::cpuinfo;
@@ -49,28 +49,28 @@ sub detect($) {
 
     # Check dmidecode
     if(defined(my $spn = dmidecode_string('system-product-name'))) {
-        if ($spn =~ /^(KVM|Bochs)/) {
-            ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+        if ($spn =~ /^Parallels Virtual Platform/) {
+            ImVirt::inc_pts($dref, IMV_PTS_DRASTIC, IMV_VIRTUAL, PRODUCT);
         }
         else {
-            ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+            ImVirt::dec_pts($dref, IMV_PTS_DRASTIC, IMV_VIRTUAL, PRODUCT);
         }
     }
     if(defined(my $spn = dmidecode_string('bios-vendor'))) {
-        if ($spn =~ /^(QEMU|Bochs)/) {
-            ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+        if ($spn =~ /^Parallels Software International Inc\./) {
+            ImVirt::inc_pts($dref, IMV_PTS_DRASTIC, IMV_VIRTUAL, PRODUCT);
         }
         else {
-            ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+            ImVirt::dec_pts($dref, IMV_PTS_DRASTIC, IMV_VIRTUAL, PRODUCT);
         }
     }
 
     # Look for dmesg lines
     if(defined(my $m = dmesg_match(
-        ' QEMUAPIC ' => IMV_PTS_NORMAL,
-        'QEMU Virtual CPU' => IMV_PTS_NORMAL,
-        'Booting paravirtualized kernel on KVM' => IMV_PTS_MAJOR,
-        'kvm-clock' => IMV_PTS_MAJOR,
+        'Booting paravirtualized kernel on KVM' => IMV_PTS_NORMAL,
+        'kvm-clock' => IMV_PTS_NORMAL,
+        'DMI: Parallels Software International Inc.' => IMV_PTS_DRASTIC,
+        'intel8x0: enable Parallels VM optimization' => IMV_PTS_DRASTIC,
       ))) {
         if($m > 0) {
             ImVirt::inc_pts($dref, $m, IMV_VIRTUAL, PRODUCT);
@@ -83,26 +83,18 @@ sub detect($) {
     # Look for clock source
     if(defined(my $cs = sysfs_read('devices/system/clocksource/clocksource0/available_clocksource'))) {
         if($cs =~ /kvm/) {
-            ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+            ImVirt::inc_pts($dref, IMV_PTS_MINOR, IMV_VIRTUAL, PRODUCT);
         }
         else {
-            ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+            ImVirt::dec_pts($dref, IMV_PTS_MINOR, IMV_VIRTUAL, PRODUCT);
         }
-    }
-
-    # Check /proc/cpuinfo
-    my %cpuinfo = cpuinfo_get();
-    foreach my $cpu (keys %cpuinfo) {
-	if(exists(${$cpuinfo{$cpu}}{'model name'}) && ${$cpuinfo{$cpu}}{'model name'} =~ /QEMU Virtual CPU/) {
-	    ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
-	}
     }
 
     # Check /proc/bus/pci/devices
     my %pcidevs = pcidevs_get();
     foreach my $addr (keys %pcidevs) {
-	if(${$pcidevs{$addr}}{'device'} =~ /Qumranet, Inc\. Virtio/) {
-	    ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	if(${$pcidevs{$addr}}{'device'} =~ /Parallels, Inc\. /) {
+	    ImVirt::inc_pts($dref, IMV_PTS_DRASTIC, IMV_VIRTUAL, PRODUCT);
 	}
     }
 
@@ -116,6 +108,14 @@ sub detect($) {
     # Look for virtio modules
     my $p = kmods_match_used(
 	'^virtio(_(blk|pci|net|ballon|ring))?$' => IMV_PTS_MINOR,
+    );
+    if($p > 0) {
+	ImVirt::inc_pts($dref, $p, IMV_VIRTUAL, PRODUCT);
+    }
+
+    # Look for e1000, snd_intel8x0
+    $p = kmods_match_used(
+	'^(e1000|snd_intel8x0)?$' => IMV_PTS_MINOR,
     );
     if($p > 0) {
 	ImVirt::inc_pts($dref, $p, IMV_VIRTUAL, PRODUCT);

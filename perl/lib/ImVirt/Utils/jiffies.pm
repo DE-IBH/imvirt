@@ -48,6 +48,11 @@ sub jiffies_hz() {
     my $uptime = procfs_read('uptime');
     my $tlist = procfs_read('timer_list');
 
+    unless(defined($uptime) && defined($tlist)) {
+	ImVirt::debug(__PACKAGE__, "could not get timing data from procfs");
+	return undef;
+    }
+
     $uptime =~ s/\s.+$//;
     $tlist =~ /^jiffies: (\d+)$/m;
     my $jiffies = $1 % (2**32);
@@ -67,7 +72,11 @@ sub jiffies_hz() {
 }
 
 sub jiffies_sec($) {
-    return (shift) / jiffies_hz();
+    jiffies_hz();
+
+    return (shift) / $hz if(defined($hz));
+
+    return undef;
 }
 
 1;

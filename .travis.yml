@@ -1,0 +1,18 @@
+language: c
+
+env:
+ - debug=""
+ - debug="-d"
+
+before_install:
+ - sudo apt-get update -qq
+ - sudo apt-get install -qq libmodule-find-perl libfile-slurp-perl libfile-which-perl libmime-lite-perl
+
+install:
+ - ./configure --prefix=$(pwd)/build
+ - make && make install
+
+script:
+ - perl -Iperl/lib imvirt $debug
+ - sudo perl -Iperl/lib imvirt $debug
+ - test "$debug" = "-d" && sudo perl -Iperl/lib imvirt-report -s /dev/stdout || true
