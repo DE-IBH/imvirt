@@ -1,0 +1,7 @@
+language: c
+
+install:
+ - ./configure --prefix=~/test && make && make install
+
+script:
+ - perl -Iperl/lib imvirt -d
