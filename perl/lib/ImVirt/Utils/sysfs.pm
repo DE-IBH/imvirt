@@ -33,6 +33,7 @@ our @ISA = qw(Exporter);
 our @EXPORT = qw(
     sysfs_getmp
     sysfs_isdir
+    sysfs_isfile
     sysfs_read
 );
 

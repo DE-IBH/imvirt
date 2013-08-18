@@ -33,6 +33,7 @@ our @ISA = qw(Exporter);
 our @EXPORT = qw(
     procfs_getmp
     procfs_isdir
+    procfs_isfile
     procfs_read
     procfs_starttime
 );
