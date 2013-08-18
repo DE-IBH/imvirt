@@ -1,8 +1,8 @@
 language: c
 
 env:
- - report=no
- - report=yes
+ - debug=""
+ - debug="-d"
 
 before_install:
  - sudo apt-get update -qq
@@ -13,6 +13,6 @@ install:
  - make && make install
 
 script:
- - perl -Iperl/lib imvirt
- - sudo perl -Iperl/lib imvirt
- - test "$report" = "yes" && sudo perl -Iperl/lib imvirt-report -s /dev/stdout
+ - perl -Iperl/lib imvirt $debug
+ - sudo perl -Iperl/lib imvirt $debug
+ - test "$debug" = "-d" && sudo perl -Iperl/lib imvirt-report -s /dev/stdout || true
