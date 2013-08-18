@@ -26,6 +26,7 @@
 
 use strict;
 use warnings;
+use Getopt::Std;
 use MIME::Lite;
 use ImVirt;
 
@@ -38,7 +39,57 @@ my $nowhich = $@;
 my $hostname = `hostname -f`;
 chomp($hostname);
 
-my $opt_s = "imvirt-report_${hostname}_$$.eml";
+$Getopt::Std::STANDARD_HELP_VERSION++;
+
+sub HELP_MESSAGE {
+    print <<USG;
+
+About:
+  imvirt-report collects various system information and saves them to a
+  mime encoded file. It might help the upstream author to provide a better
+  detection support of virtualizing technologies. It might be helpful to
+  attach the output to bug reports.
+
+Usage:
+
+  imvirt-report [-s <filename>]
+
+    -s <filename>	where to write the collected data
+
+USG
+}
+
+sub VERSION_MESSAGE {
+    print <<LIC;
+imvirt $ImVirt::VERSION - I'm virtualized?
+
+Authors:
+  Thomas Liske <liske\@ibh.de>
+
+Copyright Holder:
+  2008 - 2013 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+
+License:
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this package; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+LIC
+    #'
+}
+
+our $opt_s = "imvirt-report_${hostname}_$$.eml";
+getopts('s:') || exit(1);
 
 my $ivout = imv_get(IMV_PROB_DEFAULT);
 
