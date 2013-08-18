@@ -40,15 +40,15 @@ sub detect($) {
 
     foreach my $fn (qw(time_list bus/pci/devices bus/input/devices)) {
 	if(procfs_isfile('time_list')) {
-	    ImVirt::dec_pts($dref, IMV_PTS_MINOR, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::dec_pts($dref, IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT);
 	}
 	else {
-	    ImVirt::inc_pts($dref, IMV_PTS_MINOR, IMV_VIRTUAL, PRODUCT);
+	    ImVirt::inc_pts($dref, IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT);
 	}
     }
 
     if(procfs_isdir('vz') && !procfs_isdir('bc')) {
-	ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+	ImVirt::inc_pts($dref, IMV_PTS_DRASTIC, IMV_VIRTUAL, PRODUCT);
     }
     else {
 	ImVirt::dec_pts($dref, IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT);
