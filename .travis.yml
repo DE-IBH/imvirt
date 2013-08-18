@@ -1,7 +1,7 @@
 language: c
 
 install:
- - ./configure --prefix=~/test && make && make install
+ - ./configure --prefix=$(pwd)/build && make && make install
 
 script:
  - perl -Iperl/lib imvirt -d
