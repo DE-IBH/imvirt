@@ -11,7 +11,7 @@ imvirt (0.9.6) unstable; urgency=low
   * Count CPU flag points only once.
   * Improve OpenVZ detection.
 
- -- Thomas Liske <liske@ibh.de>  
+ -- Thomas Liske <liske@ibh.de>  Fri, 23 Aug 2013 21:34:15 +0200
 
 imvirt (0.9.5) unstable; urgency=low
 
