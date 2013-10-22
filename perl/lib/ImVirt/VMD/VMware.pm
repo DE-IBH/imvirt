@@ -34,6 +34,7 @@ use ImVirt::Utils::helper;
 use ImVirt::Utils::dmesg;
 use ImVirt::Utils::dmidecode;
 use ImVirt::Utils::kmods;
+use ImVirt::Utils::pcidevs;
 
 ImVirt::register_vmd(__PACKAGE__);
 
@@ -76,6 +77,14 @@ sub detect($) {
     }
     else {
 	ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+    }
+
+    # Check /proc/bus/pci/devices
+    my %pcidevs = pcidevs_get();
+    foreach my $addr (keys %pcidevs) {
+	if(${$pcidevs{$addr}}{'vendor'} =~ /VMware/) {
+	    ImVirt::inc_pts($dref, IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT);
+	}
     }
 
     # Look for loaded modules
