@@ -4,7 +4,7 @@
 #   Thomas Liske <liske@ibh.de>
 #
 # Copyright Holder:
-#   2009 - 2012 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#   2009 - 2013 (C) IBH IT-Service GmbH [http://www.ibh.de/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -43,29 +43,32 @@ sub blkdev_match(%) {
     my $pts = 0;
 
     # scan SCSI devices
+    ImVirt::debug(__PACKAGE__, "scanning SCSI devices...");
     if(my @scsi = procfs_read('scsi/scsi')) {
-	foreach my $scsi (@scsi) {
-	    last unless(defined($scsi));
-
-	    chomp($scsi);
-	    foreach my $regex (keys %regexs) {
-		$pts += $regexs{$regex} if($scsi =~ /$regex/);
-	    }
+	foreach my $regex (keys %regexs) {
+	    $pts += $regexs{$regex} if(grep { /$regex/; } @scsi);
 	}
     }
 
     # scan IDE devices
+    ImVirt::debug(__PACKAGE__, "scanning IDE devices...");
     my $glob = procfs_getmp().'/ide/hd*/model';
     foreach my $hd (glob $glob) {
 	my @ide = read_file($hd);
 
-	foreach my $ide (@ide) {
-	    last unless(defined($ide));
+	foreach my $regex (keys %regexs) {
+	    $pts += $regexs{$regex} if(grep { /$regex/; } @ide);
+	}
+    }
 
-	    chomp($ide);
-	    foreach my $regex (keys %regexs) {
-		$pts += $regexs{$regex} if($ide =~ /$regex/);
-	    }
+    # scan ATA devices
+    ImVirt::debug(__PACKAGE__, "scanning ATA devices...");
+    $glob = sysfs_getmp().'/class/block/*/device/model';
+    foreach my $hd (glob $glob) {
+	my @ata = read_file($hd);
+
+	foreach my $regex (keys %regexs) {
+	    $pts += $regexs{$regex} if(grep { /$regex/; } @ata);
 	}
     }
 
