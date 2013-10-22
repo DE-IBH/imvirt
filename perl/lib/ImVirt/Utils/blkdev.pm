@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use File::Slurp;
 use ImVirt::Utils::procfs;
+use ImVirt::Utils::sysfs;
 
 require Exporter;
 our @ISA = qw(Exporter);
