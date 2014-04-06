@@ -6,6 +6,7 @@ imvirt.spec
 autom4te.cache/
 dist/
 helper/*.o
+helper/.dep
 perl/blib/
 perl/lib/ImVirt.pm
 perl/MYMETA.*
