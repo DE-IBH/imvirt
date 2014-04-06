@@ -1,0 +1,12 @@
+Makefile
+config.log
+config.status
+config.h
+imvirt.spec
+autom4te.cache/
+dist/
+helper/*.o
+perl/blib/
+perl/lib/ImVirt.pm
+perl/MYMETA.*
+perl/pm_to_blib
