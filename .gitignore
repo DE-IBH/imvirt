@@ -5,8 +5,8 @@ config.h
 imvirt.spec
 autom4te.cache/
 dist/
-helper/*.o
-helper/.dep
+helper/*
+!helper/*.c
 perl/blib/
 perl/lib/ImVirt.pm
 perl/MYMETA.*
