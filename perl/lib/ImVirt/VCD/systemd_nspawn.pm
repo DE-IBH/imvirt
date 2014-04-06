@@ -4,7 +4,7 @@
 #   Thomas Liske <liske@ibh.de>
 #
 # Copyright Holder:
-#   2009 - 2012 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#   2014 (C) IBH IT-Service GmbH [http://www.ibh.de/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -22,40 +22,35 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package ImVirt::VMD::OpenVZ;
+package ImVirt::VCD::systemd_nspawn;
 
 use strict;
 use warnings;
-use constant PRODUCT => '|OpenVZ';
+use constant PRODUCT => '|systemd-nspawn';
 
 use ImVirt;
 use ImVirt::Utils::procfs;
 
-ImVirt::register_vmd(__PACKAGE__);
+ImVirt::register_vcd(__PACKAGE__);
 
 sub detect($) {
     ImVirt::debug(__PACKAGE__, 'detect()');
 
     my $dref = shift;
 
-    foreach my $fn (qw(time_list bus/pci/devices bus/input/devices)) {
-	if(procfs_isfile('time_list')) {
-	    ImVirt::dec_pts($dref, IMV_PTS_MINOR, IMV_VIRTUAL, PRODUCT);
-	}
-	else {
-	    ImVirt::inc_pts($dref, IMV_PTS_MINOR, IMV_VIRTUAL, PRODUCT);
-	}
-    }
-
-    if(procfs_isdir('vz') && !procfs_isdir('bc')) {
-	ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
-    }
-    else {
-	ImVirt::dec_pts($dref, IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT);
+    # Check init's environment for systemd-nspawn
+    if(defined(my $env = procfs_read('1/environ'))) {
+        if($env =~ /systemd-nspawn/i) {
+            ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
+        }
+        else {
+            ImVirt::dec_pts($dref, IMV_PTS_MINOR, IMV_VIRTUAL, PRODUCT);
+        }
     }
 }
 
 sub pres() {
     return (PRODUCT);
 }
+
 1;

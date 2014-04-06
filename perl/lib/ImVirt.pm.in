@@ -36,7 +36,7 @@ ImVirt - detects several virtualizations
 =head1 DESCRIPTION
 
 The C<ImVirt> package tries to detect if it is run in a
-virtualization container. At least the following container
+virtualization. At least the following virtual machines
 should be detected:
 
 =over
@@ -47,13 +47,7 @@ should be detected:
 
 =item lguest
 
-=item LXC
-
-=item OpenVZ
-
 =item QEMU
-
-=item UML
 
 =item VirtualBox
 
@@ -65,12 +59,26 @@ should be detected:
 
 =back
 
+The following virtualization containers should be detected:
+
+=over
+
+=item LXC
+
+=item OpenVZ
+
+=item UML
+
+=item systemd-nspawn
+
+=back
+
 =head1 DETECTION HEURISTIC
 
 The detection is based on a heuristic - you should not trust the result at all.
 
 ImVirt probes for different well-known characteristics of different
-virtualization containers. Any characteristics found or not found are weighted
+virtualizations. Any characteristics found or not found are weighted
 by their significance.
 
 The result of the heuristic is a weighted tree. The leaves are the (not)
@@ -78,24 +86,46 @@ detected containers.
 
 =head1 FUNCTIONS
 
-The following functions should be used to retrieve the detected virtualization
+The following functions can be used to retrieve the detected virtualization
 containers:
+
+=head2 Virtual Machines
 
 =over 4
 
-=item imv_get($prob)
-Returns exactly one string describing the detected container. If the detected
-container has a smaller match probability than $prob the string 'Unknown' is
+=item imv_get_vm($prob)
+Returns exactly one string describing the detected virtual machine. If the detected
+virtual machine has a smaller match probability than $prob the string 'Unknown' is
 returned.
 
-=item imv_get_all()
-Returns a hash any positive detected containers as keys and their corresponding
-match probability as value.
+=item imv_get_all_vm()
+Returns a hash any positive detected virtual machines as keys and their
+corresponding match probability as value.
 
-=item imv_get_pos_results()
-Returns a list of all possible results which might be returned by all detection
-modules. The list entries might be appended by some additional data like version
-numbers etc.
+=item imv_get_pos_results_vm()
+Returns a list of all possible results which might be returned by all
+virtual machine detection modules. The list entries might be appended by
+some additional data like version numbers etc.
+
+=back
+
+=head2 Virtual Containers
+
+=over 4
+
+=item imv_get_vc($prob)
+Returns exactly one string describing the detected virtual container. If the detected
+virtual container has a smaller match probability than $prob the string 'Unknown' is
+returned.
+
+=item imv_get_all_vc()
+Returns a hash any positive detected virtual container as keys and their
+corresponding match probability as value.
+
+=item imv_get_pos_results_vc()
+Returns a list of all possible results which might be returned by all
+virtual container detection modules. The list entries might be appended by
+some additional data like version numbers etc.
 
 =back
 
@@ -114,8 +144,7 @@ use constant {
 
     IMV_PHYSICAL	=> 'Physical',
     IMV_VIRTUAL		=> 'Virtual',
-    IMV_EMULATOR	=> 'Emulator',
-    IMV_CONTAINER	=> 'Container',
+    IMV_NONE		=> 'None',
     IMV_UNKNOWN		=> 'Unknown',
 
     IMV_PROB_DEFAULT	=> 0.9,
@@ -132,11 +161,18 @@ our @ISA = qw(Exporter);
 our @EXPORT = qw(
     imv_detect
     imv_get
+    imv_get_vm
+    imv_get_vc
     imv_get_all
+    imv_get_all_vm
+    imv_get_all_vc
     imv_get_pos_results
+    imv_get_pos_results_vm
+    imv_get_pos_results_vc
     IMV_PROB_DEFAULT
     IMV_PHYSICAL
     IMV_VIRTUAL
+    IMV_NONE
     IMV_UNKNOWN
     IMV_PTS_MINOR
     IMV_PTS_NORMAL
@@ -151,9 +187,12 @@ sub get_libexecdir() {
 }
 
 my @vmds = ();
+my @vcds = ();
 my $debug = 0;
-my %detected = ();
-my %rtree;
+my %detected_vm = ();
+my %detected_vc = ();
+my %rtree_vm;
+my %rtree_vc;
 
 sub register_vmd($) {
     my $vmd = shift || return;
@@ -161,7 +200,13 @@ sub register_vmd($) {
     push(@vmds, $vmd);
 }
 
-sub _rtree_vm($$$@) {
+sub register_vcd($) {
+    my $vcd = shift || return;
+
+    push(@vcds, $vcd);
+}
+
+sub _rtree($$$@) {
     my $dref = shift;
     my $cref = shift;
     my $pts = shift;
@@ -170,7 +215,7 @@ sub _rtree_vm($$$@) {
 	my $href = ${$dref}{$prod};
 
 	if(keys %{${$href}{KV_SUBPRODS}}) {
-	    &_rtree_vm(${$href}{KV_SUBPRODS}, $cref, $pts + ${$href}{KV_POINTS}, @_, $prod);
+	    &_rtree(${$href}{KV_SUBPRODS}, $cref, $pts + ${$href}{KV_POINTS}, @_, $prod);
 	}
 	else {
 	    if(${$href}{KV_POINTS} > 0) {
@@ -185,31 +230,53 @@ sub _rtree_vm($$$@) {
 sub imv_detect() {
     imv_init() unless (@vmds);
 
-    %detected = (ImVirt::IMV_PHYSICAL => {KV_POINTS => IMV_PTS_MINOR});
-
+    # detect Virtual Machines
+    %detected_vm = (ImVirt::IMV_PHYSICAL => {KV_POINTS => IMV_PTS_MINOR});
     foreach my $vmd (@vmds) {
-	eval "${vmd}::detect(\\\%detected);";
+	eval "${vmd}::detect(\\\%detected_vm);";
 	warn "Error in ${vmd}::detect(): $@\n" if $@;
     }
 
-    %rtree = ();
+    %rtree_vm = ();
+    _rtree(\%detected_vm, \%rtree_vm, 0);
 
-    _rtree_vm(\%detected, \%rtree, 0);
-
-    my $psum = sum grep { $_ > 0 } values %rtree;
-
-    foreach my $prod (keys %rtree) {
-	my $pts = $rtree{$prod};
+    my $psum = sum grep { $_ > 0 } values %rtree_vm;
+    foreach my $prod (keys %rtree_vm) {
+	my $pts = $rtree_vm{$prod};
 
 	if($pts > 0) {
-	    $rtree{$prod} = $pts/$psum;
+	    $rtree_vm{$prod} = $pts/$psum;
 	}
 	else {
-	    $rtree{$prod} = 0;
+	    $rtree_vm{$prod} = 0;
 	}
     }
 
-    debug(__PACKAGE__, "imvirt_detect():\n".Dumper(\%rtree));
+    debug(__PACKAGE__, "imvirt_detect(): VM\n".Dumper(\%rtree_vm));
+
+    # detect Virtual Containers
+    %detected_vc = (ImVirt::IMV_NONE => {KV_POINTS => IMV_PTS_MINOR});
+    foreach my $vcd (@vcds) {
+	eval "${vcd}::detect(\\\%detected_vc);";
+	warn "Error in ${vcd}::detect(): $@\n" if $@;
+    }
+
+    %rtree_vc = ();
+    _rtree(\%detected_vc, \%rtree_vc, 0);
+
+    $psum = sum grep { $_ > 0 } values %rtree_vc;
+    foreach my $prod (keys %rtree_vc) {
+	my $pts = $rtree_vc{$prod};
+
+	if($pts > 0) {
+	    $rtree_vc{$prod} = $pts/$psum;
+	}
+	else {
+	    $rtree_vc{$prod} = 0;
+	}
+    }
+
+    debug(__PACKAGE__, "imvirt_detect(): VC\n".Dumper(\%rtree_vc));
 }
 
 sub inc_pts($$@) {
@@ -247,48 +314,109 @@ sub _change_pts($\%@) {
 	${$href}{KV_POINTS} += $prop;
     }
 }
-sub imv_get_all() {
-    imv_detect() unless (%detected);
 
-    return %rtree;
+sub imv_get_all() {
+    return imv_get_all_vm();
+}
+
+sub imv_get_all_vm() {
+    imv_detect() unless (%detected_vm);
+
+    return %rtree_vm;
+}
+
+sub imv_get_all_vc() {
+    imv_detect() unless (%detected_vc);
+
+    return %rtree_vc;
 }
 
 sub imv_get($) {
-    imv_detect() unless (%detected);
+    return imv_get_vm(@_);
+}
+
+sub imv_get_vm($) {
+    imv_detect() unless (%detected_vm);
 
     my $prob = shift;
 
-    my @res = sort { $rtree{$b} > $rtree{$a} } keys %rtree;
+    my @res = sort { $rtree_vm{$b} > $rtree_vm{$a} } keys %rtree_vm;
     my $vm = shift @res;
 
     return $vm if(eval {
-	my $m = (sum values %rtree)/($#res+2);
+	my $m = (sum values %rtree_vm)/($#res+2);
 	debug(__PACKAGE__, "imv_get: m = $m");
 
 	my $s = 0;
-	foreach my $v (values %rtree) {
+	foreach my $v (values %rtree_vm) {
 	    $s += ($v - $m)**2;
 	}
 	$s /=($#res+1);
 	debug(__PACKAGE__, "imv_get: s² = $s");
 
 	my $vm2 = shift @res;
-	debug(__PACKAGE__, "imv_get: $rtree{$vm} - sqrt($s) > $rtree{$vm2}");
-	$rtree{$vm} - sqrt($s) > $rtree{$vm2};
+	debug(__PACKAGE__, "imv_get: $rtree_vm{$vm} - sqrt($s) > $rtree_vm{$vm2}");
+	$rtree_vm{$vm} - sqrt($s) > $rtree_vm{$vm2};
     });
 
-    return $vm if($rtree{$vm} >= $prob);
+    return $vm if($rtree_vm{$vm} >= $prob);
+
+    return IMV_UNKNOWN;
+}
+
+sub imv_get_vc($) {
+    imv_detect() unless (%detected_vc);
+
+    my $prob = shift;
+
+    my @res = sort { $rtree_vc{$b} > $rtree_vc{$a} } keys %rtree_vc;
+    my $vc = shift @res;
+
+    return $vc if(eval {
+	my $m = (sum values %rtree_vc)/($#res+2);
+	debug(__PACKAGE__, "imv_get: m = $m");
+
+	my $s = 0;
+	foreach my $v (values %rtree_vc) {
+	    $s += ($v - $m)**2;
+	}
+	$s /=($#res+1);
+	debug(__PACKAGE__, "imv_get: s² = $s");
+
+	my $vc2 = shift @res;
+	debug(__PACKAGE__, "imv_get: $rtree_vc{$vc} - sqrt($s) > $rtree_vc{$vc2}");
+	$rtree_vc{$vc} - sqrt($s) > $rtree_vc{$vc2};
+    });
+
+    return $vc if($rtree_vc{$vc} >= $prob);
 
     return IMV_UNKNOWN;
 }
 
 sub imv_get_pos_results {
+    return imv_get_pos_results_vm();
+}
+
+sub imv_get_pos_results_vm {
     imv_init() unless (@vmds);
 
     my @pres;
 
     foreach my $vmd (@vmds) {
 	eval "\@pres = (\@pres, ${vmd}::pres());";
+    }
+
+    my %pres = map { $_, 1 } map { s/^.*\|([^|]+)$/$1/; $_; } @pres;
+    return sort {uc($a) cmp uc($b)} keys %pres;
+}
+
+sub imv_get_pos_results_vc {
+    imv_init() unless (@vcds);
+
+    my @pres;
+
+    foreach my $vcd (@vcds) {
+	eval "\@pres = (\@pres, ${vcd}::pres());";
     }
 
     my %pres = map { $_, 1 } map { s/^.*\|([^|]+)$/$1/; $_; } @pres;
@@ -308,8 +436,8 @@ sub debug($$) {
 }
 
 sub imv_init() {
-    # autoload VMD modules
-    foreach my $module (findsubmod ImVirt::VMD) {
+    # autoload VCD/VMD modules
+    foreach my $module (findsubmod ImVirt::VCD, findsubmod ImVirt::VMD) {
 	eval "use $module;";
 	die "Error loading $module: $@\n" if $@;
     }

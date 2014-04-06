@@ -72,4 +72,10 @@ GetOptions(
     help => sub { HELP_MESSAGE(); },
 ) or HELP_MESSAGE();
 
-print imv_get(IMV_PROB_DEFAULT),"\n";
+my $vc = imv_get_vc(IMV_PROB_DEFAULT);
+if($vc ne IMV_NONE) {
+    print "$vc\n";
+}
+else {
+    print imv_get_vm(IMV_PROB_DEFAULT),"\n";
+}

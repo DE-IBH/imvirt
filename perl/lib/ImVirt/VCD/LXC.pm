@@ -22,7 +22,7 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package ImVirt::VMD::LXC;
+package ImVirt::VCD::LXC;
 
 use strict;
 use warnings;
@@ -32,7 +32,7 @@ use ImVirt;
 use ImVirt::Utils::procfs;
 use ImVirt::Utils::jiffies;
 
-ImVirt::register_vmd(__PACKAGE__);
+ImVirt::register_vcd(__PACKAGE__);
 
 sub detect($) {
     ImVirt::debug(__PACKAGE__, 'detect()');
