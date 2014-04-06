@@ -46,8 +46,10 @@ sub blkdev_match(%) {
     # scan SCSI devices
     ImVirt::debug(__PACKAGE__, "scanning SCSI devices...");
     if(my @scsi = procfs_read('scsi/scsi')) {
-	foreach my $regex (keys %regexs) {
-	    $pts += $regexs{$regex} if(grep { /$regex/; } @scsi);
+	if(defined($scsi[0])) {
+	    foreach my $regex (keys %regexs) {
+		$pts += $regexs{$regex} if(grep { /$regex/; } @scsi);
+	    }
 	}
     }
 
