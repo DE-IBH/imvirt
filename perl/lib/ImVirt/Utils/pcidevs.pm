@@ -47,7 +47,7 @@ if(procfs_isdir('bus/pci')) {
 	close(CHILD_WTR);
 	foreach my $line (<PARENT_RDR>) {
 	    chomp($line);
-	    unless($line =~ /^([\da-f:.]+) "([^"]*)" "([^"]*)" "([^"]*)" ([^"]*) ?"([^"]*)" "([^"]*)"$/) {
+	    unless($line =~ /^([\da-f:.]+) "(.*)" "(.*)" "(.*)" ([^"]*) ?"(.*)" "(.*)"$/) {
 		warn "Unexpected output from lspci: $line\n";
 		next;
 	    }
