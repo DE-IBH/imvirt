@@ -54,28 +54,43 @@ About:
   tries to find out which virtualization technology is used.
 
 Usage:
-  imvirt [-d]
+  imvirt [-d] [-c|-m]
     -d			enable debug output
+    -c			detect virtualization containers only
+    -m			detect virtual machines only
 
-Output:
+Output (virtualization containers):
 EOH
     #'
 
-    print "    ",join("\n    ", imv_get_pos_results()),"\n\n";
+    print "    ",join("\n    ", imv_get_pos_results_vc()),"\n\n";
+
+    print "Output (virtual machines):\n";
+    print "    ",join("\n    ", imv_get_pos_results_vm()),"\n\n";
 
     exit;
 }
 
 my %opts;
+my $mode;
 GetOptions(
     'd' => sub { ImVirt::set_debug(1); },
+    'c' => sub { $mode .= 'c'; },
+    'm' => sub { $mode .= 'm'; },
     help => sub { HELP_MESSAGE(); },
 ) or HELP_MESSAGE();
 
-my $vc = imv_get_vc(IMV_PROB_DEFAULT);
+$mode = 'cm' unless(defined($mode));
+
+my $vc = ($mode =~ /c/ ? imv_get_vc(IMV_PROB_DEFAULT) : IMV_NONE);
 if($vc ne IMV_NONE) {
     print "$vc\n";
 }
 else {
-    print imv_get_vm(IMV_PROB_DEFAULT),"\n";
+    if($mode =~ /m/) {
+	print imv_get_vm(IMV_PROB_DEFAULT),"\n";
+    }
+    else {
+	print IMV_NONE,"\n";
+    }
 }
