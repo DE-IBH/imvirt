@@ -41,7 +41,7 @@ sub detect($) {
 
     # Check init's control group data
     if(defined(my $cg = procfs_read('1/cgroup'))) {
-        if($cg =~ /^\d+:[^:]+:\/.+$/) {
+        if($cg =~ /^\d+:[^:]+:\/lxc\/.+$/m) {
             ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
         }
         else {
