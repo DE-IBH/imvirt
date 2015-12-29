@@ -1,3 +1,15 @@
+imvirt (1.0.0) unstable; urgency=low
+
+  * Handle non-existing /proc/scsi/scsi gracefully.
+  * Fix: Allow escaped quotes in lspci output.
+    (Debian Bug #732460 by Martin von Wittich <martin.von.wittich@iserv.eu>)
+  * Distinguish between virtual machine and virtualization container
+    detection.
+  * Fix broken sort function resulting in alternating results of imvirt.
+    (Github Issue #14 by @pencil; Github Issue #15 by @alexbarton)
+
+ -- Thomas Liske <liske@ibh.de>  
+
 imvirt (0.9.6) unstable; urgency=low
 
   * Do not die if /proc/cpuinfo is unavailable

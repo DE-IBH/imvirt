@@ -4,7 +4,7 @@
 #   Thomas Liske <liske@ibh.de>
 #
 # Copyright Holder:
-#   2009 - 2012 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#   2009 - 2013 (C) IBH IT-Service GmbH [http://www.ibh.de/]
 #
 # License:
 #   This program is free software; you can redistribute it and/or modify
@@ -34,6 +34,7 @@ use ImVirt::Utils::helper;
 use ImVirt::Utils::dmesg;
 use ImVirt::Utils::dmidecode;
 use ImVirt::Utils::kmods;
+use ImVirt::Utils::pcidevs;
 
 ImVirt::register_vmd(__PACKAGE__);
 
@@ -78,6 +79,14 @@ sub detect($) {
 	ImVirt::dec_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
     }
 
+    # Check /proc/bus/pci/devices
+    my %pcidevs = pcidevs_get();
+    foreach my $addr (keys %pcidevs) {
+	if(${$pcidevs{$addr}}{'vendor'} =~ /VMware/) {
+	    ImVirt::inc_pts($dref, IMV_PTS_NORMAL, IMV_VIRTUAL, PRODUCT);
+	}
+    }
+
     # Look for loaded modules
     $p = kmods_match(
 	'^vmblock$' => IMV_PTS_NORMAL,
@@ -91,6 +100,7 @@ sub detect($) {
 	'^vsock$' => IMV_PTS_NORMAL,
 	'^vmw_balloon$' => IMV_PTS_NORMAL,
 	'^pcnet32$' => IMV_PTS_MINOR,
+	'^BusLogic$' => IMV_PTS_MINOR,
     );
     if($p > 0) {
 	ImVirt::inc_pts($dref, $p, IMV_VIRTUAL, PRODUCT);

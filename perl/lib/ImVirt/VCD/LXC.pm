@@ -22,7 +22,7 @@
 #   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package ImVirt::VMD::LXC;
+package ImVirt::VCD::LXC;
 
 use strict;
 use warnings;
@@ -32,7 +32,7 @@ use ImVirt;
 use ImVirt::Utils::procfs;
 use ImVirt::Utils::jiffies;
 
-ImVirt::register_vmd(__PACKAGE__);
+ImVirt::register_vcd(__PACKAGE__);
 
 sub detect($) {
     ImVirt::debug(__PACKAGE__, 'detect()');
@@ -41,7 +41,7 @@ sub detect($) {
 
     # Check init's control group data
     if(defined(my $cg = procfs_read('1/cgroup'))) {
-        if($cg =~ /^\d+:[^:]+:\/.+$/) {
+        if($cg =~ /^\d+:[^:]+:\/lxc\/.+$/m) {
             ImVirt::inc_pts($dref, IMV_PTS_MAJOR, IMV_VIRTUAL, PRODUCT);
         }
         else {

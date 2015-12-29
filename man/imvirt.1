@@ -13,7 +13,7 @@ find out which virtualization technology is used.
 But there is at the moment a restriction if you do not call this script with
 the administrative root user, because \fBimvirt\fR also uses \fBdmidecode\fR to
 determine the used virtualization technology. \fBdmidecode\fR itself needs root
-privileges to accesss /dev/mem. So on you have to wrap \fBimvirt\fR with sudo
+privileges to access /dev/mem. You have to wrap \fBimvirt\fR with sudo
 if you want to detect every virtualization technology.
 .SH "SEE ALSO"
 .BR dmidecode (8)
