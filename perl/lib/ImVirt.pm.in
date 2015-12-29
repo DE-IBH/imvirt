@@ -340,7 +340,7 @@ sub imv_get_vm($) {
 
     my $prob = shift;
 
-    my @res = sort { $rtree_vm{$b} > $rtree_vm{$a} } keys %rtree_vm;
+    my @res = sort { $rtree_vm{$b} <=> $rtree_vm{$a} } keys %rtree_vm;
     my $vm = shift @res;
 
     return $vm if(eval {
@@ -369,7 +369,7 @@ sub imv_get_vc($) {
 
     my $prob = shift;
 
-    my @res = sort { $rtree_vc{$b} > $rtree_vc{$a} } keys %rtree_vc;
+    my @res = sort { $rtree_vc{$b} <=> $rtree_vc{$a} } keys %rtree_vc;
     my $vc = shift @res;
 
     return $vc if(eval {

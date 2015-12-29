@@ -5,6 +5,8 @@ imvirt (1.0.0) unstable; urgency=low
     (Debian Bug #732460 by Martin von Wittich <martin.von.wittich@iserv.eu>)
   * Distinguish between virtual machine and virtualization container
     detection.
+  * Fix broken sort function resulting in alternating results of imvirt.
+    (Github Issue #14 by @pencil; Github Issue #15 by @alexbarton)
 
  -- Thomas Liske <liske@ibh.de>  
 
